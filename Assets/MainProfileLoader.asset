@@ -25,23 +25,8 @@ MonoBehaviour:
     DisplayName: The Garden
     Author: Tiago.S
     spriteStage: {fileID: 21300000, guid: d29950b92302ca74ab7e2dc2f770f478, type: 3}
-  - stageID: 2
-    musicID: 2
-    Name: Stage_KOF
-    DisplayName: KOF
-    Author: Tiago.S
-    spriteStage: {fileID: 21300000, guid: bc816f64e28e5df4cb878e3942881415, type: 3}
   profiles:
   - {fileID: 11400000, guid: 20d095a412895004c9cd565ccd55e83b, type: 2}
-  - {fileID: 11400000, guid: 942d78374aeef0d45b242689d6624f7a, type: 2}
-  - {fileID: 11400000, guid: 7c97aa070fe17e140acea98a790cbf0b, type: 2}
-  - {fileID: 11400000, guid: 404f66fc11de58c42a491acd6ce43801, type: 2}
-  - {fileID: 11400000, guid: 7d981625af70ab84582174234de2e0ce, type: 2}
-  - {fileID: 11400000, guid: 72649836160461a4e8fc7baa289dec72, type: 2}
-  - {fileID: 11400000, guid: be5d5ece1f8abef488d0ce9927ce816a, type: 2}
-  - {fileID: 11400000, guid: e7bdb9f1a4758ba418509fca13bce99b, type: 2}
-  - {fileID: 11400000, guid: ec9bde0189c109f45b92c4584e9cac61, type: 2}
-  - {fileID: 11400000, guid: 5c5bc23ffa4307d459007d73638e3835, type: 2}
   musicProfiles:
   - musicID: 0
     nameMusic: Street Smart
