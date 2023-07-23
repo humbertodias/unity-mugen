@@ -17,12 +17,12 @@ namespace UnityMugen.Screens
 
         private EngineInitialization initialization;
 
-        private Color battleHiden = new Color(0.05660379f, 0.05660379f, 0.05660379f);
-        private Color battleShow = Color.white;
+    //    private Color battleHiden = new Color(0.05660379f, 0.05660379f, 0.05660379f);
+    //    private Color battleShow = Color.white;
 
-        public SpriteRenderer imageP1, imageP2;
+        public Image imageP1, imageP2;
 
-        public Image[] battles;
+    //    public Image[] battles;
 
         private float t = 0;
 
@@ -33,13 +33,13 @@ namespace UnityMugen.Screens
 
             SetImagesBattle();
 
-            for (int i = 1; i <= battles.Length; i++)
-            {
-                if (Engine.MatchNumber >= i)
-                    battles[i - 1].color = battleShow;
-                else
-                    battles[i - 1].color = battleHiden;
-            }
+            //for (int i = 1; i <= battles.Length; i++)
+            //{
+            //    if (Engine.MatchNumber >= i)
+            //        battles[i - 1].color = battleShow;
+            //    else
+            //        battles[i - 1].color = battleHiden;
+            //}
 
             initialization.Team1Mode = TeamMode.Single;
             initialization.Team2Mode = TeamMode.Single;
@@ -118,19 +118,19 @@ namespace UnityMugen.Screens
                 int character = orderBattleArcade.Keys.ElementAt(i);
                 int stage = orderBattleArcade.Values.ElementAt(i);
 
-                battles[i].sprite = Launcher.profileLoader.profiles[character].largePortrait;
+             //   battles[i].sprite = Launcher.profileLoader.profiles[character].largePortrait;
 
                 // , StageProfiles[stage]
             }
         }
 
-        void Update()
-        {
-            float duration = 2;
+        //void Update()
+        //{
+        //    float duration = 2;
 
-            battles[Engine.MatchNumber].color = Color.Lerp(battleHiden, battleShow, t);
-            if (t < 1)
-                t += Time.deltaTime / duration;
-        }
+        //    battles[Engine.MatchNumber].color = Color.Lerp(battleHiden, battleShow, t);
+        //    if (t < 1)
+        //        t += Time.deltaTime / duration;
+        //}
     }
 }

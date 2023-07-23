@@ -343,7 +343,7 @@ namespace UnityMugen.Combat
                             init.AddComponent<LoadSceneCustom>();
                             LoadSceneCustom scr = init.GetComponent<LoadSceneCustom>();
 
-                            if (MatchNumber == Launcher.profileLoader.totalBattlesArcade)
+                            if (MatchNumber == Launcher.profileLoader.totalBattle)
                             {
                                 scr.Inicialize("SelectScreen", Color.black, 2.5f, true);
                                 Launcher.mugen.FadeOutMusic();

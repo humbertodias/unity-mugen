@@ -10498,7 +10498,7 @@ GameObject:
   - component: {fileID: 2039322652}
   - component: {fileID: 2039322653}
   m_Layer: 0
-  m_Name: KungFuMan
+  m_Name: Kfm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

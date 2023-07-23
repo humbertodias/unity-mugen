@@ -13,13 +13,13 @@ namespace UnityMugen
         static LauncherEngine Launcher => LauncherEngine.Inst;
         FightEngine Engine => Launcher.mugen.Engine;
 
+        public int totalBattlesArcade = 5;
+        public int totalBattlesSurvival = 5;
+        public int totalBattle => Math.Min(profiles.Count, totalBattlesArcade);
 
         public List<StageProfile> stageProfiles;
         public List<PlayerProfileManager> profiles;
         public List<MusicProfile> musicProfiles;
-
-        public int totalBattlesArcade = 5;
-        public int totalBattlesSurvival = 5;
 
         [NonSerialized] public Dictionary<int, int> orderBattleHistory;
         [NonSerialized] public Dictionary<int, int> orderBattleArcade;
@@ -62,18 +62,18 @@ namespace UnityMugen
             int totalStages = stageProfiles.Count;
             int totalCharaters = profiles.Count;
 
-            for (int i = 0; i < totalBattlesArcade; i++)
+            for (int i = 0; i < totalBattle; i++)
             {
                 int stage = UnityEngine.Random.Range(0, totalStages);
 
-            reloadRondomCharacter:
+            reloadRandomCharacter:
                 int charac = UnityEngine.Random.Range(0, totalCharaters);
                 if (!orderBattleArcade.ContainsKey(charac))
                 {
                     orderBattleArcade.Add(charac, stage);
                 }
                 else
-                    goto reloadRondomCharacter;
+                    goto reloadRandomCharacter;
             }
         }
 

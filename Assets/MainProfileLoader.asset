@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ac600ff4bdb25b49a97c6e3f7e00388, type: 3}
   m_Name: MainProfileLoader
   m_EditorClassIdentifier: 
+  totalBattlesArcade: 5
+  totalBattlesSurvival: 5
   stageProfiles:
   - stageID: 0
     musicID: 0
@@ -46,5 +48,3 @@ MonoBehaviour:
     musicLoop: {fileID: 0}
     musicEnd: {fileID: 0}
     musicVolume: 255
-  totalBattlesArcade: 5
-  totalBattlesSurvival: 5

@@ -16,7 +16,7 @@ EditorBuildSettings:
     guid: 41376bcce6554e740bc7ea66aa1f9139
   - enabled: 1
     path: Assets/Scenes/VersusScreen.unity
-    guid: ca24c327b78d04d479eea8de549b2718
+    guid: 719ad34fca680bb4995a3602efe6f213
   - enabled: 1
     path: Assets/Scenes/Stages/TrainnerStage/Stage_Trainner.unity
     guid: 70e97654e7d21a14495aed1e4768fd18
