@@ -322,6 +322,11 @@ namespace UnityMugen.Screens
                         }
                     }
 
+                    if (currentPositionP1.profile == null)
+                    {
+                        Debug.LogWarning("The selected player does not have a profile.");
+                        return;
+                    }
                     PlayerCreation create = new PlayerCreation(currentPositionP1.profile, 0, PlayerMode.Human);
                     initialization.Team1.Add(create);
 
@@ -363,6 +368,12 @@ namespace UnityMugen.Screens
                         currentPositionP2 = selects.ElementAt(UnityEngine.Random.Range(0, selects.Length - 1));
                         if (randomsPosition.Contains(currentPositionP2))
                             goto tryAgain;
+                    }
+
+                    if (currentPositionP2.profile == null)
+                    {
+                        Debug.LogWarning("The selected player does not have a profile.");
+                        return;
                     }
 
                     PlayerCreation create;

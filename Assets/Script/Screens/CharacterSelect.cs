@@ -29,9 +29,13 @@ namespace UnityMugen.Screens
 
         private void Update()
         {
-            if (profile != null && profile.largePortrait != null) {
+            if (profile != null && profile.largePortrait != null)
+            {
                 if (lastSprite != profile.largePortrait)
+                {
                     lastSprite = transform.Find("BackGroundSelect/ImageChar").GetComponent<Image>().sprite = profile.largePortrait;
+                    gameObject.name = profile.charName;
+                }
             }
         }
     }
