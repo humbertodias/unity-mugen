@@ -704,9 +704,9 @@ namespace UnityMugen.Combat
                 var target = entity as Character;
                 if (target == null) continue;
 
-                var helper = entity as Helper;
-                if (helper != null && helper.Data.Type == HelperType.Normal)
-                    continue;
+                //var helper = entity as Helper;
+                //if (helper != null && helper.Data.Type == HelperType.Normal)
+                //    continue;
 
                 if (CanBlock(attacker, target, attacker.OffensiveInfo.HitDef, true))
                 {

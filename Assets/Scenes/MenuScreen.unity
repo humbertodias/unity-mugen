@@ -1493,7 +1493,7 @@ MonoBehaviour:
   automaticStartBattle: 1
   combatMode: 9
   p1: {fileID: 11400000, guid: 47e7d7772aa1dde4d9f934883dc26098, type: 2}
-  p2: {fileID: 11400000, guid: 5c5bc23ffa4307d459007d73638e3835, type: 2}
+  p2: {fileID: 11400000, guid: 47e7d7772aa1dde4d9f934883dc26098, type: 2}
   stageProfile:
     stageID: 2
     musicID: 0
@@ -12708,11 +12708,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4647843588456784, guid: e067d4351f178334cb21bd12b97da95c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114453851410523946, guid: e067d4351f178334cb21bd12b97da95c,
-        type: 3}
-      propertyPath: IntroDelay
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

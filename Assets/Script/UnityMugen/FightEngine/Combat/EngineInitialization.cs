@@ -5,7 +5,7 @@ using UnityEngine;
 namespace UnityMugen.Combat
 {
 
-    public class EngineInitialization : MonoBehaviour
+    public class EngineInitialization
     {
 
         public void SetSeed()
@@ -21,11 +21,11 @@ namespace UnityMugen.Combat
 
         [Header("Player1")]
         public TeamMode Team1Mode;
-        public List<PlayerCreation> Team1;
+        public List<PlayerCreation> Team1 = new List<PlayerCreation>();
 
         [Header("Player2")]
         public TeamMode Team2Mode;
-        public List<PlayerCreation> Team2;
+        public List<PlayerCreation> Team2 = new List<PlayerCreation>();
 
 
     }

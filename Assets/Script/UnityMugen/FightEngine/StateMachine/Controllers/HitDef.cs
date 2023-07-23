@@ -112,7 +112,7 @@ namespace UnityMugen.StateMachine.Controllers
 
 #warning hack because some animals kept the attribute no I don't put a value
                 if (!textSection.ContainsError("hitflag", out string error) && error != null)
-                    Debug.LogError("never create an empty attribute: "+ error);
+                /*    Debug.LogError("never create an empty attribute: "+ error)*/;
                 else
                     m_hitFlag = textSection.GetAttribute("hitflag", HitFlag.Default);
     /////////////////////////////

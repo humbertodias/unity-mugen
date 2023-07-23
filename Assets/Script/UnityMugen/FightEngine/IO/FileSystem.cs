@@ -196,6 +196,10 @@ namespace UnityMugen.IO
 
                         sectionparsedlines.Add(new KeyValuePair<string, string>(key, value));
                     }
+                    else
+                    {
+                        UnityEngine.Debug.LogError("never create an empty attribute: " + sectiontitle + " - " + lines[i]);
+                    }
                 }
             }
 
@@ -249,6 +253,10 @@ namespace UnityMugen.IO
                         if (value.Length >= 2 && value[0] == '"' && value[value.Length - 1] == '"') value = value.Substring(1, value.Length - 2);
 
                         sectionparsedlines.Add(new KeyValuePair<string, string>(key, value));
+                    }
+                    else
+                    {
+                        UnityEngine.Debug.LogError("never create an empty attribute: " + sectiontitle + " - " + lines[i]);
                     }
                 }
             }
@@ -316,6 +324,10 @@ namespace UnityMugen.IO
                         if (value.Length >= 2 && value[0] == '"' && value[value.Length - 1] == '"') value = value.Substring(1, value.Length - 2);
 
                         sectionparsedlines.Add(new KeyValuePair<string, string>(key, value));
+                    }
+                    else
+                    {
+                        UnityEngine.Debug.LogError("never create an empty attribute: "+ sectiontitle + " - " + line);
                     }
                 }
             }

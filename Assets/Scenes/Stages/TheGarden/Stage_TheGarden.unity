@@ -331,7 +331,8 @@ MonoBehaviour:
     environmentColor: []
   m_stageActions:
     spritesStage: []
-    envShakeAnimations: []
+    envShakeAnimations:
+    - {fileID: 1693067899}
 --- !u!4 &437194650
 Transform:
   m_ObjectHideFlags: 0

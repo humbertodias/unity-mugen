@@ -36,6 +36,7 @@ namespace UnityMugen
         //public ShowMessage showMessage;
 
         public ScreenType screenType;
+        public ProfileLoader profileLoader;
 
         public UnityMugen.Random random;
 
@@ -43,9 +44,7 @@ namespace UnityMugen
         [NonSerialized] public TrainnerSettings trainnerSettings;
         [NonSerialized] public NetworkSettings networkSettings;
         [NonSerialized] public EngineInitialization engineInitialization;
-        [NonSerialized] public ProfileLoader profileLoader;
-        //[NonSerialized]
-        public InputSystem inputSystem;
+        [NonSerialized] public InputSystem inputSystem;
         [NonSerialized] public SoundSystem soundSystem;
         [NonSerialized] public SpriteSystem spriteSystem;
         [NonSerialized] public PaletteSystem paletteSystem;
@@ -64,6 +63,9 @@ namespace UnityMugen
         {
             if (Inst == null)
             {
+                if(profileLoader == null)
+                    throw new Exception("Profile loader is essential to start the project.");
+
                 Inst = this;
                 initializationSettings = GetComponent<InitializationSettings>();
                 Application.runInBackground = true;
@@ -76,12 +78,10 @@ namespace UnityMugen
                 initializationSettings = initializationSettings.Initialize();
                 trainnerSettings = GetComponent<TrainnerSettings>();
                 networkSettings = GetComponent<NetworkSettings>();
-                engineInitialization = GetComponent<EngineInitialization>();
-                profileLoader = GetComponent<ProfileLoader>();
-                profileLoader.SetIDs();
-
+                
                 soundSystem = transform.Find("SoundSystem").gameObject.GetComponent<SoundSystem>().Initialize();
 
+                engineInitialization = new EngineInitialization();
                 spriteSystem = new SpriteSystem();
                 paletteSystem = new PaletteSystem();
                 animationSystem = new AnimationSystem();
@@ -94,6 +94,7 @@ namespace UnityMugen
                 stateSystem = new StateSystem();
                 inputSystem = new InputSystem().Inicialize();
 
+                profileLoader.SetIDs();
                 profileLoader.PreLoadStates();
                 profileLoader.PreLoadStatesCNS();
                 profileLoader.PreLoadPalettes();

@@ -41,11 +41,13 @@ namespace UnityMugen.Combat
             {
                 Bounds b1 = Make(lhs.transform.localPosition, lhs.CurrentFacing, lhs_clsn);
 
-                List<Rect> oponentNormal = rhs.AnimationManager.CurrentElement.ClsnsTipe2Normal;
                 List<Rect> oponentMix = new List<Rect>();
-                if (oponentNormal != null)
-                    oponentMix.AddRange(oponentNormal.OfType<Rect>().ToList());
-
+                if (rhs.AnimationManager.CurrentElement != null)
+                {
+                    List<Rect> oponentNormal = rhs.AnimationManager.CurrentElement.ClsnsTipe2Normal;
+                    if (oponentNormal != null)
+                        oponentMix.AddRange(oponentNormal.OfType<Rect>().ToList());
+                }
                 foreach (var rhs_clsn in oponentMix)
                 {
                     Bounds b2 = Make(rhs.transform.localPosition, rhs.CurrentFacing, rhs_clsn);
@@ -70,11 +72,13 @@ namespace UnityMugen.Combat
             {
                 Bounds b1 = Make(lhs.transform.localPosition, lhs.CurrentFacing, lhs_clsn);
 
-                List<Rect> oponentNormal = rhs.AnimationManager.CurrentElement.ClsnsTipe1Attack;
                 List<Rect> oponentMix = new List<Rect>();
-                if (oponentNormal != null)
-                    oponentMix.AddRange(oponentNormal.OfType<Rect>().ToList());
-
+                if (rhs.AnimationManager.CurrentElement != null)
+                {
+                    List<Rect> oponentNormal = rhs.AnimationManager.CurrentElement.ClsnsTipe1Attack;
+                    if (oponentNormal != null)
+                        oponentMix.AddRange(oponentNormal.OfType<Rect>().ToList());
+                }
                 foreach (var rhs_clsn in oponentMix)
                 {
                     Bounds b2 = Make(rhs.transform.localPosition, rhs.CurrentFacing, rhs_clsn);
@@ -100,13 +104,15 @@ namespace UnityMugen.Combat
                 Bounds b1 = Make(lhs.transform.localPosition, lhs.CurrentFacing, lhs_clsn);
 
                 List<Rect> oponentMix = new List<Rect>();
-                List<Rect> oponentAttack = rhs.AnimationManager.CurrentElement.ClsnsTipe1Attack;
-                List<Rect> oponentNormal = rhs.AnimationManager.CurrentElement.ClsnsTipe2Normal;
-                if (oponentAttack != null)
-                    oponentMix.AddRange(oponentAttack.OfType<Rect>().ToList());
-                if (oponentNormal != null)
-                    oponentMix.AddRange(oponentNormal.OfType<Rect>().ToList());
-
+                if (rhs.AnimationManager.CurrentElement != null)
+                {
+                    List<Rect> oponentAttack = rhs.AnimationManager.CurrentElement.ClsnsTipe1Attack;
+                    List<Rect> oponentNormal = rhs.AnimationManager.CurrentElement.ClsnsTipe2Normal;
+                    if (oponentAttack != null)
+                        oponentMix.AddRange(oponentAttack.OfType<Rect>().ToList());
+                    if (oponentNormal != null)
+                        oponentMix.AddRange(oponentNormal.OfType<Rect>().ToList());
+                }
                 foreach (var rhs_clsn in oponentMix)
                 {
                     Bounds b2 = Make(rhs.transform.localPosition, rhs.CurrentFacing, rhs_clsn);
