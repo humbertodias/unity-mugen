@@ -1,0 +1,4 @@
+21/10/2020
+OK - 21/10/2020 13:48:48 - Teste Message OK
+WARNING - 21/10/2020 13:48:48 - Teste Message Warning
+ERROR - 21/10/2020 13:48:48 - Teste Message Error

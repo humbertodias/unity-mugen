@@ -1,0 +1,763 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1852749115523562}
+  m_IsPrefabAsset: 1
+--- !u!1 &1852749115523562
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4232504783256202}
+  - component: {fileID: 114259595260673084}
+  m_Layer: 0
+  m_Name: FxAnimations
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4232504783256202
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1852749115523562}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114259595260673084
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1852749115523562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ff0e3358f2b5ac4799860509a211f94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  description: fx
+  animationsFE:
+  - name: ' Light hit spark'
+    number: 0
+    loopstart: 0
+    animationElement:
+    - time: 2
+      sprite: {fileID: 21300000, guid: c9ebadf9085d7c040ab6144d793468a6, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 29c5df10f37a01543bb91ab5154a9a8e, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 9376296eeb7a73440973bba460b655e9, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 201248a22fc810f4d816e643dc0e8d36, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 2557f3ad9484a38418bb69afa2f63903, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 47b36ae254418c54382df1d56e8705ef, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+  - name: Medium hit spark
+    number: 1
+    loopstart: 0
+    animationElement:
+    - time: 2
+      sprite: {fileID: 21300000, guid: 0334c7f7842561f408cfacc3cc36651c, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 780b34da547a30043bcc31ba9fef38a5, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: a0ef6a98b41518f4aa22b6face919c6f, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: b81449f8c174d424db5563521adc78db, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 29379854bf00cb141ae9a5b02bf2b16b, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+  - name: ' Strong hit spark'
+    number: 2
+    loopstart: 0
+    animationElement:
+    - time: 1
+      sprite: {fileID: 21300000, guid: d20ad09cff72f1947adf07ae656b2a05, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 1
+      sprite: {fileID: 21300000, guid: 8109f49dcd1801a4f88c36e74cbc151e, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 1
+      sprite: {fileID: 21300000, guid: 791f8cb9e82a7714aa32b08ffc244983, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 1
+      sprite: {fileID: 21300000, guid: adac32d26f95f4c489ea65e2d81579ed, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 1
+      sprite: {fileID: 21300000, guid: 071dbb8e7b3c7284fad0bb2ee5a0f82d, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 70dc1c0283632d24cbe40645ac288ff8, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: ac27ac720c54b354989437f2a49c0647, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 1
+      sprite: {fileID: 21300000, guid: a0ef6a98b41518f4aa22b6face919c6f, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 1
+      sprite: {fileID: 21300000, guid: b81449f8c174d424db5563521adc78db, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 29379854bf00cb141ae9a5b02bf2b16b, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+  - name: ' Very strong hit spark'
+    number: 3
+    loopstart: 0
+    animationElement:
+    - time: 1
+      sprite: {fileID: 21300000, guid: abfd4ad99827010418efb71bbd98deab, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 1
+      sprite: {fileID: 21300000, guid: abfd4ad99827010418efb71bbd98deab, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 1
+      sprite: {fileID: 21300000, guid: 5c0824a20f708804ebe5715c28ee0a0f, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 1
+      sprite: {fileID: 21300000, guid: 1681e14389ac6b6469b077f1da7c882f, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 1
+      sprite: {fileID: 21300000, guid: ea9e28a41880147469ce765b41852360, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 88c90fe52f3dbbc44ba6968e6df1e6b9, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 1
+      sprite: {fileID: 21300000, guid: 9d62746d9d9607044b3843c8088036f1, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: a63d9d9a4a6e67f4dbcd922ed52cecfe, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+  - name: ' Weak blood hit spark'
+    number: 10
+    loopstart: 0
+    animationElement:
+    - time: 2
+      sprite: {fileID: 21300000, guid: 7593df5cb26ead54fb709fce8650d4cd, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 6778b4c94e3ce264881122f90c184c3e, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 8da619150b52740438d55daa4a8b75d9, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: b43fa537a78d5ac449d565a451d0ac2f, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 5dbb04507a715624dbb19abf84c50fe6, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 09c4bf05ac7200a4fad0c9766540aefa, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+  - name: ' Medium blood hit spark'
+    number: 11
+    loopstart: 0
+    animationElement:
+    - time: 2
+      sprite: {fileID: 21300000, guid: 3e5de7273ba201a4ab970bd955c592fb, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 91ae5af547411684b9f7ddb4ed7d91cb, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: fed04f304d47f7444b58c55c59f4b0c8, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: eb812af129503b047a4c6c6a2b3b488b, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 5e8f03dcbbc04bb44a769b8c91f5794b, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 4c76cc96ea2558d42b60bf96b62b151e, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+  - name: ' Strong blood hit spark'
+    number: 12
+    loopstart: 0
+    animationElement:
+    - time: 2
+      sprite: {fileID: 21300000, guid: 3e5de7273ba201a4ab970bd955c592fb, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 91ae5af547411684b9f7ddb4ed7d91cb, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 3e5de7273ba201a4ab970bd955c592fb, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 91ae5af547411684b9f7ddb4ed7d91cb, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: fed04f304d47f7444b58c55c59f4b0c8, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: eb812af129503b047a4c6c6a2b3b488b, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 91ae5af547411684b9f7ddb4ed7d91cb, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: fed04f304d47f7444b58c55c59f4b0c8, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: eb812af129503b047a4c6c6a2b3b488b, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 5e8f03dcbbc04bb44a769b8c91f5794b, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 4c76cc96ea2558d42b60bf96b62b151e, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+  - name: ' Guard spark'
+    number: 40
+    loopstart: 0
+    animationElement:
+    - time: 2
+      sprite: {fileID: 21300000, guid: 64b4a1b59701ced4badb467f1b988212, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 1
+      sprite: {fileID: 21300000, guid: 64b4a1b59701ced4badb467f1b988212, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 9919a4f0a3b703847840dc611e97bc33, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 1
+      sprite: {fileID: 21300000, guid: 9919a4f0a3b703847840dc611e97bc33, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: f4734a532c600fd4bb562ae71b8e6e57, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 1
+      sprite: {fileID: 21300000, guid: f4734a532c600fd4bb562ae71b8e6e57, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 1
+      sprite: {fileID: 21300000, guid: 03aff3b0c1d805849bf8f4b3e9774521, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 1
+      sprite: {fileID: 21300000, guid: 03aff3b0c1d805849bf8f4b3e9774521, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 1
+      sprite: {fileID: 21300000, guid: 295226736d515044eb4124ba63996f83, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 1
+      sprite: {fileID: 21300000, guid: 295226736d515044eb4124ba63996f83, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+  - name: ' Small ground shockwave'
+    number: 60
+    loopstart: 0
+    animationElement:
+    - time: 2
+      sprite: {fileID: 21300000, guid: 464fc3f1c33766348a6839381a1c137d, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: e89d50a00abe6f3438dc75e12f276164, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: ed5ca942187dc2842bc31cbdc265b617, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 0}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: b0275592dfaaa5e4a835b81a211c1d9f, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+  - name: ' Medium ground shockwave'
+    number: 61
+    loopstart: 0
+    animationElement:
+    - time: 2
+      sprite: {fileID: 21300000, guid: 464fc3f1c33766348a6839381a1c137d, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: e89d50a00abe6f3438dc75e12f276164, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: c0e057d47a95b424b9867fb58323d742, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: ed5ca942187dc2842bc31cbdc265b617, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 541c883f77b7cea4c90f03318f40a047, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 4bc61bdc690f608408195b7cc410c5ec, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 379abc0f1bc99e249b700d435b06c3b6, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+  - name: ' Strong ground shockwave'
+    number: 62
+    loopstart: 0
+    animationElement:
+    - time: 2
+      sprite: {fileID: 21300000, guid: ad9f927a69fab004995126c9fac68aad, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: c1f98ff372b00ec4ca308e0c005e1f83, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 7510474c73238564e9db1f16e7ed0b1c, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: ac64f518c4609694b83e1326a11e84ed, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: d9be6dcc85c7f2b41b0bb58d6a7b54ce, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: a6ca126ff1487a94dab9e40e325c83c5, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: fff23fae36760a14599a7a47059577c2, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: a3112dee715532e438728618cb2f6af8, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 18454d191ee0e7b419f041949779609d, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 6ce95322429694e498c508eca092f6e3, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 3
+      sprite: {fileID: 21300000, guid: a29493954b3466747b2d759cae794a6f, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+  - name: Light wall-hit shockwave
+    number: 70
+    loopstart: 0
+    animationElement:
+    - time: 2
+      sprite: {fileID: 21300000, guid: 2057f6155f3152f449a0dff939ed15b2, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 3
+      sprite: {fileID: 21300000, guid: 6e6d7a60465ac654594d328e1a16131a, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 3
+      sprite: {fileID: 21300000, guid: 2057f6155f3152f449a0dff939ed15b2, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+  - name: Medium wall-hit shockwave
+    number: 71
+    loopstart: 0
+    animationElement:
+    - time: 2
+      sprite: {fileID: 21300000, guid: 2057f6155f3152f449a0dff939ed15b2, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 6e6d7a60465ac654594d328e1a16131a, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: aaca7dbbbe292cf4e882a51d9f0a24e6, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 6e6d7a60465ac654594d328e1a16131a, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 2057f6155f3152f449a0dff939ed15b2, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+  - name: Strong wall-hit shockwave
+    number: 72
+    loopstart: 0
+    animationElement:
+    - time: 2
+      sprite: {fileID: 21300000, guid: 2057f6155f3152f449a0dff939ed15b2, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 6e6d7a60465ac654594d328e1a16131a, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: aaca7dbbbe292cf4e882a51d9f0a24e6, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: f759827d3bd2d7c49b5019e69f68f004, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: c18773bc72d6be440bec78516414ea56, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 3
+      sprite: {fileID: 21300000, guid: 8666300a45293aa47bde1136f4941ac5, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 3
+      sprite: {fileID: 21300000, guid: 38a85784bfc541343a6586eaa50025f0, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 3
+      sprite: {fileID: 21300000, guid: 7c0ef487a11879d4799c162e2f7f3ce9, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+  - name: ' Level 1 super effect'
+    number: 100
+    loopstart: 0
+    animationElement:
+    - time: 3
+      sprite: {fileID: 21300000, guid: 4d1594dad8c257d48a0ef687abde3925, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 13b5a37c9d921b14284d6352b1c30c6f, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 3
+      sprite: {fileID: 21300000, guid: 1d9a3668d00eb7443bf79948229b0037, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: ec9b5a7b7c0a67141a04f0e83bc3e3a0, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 3
+      sprite: {fileID: 21300000, guid: 9d0cd84c44e8b21449f72051a6d0e025, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 4d1594dad8c257d48a0ef687abde3925, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 3
+      sprite: {fileID: 21300000, guid: 13b5a37c9d921b14284d6352b1c30c6f, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 1d9a3668d00eb7443bf79948229b0037, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 3
+      sprite: {fileID: 21300000, guid: ec9b5a7b7c0a67141a04f0e83bc3e3a0, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 9d0cd84c44e8b21449f72051a6d0e025, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 3
+      sprite: {fileID: 21300000, guid: d3b2710c6fa28314a953e95c77318a19, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 3
+      sprite: {fileID: 21300000, guid: 9cf1062fbdb143042bd93e21f520d372, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+  - name: ' Level 2 super effect'
+    number: 101
+    loopstart: 0
+    animationElement:
+    - time: 3
+      sprite: {fileID: 21300000, guid: 1f9c0ebe05ae9944d83fa66cdc837792, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 6bcabb91c623c774b81078f15c3bb639, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 3
+      sprite: {fileID: 21300000, guid: 35de34beeeabfef4ba953b0541438708, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 25b3517cb6f4d66469d486903b5220ad, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 3
+      sprite: {fileID: 21300000, guid: 93ca6798183035f4583b4e13846a60b3, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 1f9c0ebe05ae9944d83fa66cdc837792, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 3
+      sprite: {fileID: 21300000, guid: 6bcabb91c623c774b81078f15c3bb639, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 35de34beeeabfef4ba953b0541438708, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 3
+      sprite: {fileID: 21300000, guid: 25b3517cb6f4d66469d486903b5220ad, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 3
+      sprite: {fileID: 21300000, guid: 93ca6798183035f4583b4e13846a60b3, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: c1b0724eae9d8e541a1a276b1654f764, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 4f76733716a98cb4a88899d13134420a, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 9d0511c033c14574680eb7c85f5e3eda, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+  - name: ' Level 3 super effect'
+    number: 102
+    loopstart: 0
+    animationElement:
+    - time: 3
+      sprite: {fileID: 21300000, guid: 16ed8e29d3c33354090cc140ef5112f0, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 22cb17d296a674c45b3adafc8f6988dd, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 3
+      sprite: {fileID: 21300000, guid: e07babe63af8245458be26ad279a3bb6, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 8505dce627a4ae343a4f0216f60f1440, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 3
+      sprite: {fileID: 21300000, guid: 77f1994aacf7af441972ce95a7f721b5, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 16ed8e29d3c33354090cc140ef5112f0, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 3
+      sprite: {fileID: 21300000, guid: 22cb17d296a674c45b3adafc8f6988dd, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: e07babe63af8245458be26ad279a3bb6, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 3
+      sprite: {fileID: 21300000, guid: 8505dce627a4ae343a4f0216f60f1440, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 77f1994aacf7af441972ce95a7f721b5, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: ceaf8c08316a58340ab0e23487ec8f30, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 1
+      sprite: {fileID: 21300000, guid: 23bf64851990855448ace4bda5b6553e, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 1
+      sprite: {fileID: 21300000, guid: c1ab6b2299318234897813db556002cf, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 1
+      sprite: {fileID: 21300000, guid: 0514eaabc68be5d438d7a97d5c789150, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 1
+      sprite: {fileID: 21300000, guid: ffced4bf422ccb2449ca41c46718308c, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+  - name: ' Small floor dust'
+    number: 120
+    loopstart: 0
+    animationElement:
+    - time: 3
+      sprite: {fileID: 21300000, guid: 0536396f9a8bb7b4db635b306227e239, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 3
+      sprite: {fileID: 21300000, guid: 235858904427b0b4cac143d69874c238, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 4
+      sprite: {fileID: 21300000, guid: cd8a16bd7ad57c941819f36e198e2c26, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 2
+      sprite: {fileID: 21300000, guid: 6a73a6aa465cbde409a7e5a4227f5020, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 3
+      sprite: {fileID: 21300000, guid: 6a73a6aa465cbde409a7e5a4227f5020, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 3
+      sprite: {fileID: 21300000, guid: 819312713827a504c9ce8f7c0cd8c135, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 3
+      sprite: {fileID: 21300000, guid: 819312713827a504c9ce8f7c0cd8c135, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 3
+      sprite: {fileID: 21300000, guid: d232a3e27e3b43d439341c6a9736d56e, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 3
+      sprite: {fileID: 21300000, guid: d232a3e27e3b43d439341c6a9736d56e, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+  - name: ' Power up effect'
+    number: 130
+    loopstart: 0
+    animationElement:
+    - time: 1
+      sprite: {fileID: 21300000, guid: 5e3574c58db0306489212b7a7e226738, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 1
+      sprite: {fileID: 21300000, guid: 5e3574c58db0306489212b7a7e226738, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 1
+      sprite: {fileID: 21300000, guid: 558ee70bcc0c29c4cae7219cb67db057, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 1
+      sprite: {fileID: 21300000, guid: 558ee70bcc0c29c4cae7219cb67db057, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 1
+      sprite: {fileID: 21300000, guid: 4c9bb31009ddb364a884eb68750c3a77, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 1
+      sprite: {fileID: 21300000, guid: 4c9bb31009ddb364a884eb68750c3a77, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 1
+      sprite: {fileID: 21300000, guid: 8d07b6b307a8116408f5562d5c4ea854, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}
+    - time: 1
+      sprite: {fileID: 21300000, guid: 8d07b6b307a8116408f5562d5c4ea854, type: 3}
+      collType1Attack: {fileID: 0}
+      collType2Normal: {fileID: 0}

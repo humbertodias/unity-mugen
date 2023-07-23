@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 177426e906a5aca4a8b5a4f77f76649d, type: 3}
+  m_Name: KfmPlayerProfileManager
+  m_EditorClassIdentifier: 
+  charName: Kfm
+  displayName: Kung Fu Man
+  author: Tiago S.
+  mugenVersion: 0
+  versionDate: 
+  smallPortrait: {fileID: 21300000, guid: 47f17d00396d3f548b488c5c8765d804, type: 3}
+  largePortrait: {fileID: 21300000, guid: 81ce7331f5338e44b8e62459e3d558e4, type: 3}
+  palettesIndex: 010000000200000003000000040000000500000006000000
+  playerConstants: {fileID: 11400000, guid: d769da98170f62f409f8ede27d4f6188, type: 2}
+  commandsList: {fileID: 11400000, guid: c6041c9dbc76c9546bee82678109d084, type: 2}
+  moveList: {fileID: 11400000, guid: e4670abe99dfdc84ca4654b24d59837c, type: 2}
+  intro: {fileID: 0}
+  ending: {fileID: 0}
+  sff: kfm2
+  air: kfm
+  snd: kfm
+  states:
+  - /Data/TrainnerState.cns
+  - /Data/ScoreState.cns
+  - /Data/commonOld.cns
+  - /Kfm/States/kfm.cmd
+  - /Kfm/States/kfm.cns

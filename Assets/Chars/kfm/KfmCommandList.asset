@@ -1,0 +1,136 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14de9e95adfefed4a9f9c769773fd8d5, type: 3}
+  m_Name: KfmCommandList
+  m_EditorClassIdentifier: 
+  nameChar: kfm_cmd
+  commands:
+  - name: TripleKFPalm
+    time: 20
+    buffertime: 1
+    command: ~D, DF, F, D, DF, F, x
+  - name: TripleKFPalm
+    time: 20
+    buffertime: 1
+    command: ~D, DF, F, D, DF, F, y
+  - name: SmashKFUpper
+    time: 20
+    buffertime: 1
+    command: ~D, DB, B, D, DB, B, x
+  - name: SmashKFUpper
+    time: 20
+    buffertime: 1
+    command: ~D, DB, B, D, DB, B, x
+  - name: upper_x
+    time: 15
+    buffertime: 1
+    command: ~F, D, DF, x
+  - name: upper_y
+    time: 15
+    buffertime: 1
+    command: ~F, D, DF, y
+  - name: upper_xy
+    time: 15
+    buffertime: 1
+    command: ~F, D, DF, x+y
+  - name: QCF_x
+    time: 15
+    buffertime: 1
+    command: ~D, DF, F, x
+  - name: QCF_y
+    time: 15
+    buffertime: 1
+    command: ~D, DF, F, y
+  - name: QCF_xy
+    time: 15
+    buffertime: 1
+    command: ~D, DF, F, x+y
+  - name: QCB_x
+    time: 15
+    buffertime: 1
+    command: ~D, DB, B, x
+  - name: QCB_y
+    time: 15
+    buffertime: 1
+    command: ~D, DB, B, y
+  - name: QCB_xy
+    time: 15
+    buffertime: 1
+    command: ~D, DB, B, x+y
+  - name: FF_ab
+    time: 15
+    buffertime: 1
+    command: F, >~F, >F, a+b
+  - name: FF_a
+    time: 15
+    buffertime: 1
+    command: F, >~F, >F, a
+  - name: FF_b
+    time: 15
+    buffertime: 1
+    command: F, >~F, >F, b
+  - name: FF
+    time: 10
+    buffertime: 1
+    command: F, >~F, >F
+  - name: BB
+    time: 10
+    buffertime: 1
+    command: B, >~B, >B
+  - name: recovery
+    time: 1
+    buffertime: 1
+    command: x+y
+  - name: a
+    time: 1
+    buffertime: 1
+    command: a
+  - name: b
+    time: 1
+    buffertime: 1
+    command: b
+  - name: c
+    time: 1
+    buffertime: 1
+    command: c
+  - name: x
+    time: 1
+    buffertime: 1
+    command: x
+  - name: y
+    time: 1
+    buffertime: 1
+    command: y
+  - name: z
+    time: 1
+    buffertime: 1
+    command: z
+  - name: start
+    time: 1
+    buffertime: 1
+    command: s
+  - name: holdfwd
+    time: 1
+    buffertime: 1
+    command: /$F
+  - name: holdback
+    time: 1
+    buffertime: 1
+    command: /$B
+  - name: holdup
+    time: 1
+    buffertime: 1
+    command: /$U
+  - name: holddown
+    time: 1
+    buffertime: 1
+    command: /$D

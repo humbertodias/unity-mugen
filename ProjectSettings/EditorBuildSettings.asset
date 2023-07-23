@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Intro.unity
+    guid: 069c37326aab14346b9c8015e3ab5793
+  - enabled: 1
+    path: Assets/Scenes/Title.unity
+    guid: 0bb6bce12c5115f46895a842c0e3d4a8
+  - enabled: 1
+    path: Assets/Scenes/MenuScreen.unity
+    guid: 41376bcce6554e740bc7ea66aa1f9139
+  - enabled: 1
+    path: Assets/Scenes/VersusScreen.unity
+    guid: ca24c327b78d04d479eea8de549b2718
+  - enabled: 1
+    path: Assets/Scenes/Stages/TrainnerStage/Stage_Trainner.unity
+    guid: 70e97654e7d21a14495aed1e4768fd18
+  - enabled: 1
+    path: Assets/Scenes/Stages/TheGarden/Stage_TheGarden.unity
+    guid: 75a98f32b2e24e445b08100ab727b8fc
+  - enabled: 1
+    path: Assets/Scenes/Stages/KOF/Stage_KOF.unity
+    guid: 07a666d1acc80c044bac86001e0ea80c
+  - enabled: 1
+    path: Assets/Scenes/Canvas/HudCanvasBattle.unity
+    guid: 185be6b738363a84eb4a510a5cbbff3a
+  - enabled: 1
+    path: Assets/Scenes/Canvas/HudCanvasMoveLists.unity
+    guid: de082831dea385446a9009b2a35dba17
+  - enabled: 0
+    path: Assets/Scenes/Canvas/HudCanvasBattleMobile.unity
+    guid: 5ef5d7002a63af548a0f5c606a83eb9c
+  - enabled: 1
+    path: Assets/Scenes/Canvas/HudPauseFight.unity
+    guid: b30dedd9240fb52479c654c85711b0e1
+  - enabled: 1
+    path: Assets/Scenes/LoadScreen.unity
+    guid: 3872f34cf6843b7498c48227231665c8
+  - enabled: 1
+    path: Assets/Scenes/SelectScreen.unity
+    guid: 2e79f5c1173ef0a4582bf6e284a2f6bd
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: 005b287a135814049877784a972b9c71,
+      type: 2}

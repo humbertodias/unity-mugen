@@ -1,0 +1,163 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da84a738f201d4d4585d60c7ad2aa5b0, type: 3}
+  m_Name: KfmMoveList
+  m_EditorClassIdentifier: 
+  editReadme: 1
+  iconChar: {fileID: 2800000, guid: 47f17d00396d3f548b488c5c8765d804, type: 3}
+  nameChar: Kung Fu Man
+  specialMoves:
+  - nameMove: Light Kung Fu Palm
+    imageMove: {fileID: 2800000, guid: 2bafa6c4737fa8b489d1762958ba0e66, type: 3}
+    parent: 0
+    description: Light Kung Fu Palm
+    playerButtons:
+    - {fileID: 2800000, guid: 5083c0c87345f43439617450933eae70, type: 3}
+    - {fileID: 2800000, guid: 5c9cf6fe996abea43b7771989e5fb7e1, type: 3}
+  - nameMove: Strong Kung Fu Palm
+    imageMove: {fileID: 2800000, guid: 2bafa6c4737fa8b489d1762958ba0e66, type: 3}
+    parent: 0
+    description: Strong Kung Fu Palm
+    playerButtons:
+    - {fileID: 2800000, guid: 777840f9205f80045ab36292a3b0f22f, type: 3}
+    - {fileID: 2800000, guid: 94a8cfae922f1e6479c8576054763da4, type: 3}
+    - {fileID: 2800000, guid: 1729154e98f560b43b1b7fc30efbf7e9, type: 3}
+    - {fileID: 2800000, guid: b1854f943a263a64aa042f076cc723a5, type: 3}
+  - nameMove: Fast Kung Fu Palm
+    imageMove: {fileID: 2800000, guid: e3f3693bfc0b035468bafeb67f275063, type: 3}
+    parent: 0
+    description: Fast Kung Fu Palm
+    playerButtons:
+    - {fileID: 2800000, guid: 5083c0c87345f43439617450933eae70, type: 3}
+    - {fileID: 2800000, guid: b1854f943a263a64aa042f076cc723a5, type: 3}
+    - {fileID: 2800000, guid: 5870307941a2ac041907d54b1c2c87fa, type: 3}
+    - {fileID: 2800000, guid: 5c9cf6fe996abea43b7771989e5fb7e1, type: 3}
+  - nameMove: Light Kung Fu Knee
+    imageMove: {fileID: 2800000, guid: d6abaef3e57c5904f81f8f6e8f83da93, type: 3}
+    parent: 0
+    description: Light Kung Fu Knee
+    playerButtons:
+    - {fileID: 2800000, guid: 1729154e98f560b43b1b7fc30efbf7e9, type: 3}
+    - {fileID: 2800000, guid: 1729154e98f560b43b1b7fc30efbf7e9, type: 3}
+    - {fileID: 2800000, guid: 6e040cf2dc083444686521e17eb45299, type: 3}
+  - nameMove: Light Kung Fu Knee - kick
+    imageMove: {fileID: 2800000, guid: c1d57c0bc51bd1342ac26e9cd30bfeb2, type: 3}
+    parent: 4
+    description: Light Kung Fu Knee - kick
+    playerButtons:
+    - {fileID: 2800000, guid: 68e92b46847100b458a79ffdfb3ebb3c, type: 3}
+    - {fileID: 2800000, guid: 6e040cf2dc083444686521e17eb45299, type: 3}
+    - {fileID: 2800000, guid: 7131cce358943ac479dc5f6a8fc8bacd, type: 3}
+    - {fileID: 2800000, guid: 580c652edd8d7d54b83d9ccb7ac0fdf1, type: 3}
+  - nameMove: Strong Kung Fu Knee
+    imageMove: {fileID: 2800000, guid: d6abaef3e57c5904f81f8f6e8f83da93, type: 3}
+    parent: 0
+    description: Strong Kung Fu Knee
+    playerButtons:
+    - {fileID: 2800000, guid: 1729154e98f560b43b1b7fc30efbf7e9, type: 3}
+    - {fileID: 2800000, guid: 1729154e98f560b43b1b7fc30efbf7e9, type: 3}
+    - {fileID: 2800000, guid: 6e040cf2dc083444686521e17eb45299, type: 3}
+  - nameMove: Strong Kung Fu Knee - kick
+    imageMove: {fileID: 2800000, guid: c1d57c0bc51bd1342ac26e9cd30bfeb2, type: 3}
+    parent: 6
+    description: Strong Kung Fu Knee - kick
+    playerButtons:
+    - {fileID: 2800000, guid: 68e92b46847100b458a79ffdfb3ebb3c, type: 3}
+    - {fileID: 2800000, guid: 6e040cf2dc083444686521e17eb45299, type: 3}
+    - {fileID: 2800000, guid: 7131cce358943ac479dc5f6a8fc8bacd, type: 3}
+    - {fileID: 2800000, guid: 580c652edd8d7d54b83d9ccb7ac0fdf1, type: 3}
+  - nameMove: Fast Kung Fu Knee
+    imageMove: {fileID: 2800000, guid: 997b84c7aa0f805418cc6765c96d8840, type: 3}
+    parent: 0
+    description: Fast Kung Fu Knee
+    playerButtons:
+    - {fileID: 2800000, guid: 1729154e98f560b43b1b7fc30efbf7e9, type: 3}
+    - {fileID: 2800000, guid: 1729154e98f560b43b1b7fc30efbf7e9, type: 3}
+    - {fileID: 2800000, guid: 580c652edd8d7d54b83d9ccb7ac0fdf1, type: 3}
+    - {fileID: 2800000, guid: 5870307941a2ac041907d54b1c2c87fa, type: 3}
+    - {fileID: 2800000, guid: 6e040cf2dc083444686521e17eb45299, type: 3}
+  - nameMove: Fast Kung Fu Knee - kick
+    imageMove: {fileID: 2800000, guid: c1d57c0bc51bd1342ac26e9cd30bfeb2, type: 3}
+    parent: 8
+    description: Fast Kung Fu Knee - kick
+    playerButtons:
+    - {fileID: 2800000, guid: 68e92b46847100b458a79ffdfb3ebb3c, type: 3}
+    - {fileID: 2800000, guid: 6e040cf2dc083444686521e17eb45299, type: 3}
+    - {fileID: 2800000, guid: 7131cce358943ac479dc5f6a8fc8bacd, type: 3}
+    - {fileID: 2800000, guid: 580c652edd8d7d54b83d9ccb7ac0fdf1, type: 3}
+  - nameMove: Light Kung Fu Upper
+    imageMove: {fileID: 2800000, guid: 0da7682127db39449b668d6dcdcc42e7, type: 3}
+    parent: 0
+    description: Light Kung Fu Upper
+    playerButtons:
+    - {fileID: 2800000, guid: 365e583e76798284ab2d1438c3cab7f9, type: 3}
+    - {fileID: 2800000, guid: b1854f943a263a64aa042f076cc723a5, type: 3}
+  - nameMove: Strong Kung Fu Upper
+    imageMove: {fileID: 2800000, guid: 0da7682127db39449b668d6dcdcc42e7, type: 3}
+    parent: 0
+    description: Strong Kung Fu Upper
+    playerButtons:
+    - {fileID: 2800000, guid: 365e583e76798284ab2d1438c3cab7f9, type: 3}
+    - {fileID: 2800000, guid: 5c9cf6fe996abea43b7771989e5fb7e1, type: 3}
+  - nameMove: Fast Kung Fu Upper
+    imageMove: {fileID: 2800000, guid: 56ab5509b1207c346af34e6aec332adb, type: 3}
+    parent: 0
+    description: Fast Kung Fu Upper
+    playerButtons:
+    - {fileID: 2800000, guid: 365e583e76798284ab2d1438c3cab7f9, type: 3}
+    - {fileID: 2800000, guid: b1854f943a263a64aa042f076cc723a5, type: 3}
+    - {fileID: 2800000, guid: 5870307941a2ac041907d54b1c2c87fa, type: 3}
+    - {fileID: 2800000, guid: 5c9cf6fe996abea43b7771989e5fb7e1, type: 3}
+  - nameMove: Light Kung Fu Blow
+    imageMove: {fileID: 2800000, guid: 173b5d4989e609a48af035c40c5eddf5, type: 3}
+    parent: 0
+    description: Light Kung Fu Blow
+    playerButtons:
+    - {fileID: 2800000, guid: a2cbb150ed8c45844aa6f243201f82ac, type: 3}
+    - {fileID: 2800000, guid: b1854f943a263a64aa042f076cc723a5, type: 3}
+  - nameMove: Strong Kung Fu Blow
+    imageMove: {fileID: 2800000, guid: 173b5d4989e609a48af035c40c5eddf5, type: 3}
+    parent: 0
+    description: Strong Kung Fu Blow
+    playerButtons:
+    - {fileID: 2800000, guid: a2cbb150ed8c45844aa6f243201f82ac, type: 3}
+    - {fileID: 2800000, guid: 5c9cf6fe996abea43b7771989e5fb7e1, type: 3}
+  - nameMove: Fast Kung Fu Blow
+    imageMove: {fileID: 2800000, guid: 520e60b62150fb94aace7460d47a4957, type: 3}
+    parent: 0
+    description: Fast Kung Fu Blow
+    playerButtons:
+    - {fileID: 2800000, guid: a2cbb150ed8c45844aa6f243201f82ac, type: 3}
+    - {fileID: 2800000, guid: b1854f943a263a64aa042f076cc723a5, type: 3}
+    - {fileID: 2800000, guid: 5870307941a2ac041907d54b1c2c87fa, type: 3}
+    - {fileID: 2800000, guid: 5c9cf6fe996abea43b7771989e5fb7e1, type: 3}
+  superMoves:
+  - nameMove: Triple Kung Fu Palm
+    imageMove: {fileID: 2800000, guid: 4f290f128ba60494ebce213417e7b8d9, type: 3}
+    parent: 0
+    description: Triple Kung Fu Palm
+    playerButtons:
+    - {fileID: 2800000, guid: 5083c0c87345f43439617450933eae70, type: 3}
+    - {fileID: 2800000, guid: 5083c0c87345f43439617450933eae70, type: 3}
+    - {fileID: 2800000, guid: 5c9cf6fe996abea43b7771989e5fb7e1, type: 3}
+    - {fileID: 2800000, guid: 7131cce358943ac479dc5f6a8fc8bacd, type: 3}
+    - {fileID: 2800000, guid: b1854f943a263a64aa042f076cc723a5, type: 3}
+  - nameMove: Smash Kung Fu Upper
+    imageMove: {fileID: 2800000, guid: 6ba7a4dd04a0a024ab4373cbd17f091a, type: 3}
+    parent: 0
+    description: Smash Kung Fu Upper
+    playerButtons:
+    - {fileID: 2800000, guid: a2cbb150ed8c45844aa6f243201f82ac, type: 3}
+    - {fileID: 2800000, guid: a2cbb150ed8c45844aa6f243201f82ac, type: 3}
+    - {fileID: 2800000, guid: 6e040cf2dc083444686521e17eb45299, type: 3}
+    - {fileID: 2800000, guid: 7131cce358943ac479dc5f6a8fc8bacd, type: 3}
+    - {fileID: 2800000, guid: 580c652edd8d7d54b83d9ccb7ac0fdf1, type: 3}

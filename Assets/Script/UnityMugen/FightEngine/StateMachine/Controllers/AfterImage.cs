@@ -1,0 +1,110 @@
+﻿using UnityEngine;
+using UnityMugen.Combat;
+using UnityMugen.Evaluation;
+using UnityMugen.IO;
+using UnityMugen.Video;
+
+namespace UnityMugen.StateMachine.Controllers
+{
+
+    [StateControllerName("AfterImage")]
+    public class AfterImage : StateController
+    {
+        private Expression m_time;
+        private Expression m_numberOfFrames;
+        private Expression m_paletteColor;
+        private Expression m_paletteInversion;
+        private Expression m_paletteBrightness;
+        private Expression m_paletteContrast;
+        private Expression m_palettePostBrightness;
+        private Expression m_paletteAdd;
+        private Expression m_paletteMutliply;
+        private Expression m_timeGap;
+        private Expression m_frameGap;
+        private Blending? m_trans;
+        private Expression m_alpha;
+
+        public AfterImage(StateSystem statesystem, string label, TextSection textsection) :
+            base(statesystem, label, textsection) { }
+
+        public AfterImage(AfterImageData afterImage)
+        {
+            m_time = afterImage.m_time;
+            m_numberOfFrames = afterImage.m_numberOfFrames;
+            m_paletteColor = afterImage.m_paletteColor;
+            m_paletteInversion = afterImage.m_paletteInversion;
+            m_paletteBrightness = afterImage.m_paletteBrightness;
+            m_paletteContrast = afterImage.m_paletteContrast;
+            m_palettePostBrightness = afterImage.m_palettePostBrightness;
+            m_paletteAdd = afterImage.m_paletteAdd;
+            m_paletteMutliply = afterImage.m_paletteMutliply;
+            m_timeGap = afterImage.m_timeGap;
+            m_frameGap = afterImage.m_frameGap;
+            m_trans = afterImage.m_trans;
+            m_alpha = afterImage.m_alpha;
+            isLoaded = true;
+        }
+
+        public override void Load()
+        {
+            if (isLoaded == false)
+            {
+                base.Load();
+
+                m_time = textSection.GetAttribute<Expression>("time", null);
+                m_numberOfFrames = textSection.GetAttribute<Expression>("length", null);
+                m_paletteColor = textSection.GetAttribute<Expression>("palcolor", null);
+                m_paletteInversion = textSection.GetAttribute<Expression>("palinvertall", null);
+                m_paletteBrightness = textSection.GetAttribute<Expression>("palbright", null);
+                m_paletteContrast = textSection.GetAttribute<Expression>("palcontrast", null);
+                m_palettePostBrightness = textSection.GetAttribute<Expression>("palpostbright", null);
+                m_paletteAdd = textSection.GetAttribute<Expression>("paladd", null);
+                m_paletteMutliply = textSection.GetAttribute<Expression>("palmul", null);
+                m_timeGap = textSection.GetAttribute<Expression>("TimeGap", null);
+                m_frameGap = textSection.GetAttribute<Expression>("FrameGap", null);
+                m_trans = textSection.GetAttribute<Blending?>("trans", Misc.ToBlending(BlendType.None));
+                m_alpha = textSection.GetAttribute<Expression>("alpha", null);
+            }
+        }
+
+
+        public override void Run(Character character)
+        {
+            Load();
+
+            var time = EvaluationHelper.AsInt32(character, m_time, 1);
+            var numberofframes = EvaluationHelper.AsInt32(character, m_numberOfFrames, 20);
+            var basecolor = EvaluationHelper.AsInt32(character, m_paletteColor, 255);
+            var invert = EvaluationHelper.AsBoolean(character, m_paletteInversion, false);
+            var palpreadd = EvaluationHelper.AsVector3(character, m_paletteBrightness, new Vector3(30, 30, 30));
+            var palcontrast = EvaluationHelper.AsVector3(character, m_paletteContrast, new Vector3(120, 120, 220));
+            var palpostadd = EvaluationHelper.AsVector3(character, m_palettePostBrightness, Vector3.zero);
+            var paladd = EvaluationHelper.AsVector3(character, m_paletteAdd, new Vector3(10, 10, 25));
+            var palmul = EvaluationHelper.AsVector3(character, m_paletteMutliply, new Vector3(.65f, .65f, .75f));
+            var timegap = EvaluationHelper.AsInt32(character, m_timeGap, 1);
+            var framegap = EvaluationHelper.AsInt32(character, m_frameGap, 4);
+
+
+            var afterimages = character.AfterImages;
+            afterimages.ResetFE();
+            afterimages.Time = time;
+            afterimages.Length = Misc.Clamp(numberofframes, 0, 60);
+            afterimages.BaseColor = basecolor / 255.0f;
+            afterimages.InvertColor = invert;
+            afterimages.ColorPreAdd = Misc.ClampVector3(palpreadd / 255.0f, Vector3.zero, Vector3.one);
+            afterimages.ColorContrast = Misc.ClampVector3(palcontrast / 255.0f, Vector3.zero, new Vector3(float.MaxValue, float.MaxValue, float.MaxValue));
+            afterimages.ColorPostAdd = Misc.ClampVector3(palpostadd / 255.0f, Vector3.zero, Vector3.one);
+            afterimages.ColorPaletteAdd = Misc.ClampVector3(paladd / 255.0f, Vector3.zero, Vector3.one);
+            afterimages.ColorPaletteMultiply = Misc.ClampVector3(palmul, Vector3.zero, new Vector3(float.MaxValue, float.MaxValue, float.MaxValue));
+            afterimages.TimeGap = timegap;
+            afterimages.FrameGap = framegap;
+            afterimages.IsActive = true;
+
+            var alpha = EvaluationHelper.AsVector2(character, m_alpha, new Vector2(255, 0));
+            if (m_trans.Value.BlendType == BlendType.AddAlpha)
+                afterimages.Transparency = new Blending(m_trans.Value.BlendType, alpha.x, alpha.y);
+            else
+                afterimages.Transparency = Misc.ToBlending(m_trans.Value.BlendType);
+        }
+    }
+}

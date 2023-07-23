@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ce0e387261ddc34ba81ca7f2f1f7f73, type: 3}
+  m_Name: ReadmeUM
+  m_EditorClassIdentifier: 
+  icon: {fileID: 2800000, guid: fee320dba3e6d3143bd634ef47648b31, type: 3}
+  sections:
+  - heading: 'Start of the project : 05/16/2018'
+    texts: []
+    linkText: 
+    url: 
+  - heading: 
+    texts: []
+    linkText: Unity Mugen Doc
+    url: https://levelalfaomega.gitbook.io/unity-mugen/
+  - heading: 
+    texts: []
+    linkText: Youtube
+    url: https://www.youtube.com/channel/UCh6gZU6HF12FPnp492XRabA
+  - heading: 
+    texts: []
+    linkText: Discord
+    url: https://discord.gg/ZWMknH2C
+  loadedLayout: 1
+  editReadme: 0

@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 429e4dd283b08bd41aaa01884f460111, type: 3}
+  m_Name: KfmPlayerConstants
+  m_EditorClassIdentifier: 
+  MaximumLife: 1000
+  MaximumPower: 3000
+  AttackPower: 100
+  DefensivePower: 100
+  FallDefenseUp: 50
+  LieDownTime: 60
+  AirJuggle: 15
+  DefaultSparkNumber: 2
+  DefaultSparkNumberIsCommon: 1
+  DefaultGuardSparkNumber: 40
+  DefaultGuardSparkNumberIsCommon: 1
+  KOEcho: 0
+  VolumeOffset: 0
+  PersistanceIntIndex: 60
+  PersistanceFloatIndex: 40
+  Scale: {x: 1, y: 1}
+  GroundBack: 15
+  GroundFront: 16
+  Airback: 12
+  Airfront: 12
+  Height: 60
+  Attackdistance: 160
+  Projectileattackdist: 90
+  ProjectileScaling: 0
+  Headposition: {x: -5, y: -90}
+  Midposition: {x: -5, y: -60}
+  Shadowoffset: 0
+  Drawoffset: {x: 0, y: 0}
+  Walk_forward: 2.4
+  Walk_back: -2.2
+  Run_fwd: {x: 6.5, y: 0}
+  Run_back: {x: -4.6, y: -3.8}
+  Jump_neutral: {x: 0, y: -8.4}
+  Jump_back: {x: -2.55, y: -8.4}
+  Jump_forward: {x: 2.5, y: -8.4}
+  Runjump_back: {x: -2.55, y: -8.1}
+  Runjump_fwd: {x: 4, y: -8.1}
+  Airjump_neutral: {x: 0, y: -8.1}
+  Airjump_back: {x: -2.55, y: -8.1}
+  Airjump_forward: {x: 2.5, y: -8.1}
+  AirGethitGroundrecover: {x: -0.15, y: -3.5}
+  AirGethitAirrecoverMul: {x: 0.5, y: 0.2}
+  AirGethitAirrecoverAdd: {x: 0, y: -4.5}
+  AirGethitAirrecoverBack: -1
+  AirGethitAirrecoverFwd: 0
+  AirGethitAirrecoverUp: -2
+  AirGethitAirrecoverDown: 1.5
+  Airjumps: 1
+  Airjumpheight: 35
+  Vert_acceleration: 0.44
+  Standfriction: 0.85
+  Crouchfriction: 0.82
+  StandFrictionThreshold: 2
+  CrouchFrictionThreshold: 0.05
+  JumpChangeanimThreshold: 0
+  AirGethitGroundlevel: 25
+  AirGethitGroundrecoverGroundThreshold: -20
+  AirGethitGroundrecoverGroundlevel: 10
+  AirGethitAirrecoverThreshold: -1
+  AirGethitAirrecoverYaccel: 0.35
+  AirGethitTripGroundlevel: 15
+  DownBounceOffset: {x: 0, y: 20}
+  DownBounceYaccel: 0.4
+  DownBounceGroundlevel: 12
+  DownFrictionThreshold: 0.05

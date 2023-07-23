@@ -1,0 +1,48 @@
+﻿/* Collapsed Marker State -> Corresponds to GUIStyle.normal */
+
+.AnnotationStyle
+{
+    width:18px;
+    height:18px;
+}
+
+
+
+JumpMarker
+{
+    width: 18px;
+    height: 18px;
+    background-image: resource("DialogSkip/jumpTo_collapsed");
+}
+
+/* Active Marker State -> Corresponds to GUIStyle.onNormal */
+JumpMarker:checked
+{
+    background-image: resource("DialogSkip/jumpTo_normal");
+}
+
+/* Selected Marker State -> Corresponds to GUIStyle.onFocused */
+JumpMarker:hover:focus:checked
+{
+    background-image: resource("DialogSkip/jumpTo_selected");
+}
+
+/* Collapsed Marker State -> Corresponds to GUIStyle.normal */
+DestinationMarker
+{
+    width: 18px;
+    height: 18px;
+    background-image: resource("DialogSkip/destination_collapsed");
+}
+
+/* Active Marker State -> Corresponds to GUIStyle.onNormal */
+DestinationMarker:checked
+{
+    background-image: resource("DialogSkip/destination_normal");
+}
+
+/* Selected Marker State -> Corresponds to GUIStyle.onFocused */
+DestinationMarker:hover:focus:checked
+{
+    background-image: resource("DialogSkip/destination_selected");
+}
