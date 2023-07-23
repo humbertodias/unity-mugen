@@ -1,0 +1,47 @@
+[Statedef -4]
+
+[State -1, Forcer Jump]
+type = CommandSet
+trigger1 = combatmode = training && stanceType = jumping && id = 1 && stateno = 0
+value = U
+
+[State -1, Forcer Crouching]
+type = CommandSet
+trigger1 = combatmode = training && stanceType = crouching && id = 1
+value = D
+
+
+
+[State -1, Walk Right]
+type = CommandSet
+trigger1 = id = 1
+trigger1 = combatmode = training && stanceType != controller && (EnemyNear,stateno = 195)
+trigger1 = facing = 1 && EnemyNear, command = "holdback"
+value = R
+clear = stancetype != Jumping
+
+
+[State -1, Walk Left]
+type = CommandSet
+trigger1 = id = 1
+trigger1 = combatmode = training && stanceType != controller && (EnemyNear,stateno = 195)
+trigger1 = facing = 1 && EnemyNear, command = "holdfwd"
+value = L
+clear = stancetype != Jumping
+
+[State -1, Walk Left 2]
+type = CommandSet
+trigger1 = id = 1
+trigger1 = combatmode = training && stanceType != controller && (EnemyNear,stateno = 195)
+trigger1 = facing != 1 && EnemyNear, command = "holdback"
+value = L
+clear = stancetype != Jumping
+
+
+[State -1, Walk Right 2]
+type = CommandSet
+trigger1 = id = 1
+trigger1 = combatmode = training && stanceType != controller && (EnemyNear,stateno = 195)
+trigger1 = facing != 1 && EnemyNear, command = "holdfwd"
+value = R
+clear = stancetype != Jumping

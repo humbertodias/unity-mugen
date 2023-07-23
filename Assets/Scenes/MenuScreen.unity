@@ -1490,10 +1490,10 @@ MonoBehaviour:
   typeControllerC2: 0
   joystickC2: {fileID: 492558353}
   keyboardC2: {fileID: 1463048318}
-  automaticStartBattle: 1
+  automaticStartBattle: 0
   combatMode: 9
-  p1: {fileID: 11400000, guid: 47e7d7772aa1dde4d9f934883dc26098, type: 2}
-  p2: {fileID: 11400000, guid: 47e7d7772aa1dde4d9f934883dc26098, type: 2}
+  p1: {fileID: 11400000, guid: 20d095a412895004c9cd565ccd55e83b, type: 2}
+  p2: {fileID: 11400000, guid: 20d095a412895004c9cd565ccd55e83b, type: 2}
   stageProfile:
     stageID: 2
     musicID: 0
