@@ -6,7 +6,7 @@ O Project ports Mugen mechanics to Unity.
 
 Visit the [Documentation](https://levelalfaomega.gitbook.io/unity-mugen/).
 
-Or reach out [in the Discord](https://discord.gg/ZWMknH2C).
+Or reach out [in the Discord](https://discord.gg/cWFA4kzqfb).
 
 To see tutorials visit the [youtube channel](https://www.youtube.com/channel/UCh6gZU6HF12FPnp492XRabA).
 
@@ -42,7 +42,7 @@ Platforms    : Windows and Linux
 
 
 ## 📝 License
-This project is under license. See the [LICENSE](LICENSE.md) file for more details.
+This project is under license. See the [LICENSE](LICENSE) file for more details.
 
 
 [⬆ Voltar ao topo](#UnityMugen)<br>
