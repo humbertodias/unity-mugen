@@ -22,7 +22,7 @@ public class MoveListEditorWindow : EditorWindow
     WindowSection m_bottonSide;
     WindowSection m_fullBottonSide;
 
-    public MoveList moveList;
+    MoveList m_moveList;
     public bool editReadme;
 
     Vector2 m_scrollPos;
@@ -48,8 +48,8 @@ public class MoveListEditorWindow : EditorWindow
     {
         set
         {
-            if (value == 0) m_currentMSs = moveList.specialMoves;
-            else m_currentMSs = moveList.superMoves;
+            if (value == 0) m_currentMSs = m_moveList.specialMoves;
+            else m_currentMSs = m_moveList.superMoves;
 
             if (value != toolbar)
             {
@@ -62,35 +62,35 @@ public class MoveListEditorWindow : EditorWindow
         get { return toolbar; }
     }
 
-    public static void Init()
+    public static void Init(MoveList moveList)
     {
         s_window = EditorWindow.GetWindow<MoveListEditorWindow>(false, "Character", true);
         s_window.titleContent = new GUIContent("Move List");
         s_window.minSize = new Vector2(854, 492);
         s_window.Show();
-        s_window.Inicialize();
+        s_window.Inicialize(moveList);
     }
 
-    void Inicialize()
+    void Inicialize(MoveList moveList)
     {
-        UnityEngine.Object[] selection = Selection.GetFiltered(typeof(MoveList), SelectionMode.Assets);
-        if (selection.Length > 0)
-            moveList = (MoveList)selection[0];
+        //UnityEngine.Object[] selection = Selection.GetFiltered(typeof(MoveList), SelectionMode.Assets);
+        //if (selection.Length > 0)
+        //    moveList = (MoveList)selection[0];
+        m_moveList = moveList;
+        if (m_moveList.specialMoves == null)
+            m_moveList.specialMoves = new List<MoveShow>();
 
-        if (moveList.specialMoves == null)
-            moveList.specialMoves = new List<MoveShow>();
+        if (m_moveList.superMoves == null)
+            m_moveList.superMoves = new List<MoveShow>();
 
-        if (moveList.superMoves == null)
-            moveList.superMoves = new List<MoveShow>();
-
-        if (moveList.specialMoves.Count == 0)
+        if (m_moveList.specialMoves.Count == 0)
         {
             var moveShow = new MoveShow();
             moveShow.playerButtons = new List<Texture2D>();
-            moveList.specialMoves.Add(moveShow);
+            m_moveList.specialMoves.Add(moveShow);
         }
 
-        m_currentMSs = moveList.specialMoves;
+        m_currentMSs = m_moveList.specialMoves;
         m_currentMoveShow = m_currentMSs[0];
 
         commonsInput = Resources.LoadAll<Texture2D>("MoveList/CommonsInput").ToList().OrderBy(q => StringToInt(q.name)).ToList();
@@ -129,8 +129,8 @@ public class MoveListEditorWindow : EditorWindow
 
     protected void OnGUI()
     {
-        if (s_window == null)
-            Init();
+        if (s_window == null || m_moveList == null)
+            Close();//Init();
 
         m_serializedObject = new SerializedObject(this);
 
@@ -185,8 +185,8 @@ public class MoveListEditorWindow : EditorWindow
 
         if (GUI.changed)
         {
-            Undo.RecordObject(moveList, "Editor Modify");
-            EditorUtility.SetDirty(moveList);
+            Undo.RecordObject(m_moveList, "Editor Modify");
+            EditorUtility.SetDirty(m_moveList);
         }
     }
 
@@ -226,12 +226,12 @@ public class MoveListEditorWindow : EditorWindow
         {
             EditorGUILayout.BeginHorizontal();
             {
-                moveList.iconChar = (Texture2D)EditorGUILayout.ObjectField(moveList.iconChar, typeof(Texture2D), false, GUILayout.Width(70), GUILayout.Height(70));
+                m_moveList.iconChar = (Texture2D)EditorGUILayout.ObjectField(m_moveList.iconChar, typeof(Texture2D), false, GUILayout.Width(70), GUILayout.Height(70));
 
                 EditorGUILayout.BeginVertical();
                 {
                     EditorGUIUtility.labelWidth = 90;
-                    moveList.nameChar = EditorGUILayout.TextField("Name:", moveList.nameChar);
+                    m_moveList.nameChar = EditorGUILayout.TextField("Name:", m_moveList.nameChar);
                 }
                 EditorGUILayout.EndVertical();
 

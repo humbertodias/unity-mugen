@@ -14,7 +14,7 @@ public class CharacterEditor : Editor
             GUILayout.Label(moveList.iconChar, GUILayout.Width(25), GUILayout.Height(25));
 
         if (GUILayout.Button("Open Move List Editor", GUILayout.Height(25)))
-            MoveListEditorWindow.Init();
+            MoveListEditorWindow.Init(moveList);
 
         EditorGUILayout.EndHorizontal();
     }
