@@ -18,6 +18,7 @@ namespace UnityMugen
 
         [Header("Debug Settings")]
         public bool KeepLog = false;
+        public bool SaveSeedDebug;
 
         [Header("Game Settings")]
         [Range(1, 8)]

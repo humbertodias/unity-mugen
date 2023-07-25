@@ -25,7 +25,7 @@ public class ImporterCharEditorWindow : EditorWindow
     const string OutputChars = "Assets/Chars/";
     const string OutputStreamingAssets = "Assets/StreamingAssets/";
 
-    //[MenuItem("UnityMugen/Importer Char")]
+    [MenuItem("UnityMugen/Importer Char")]
     static void Init()
     {
         s_editorWindow = EditorWindow.GetWindow<ImporterCharEditorWindow>(false, "Importer Char", true);
@@ -41,19 +41,21 @@ public class ImporterCharEditorWindow : EditorWindow
         if (GUILayout.Button("Load and Converter File def"))
         {
             m_listFiles = new List<Tuple<int, string>>();
-            LoadFile();
-            CreateProfileManager();
+            if (LoadFile())
+            {
+                CreateProfileManager();
 
-            m_fileDirectories = new List<FileDirectory>();
-            BuildFileDirectory(m_filesTextSection);
+                m_fileDirectories = new List<FileDirectory>();
+                BuildFileDirectory(m_filesTextSection);
 
-            m_manager.states = StatesImport(m_filesTextSection);
+                m_manager.states = StatesImport(m_filesTextSection);
 
-            CreateFolders();
-            ImportFiles();
-            CreateAssets();
+                CreateFolders();
+                ImportFiles();
+                CreateAssets();
 
-            AssetDatabase.Refresh();
+                AssetDatabase.Refresh();
+            }
         }
 
         if (m_listFiles != null)
@@ -65,7 +67,7 @@ public class ImporterCharEditorWindow : EditorWindow
         }
     }
 
-    private void LoadFile()
+    private bool LoadFile()
     {
         string file = EditorUtility.OpenFilePanel("Carregar o arquivo em formato .def", "", "def");
         if (file.Length != 0)
@@ -76,7 +78,9 @@ public class ImporterCharEditorWindow : EditorWindow
             string path = file.Substring(0, file.LastIndexOf('/') + 1);
             m_basePathInput = Path.GetDirectoryName(path);
             m_basePathOutput = Application.streamingAssetsPath + "/";
+            return true;
         }
+        return false;
     }
 
     private void CreateProfileManager()
@@ -215,24 +219,28 @@ public class ImporterCharEditorWindow : EditorWindow
 
         foreach (var kvp in filesection.ParsedLines)
         {
+            string pathCorrect = kvp.Value;
+            if (kvp.Value.LastIndexOf(@"\") > -1)
+                pathCorrect = kvp.Value.Substring(kvp.Value.LastIndexOf(@"\") + 1);
+            
             if (string.Compare(kvp.Key, 0, "st", 0, 2, StringComparison.OrdinalIgnoreCase) != 0) continue;
 
             if (string.Equals(kvp.Key, "st", StringComparison.OrdinalIgnoreCase))
             {
-                var path = FilterPathInput(kvp.Value);
+                var path = FilterPathInput(pathCorrect);
                 if (path != string.Empty)
                 {
-                    files.Add("/" + m_charName + "/States/" + kvp.Value);
+                    files.Add("/" + m_charName + "/States/" + pathCorrect);
                 }
             }
             else
             {
                 if (int.TryParse(kvp.Key.Substring(2), out var index))
                 {
-                    var path = FilterPathInput(kvp.Value);
+                    var path = FilterPathInput(pathCorrect);
                     if (path != string.Empty)
                     {
-                        files.Add("/" + m_charName + "/States/" + kvp.Value);
+                        files.Add("/" + m_charName + "/States/" + pathCorrect);
                     }
                 }
             }

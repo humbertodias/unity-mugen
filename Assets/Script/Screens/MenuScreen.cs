@@ -231,6 +231,8 @@ namespace UnityMugen.Screens
             PlayerCreation createP2 = new PlayerCreation(p2, 2, PlayerMode.Human);
             Launcher.engineInitialization.Team1.Clear();
             Launcher.engineInitialization.Team2.Clear();
+            Launcher.engineInitialization.Team1Mode = TeamMode.Single;
+            Launcher.engineInitialization.Team2Mode = TeamMode.Single;
             Launcher.engineInitialization.Team1.Add(createP1);
             Launcher.engineInitialization.Team2.Add(createP2);
             Launcher.engineInitialization.SetSeed();

@@ -90,7 +90,7 @@ namespace UnityMugen.Screens
             m_pauseFight = GameObject.Find("CanvasPauseFight")?.GetComponent<HudPauseFight>();
             m_moveLists = GameObject.Find("HudMoveLists")?.GetComponent<HudMoveLists>();
 
-            CameraFE camFE = GameObject.Find("Main Camera").GetComponent<CameraFE>();
+            CameraFE camFE = GameObject.Find("CameraBattle").GetComponent<CameraFE>();
 
             m_entities = new GameObject("Entities").transform;
             m_shadowns = new GameObject("Shadowns").transform;

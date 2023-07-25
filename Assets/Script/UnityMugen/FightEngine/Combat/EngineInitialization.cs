@@ -10,14 +10,13 @@ namespace UnityMugen.Combat
 
         public void SetSeed()
         {
-            Seed = (!saveSeedDebug ? Environment.TickCount : Seed);
+            Seed = (!LauncherEngine.Inst.initializationSettings.SaveSeedDebug ? Environment.TickCount : Seed);
         }
 
         public CombatMode Mode;
         public int stageID;
         public int musicID;
         public int Seed;
-        public bool saveSeedDebug;
 
         [Header("Player1")]
         public TeamMode Team1Mode;

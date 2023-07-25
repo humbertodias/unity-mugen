@@ -8,7 +8,7 @@ namespace UnityMugen.Combat
         static FightEngine Engine => LauncherEngine.Inst.mugen.Engine;
 
         public Vector3 lastPosCamFollow;
-        public new Camera camera;
+        [NonSerialized] public new Camera camera;
         public Bound CameraBounds;
         public Vector2 Location;
 
