@@ -3,8 +3,8 @@ using UnityMugen;
 
 namespace UnityMugen
 {
-
-    public class TrainnerSettings : MonoBehaviour
+    [CreateAssetMenu(fileName = "TrainnerSettings", menuName = "Unity Mugen/Settings/Trainner Settings")]
+    public class TrainnerSettings : ScriptableObject
     {
         [Header("Commons")]
         public Sprite boxCollider;
@@ -22,17 +22,17 @@ namespace UnityMugen
         public bool showInfoP1;
         public bool showInfoP2;
         public bool showInfoGeral;
-        public bool showFPS;
+        public bool showFPS = true;
         public bool showInfoREC;
 
         [Header("Gauge Settings")]
-        public HPRecovery hpRecovery;
+        public HPRecovery hpRecovery = HPRecovery.Immediate;
         public int percentP1HPMax = 10;
         public int percentP2HPMax = 10;
-        public PowerRecovery powerRecovery;
+        public PowerRecovery powerRecovery = PowerRecovery.Normal;
 
         [Header("Action Enemy")]
-        public StanceType stanceType = StanceType.Standing;
+        public StanceType stanceType = StanceType.Controller;
         public GuardType guard = GuardType.NoGuard;
         public GuardTimeType guardTime = GuardTimeType.Default;
         public TechingType teching = TechingType.Off;

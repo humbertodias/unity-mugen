@@ -3,10 +3,9 @@ using UnityMugen;
 
 namespace UnityMugen
 {
-
-    public class InitializationSettings : MonoBehaviour
+    [CreateAssetMenu(fileName = "InitializationSettings", menuName = "Unity Mugen/Settings/Initialization Settings")]
+    public class InitializationSettings : ScriptableObject
     {
-
         [Header("Video Settings")]
         public bool VSync = true;
         public bool isFullScreen = true;
@@ -18,7 +17,7 @@ namespace UnityMugen
 
         [Header("Debug Settings")]
         public bool KeepLog = false;
-        public bool SaveSeedDebug;
+        public bool SaveSeedDebug = false;
 
         [Header("Game Settings")]
         [Range(1, 8)]
@@ -42,7 +41,7 @@ namespace UnityMugen
 
         [Header("Others")]
         [Tooltip("Sugerido usar o tempo maximo da transicao de scena 'effectTransition1In'")]
-        public int IntroDelay = 45; //Time to wait before starting intro
+        public int IntroDelay = 0;//45; //Time to wait before starting intro
         public int ControlTime = 30; //Time players get control after "Fight"
         public int KOSlowTime = 60; //Time for KO slowdown (in ticks)
         public int OverWaitTime = 45; //Time to wait after KO before player control is stopped

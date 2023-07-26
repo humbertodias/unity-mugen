@@ -3,7 +3,7 @@ using UnityMugen;
 #if !UNITY_EDITOR && UNITY_WSA && ENABLE_X_INPUT
 using Windows.Gaming.Input;
 using WinVibration = Windows.Gaming.Input.GamepadVibration;
-using LumiVibration = Luminosity.IO.GamepadVibration;
+using LumiVibration = UnityMugen.IO.GamepadVibration;
 #endif
 
 namespace UnityMugen.CustomInput

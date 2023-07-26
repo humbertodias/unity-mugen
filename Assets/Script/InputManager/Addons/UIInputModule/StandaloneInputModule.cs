@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 
 namespace UnityMugen.CustomInput
 {
-    [AddComponentMenu("Luminosity/Input Manager/Standalone Input Module")]
+    [AddComponentMenu("UnityMugen/Input Manager/Standalone Input Module")]
     public class StandaloneInputModule : PointerInputModule
     {
         public const string VERSION = "2017.2";

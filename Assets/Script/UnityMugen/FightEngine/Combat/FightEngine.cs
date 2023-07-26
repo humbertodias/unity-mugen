@@ -165,7 +165,7 @@ namespace UnityMugen.Combat
             if (init == null) throw new ArgumentNullException(nameof(init));
 
             Initialization = init;
-            m_idcounter = 0;
+            m_idcounter = Launcher.unityMugenConfig.MaxHelper;
 
             Team1.CreatePlayers(init.Team1Mode, init.Team1, PlayerID.One, stageScreen.Entities);
             Team2.CreatePlayers(init.Team2Mode, init.Team2, PlayerID.Two, stageScreen.Entities);
@@ -213,7 +213,8 @@ namespace UnityMugen.Combat
 
         public int GenerateCharacterId()
         {
-            return m_idcounter++;
+            m_idcounter++;
+            return m_idcounter - 1;
         }
 
         //public void SetInput(InputState inputstate)

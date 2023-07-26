@@ -7,7 +7,7 @@ using UnityMugen.Combat;
 
 namespace UnityMugen
 {
-    [CreateAssetMenu(fileName = "ProfileLoader", menuName = "Unity Mugen/Profile Loader")]
+    [CreateAssetMenu(fileName = "ProfileLoader", menuName = "Unity Mugen/Settings/Profile Loader")]
     public class ProfileLoader : ScriptableObject
     {
         static LauncherEngine Launcher => LauncherEngine.Inst;

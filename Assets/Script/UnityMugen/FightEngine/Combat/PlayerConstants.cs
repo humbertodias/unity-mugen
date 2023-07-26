@@ -2,7 +2,7 @@
 
 namespace UnityMugen.Combat
 {
-    [CreateAssetMenu(fileName = "Player Constants", menuName = "Unity Mugen/Player Constants")]
+    [CreateAssetMenu(fileName = "Player Constants", menuName = "Unity Mugen/Character/Player Constants")]
     public class PlayerConstants : ScriptableObject
     {
 

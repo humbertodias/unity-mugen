@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenuAttribute(fileName = "CharMoveList", menuName = "Unity Mugen/Move List")]
+[CreateAssetMenuAttribute(fileName = "CharMoveList", menuName = "Unity Mugen/Character/Move List")]
 public class MoveList : ScriptableObject
 {
     public bool editReadme;

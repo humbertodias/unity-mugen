@@ -2,7 +2,7 @@
 
 namespace UnityMugen.CustomInput
 {
-    [CreateAssetMenu(fileName = "New Input Action Reference", menuName = "Luminosity/Input Manager/Input Action Reference")]
+    [CreateAssetMenu(fileName = "New Input Action Reference", menuName = "Unity Mugen/Input Manager/Input Action Reference")]
     public class ActionReference : ScriptableObject
     {
         [SerializeField]

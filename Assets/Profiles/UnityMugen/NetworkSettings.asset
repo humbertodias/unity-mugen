@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b83843c65eddfb34fb5d9bfd5c4835ed, type: 3}
+  m_Name: NetworkSettings
+  m_EditorClassIdentifier: 
+  portServer: 6002
+  portHostClient: 6001
+  fps: 60
+  debugMode: 1
+  emulateNetwork: 1
+  trainingModeDebugger: 1
+  preloadedObjects: 1
+  networkToggle: 1
+  connectionLog: 1
+  ping: 1
+  frameDelay: 1
+  currentLocalFrame: 1
+  currentNetworkFrame: 1
+  desyncErrorLog: 0
+  stateTrackerTest: 0
+  networkMessageSize: 2
+  inputMessageFrequency: 0
+  onlySendInputChanges: 1
+  synchronizationMessageFrequency: 2
+  allowRollBacks: 1
+  ufeTrackers: 0
+  maxFastForwards: 10
+  maxBufferSize: 10
+  rollbackBalancing: 2
+  disconnectOnDesynchronization: 1
+  desynchronizationRecovery: 1
+  allowedDesynchronizations: 0
+  floatDesynchronizationThreshold: 0.5
+  frameDelayType: 1
+  defaultFrameDelay: 0
+  minFrameDelay: 1
+  maxFrameDelay: 7
+  applyFrameDelayOffline: 0

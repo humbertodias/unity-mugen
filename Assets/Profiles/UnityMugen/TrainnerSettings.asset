@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4694cd7a175a11d489dbb4f76d5c0bda, type: 3}
+  m_Name: TrainnerSettings
+  m_EditorClassIdentifier: 
+  boxCollider: {fileID: 21300000, guid: 88269f1a920958d4a92ffa5a7a57f9aa, type: 3}
+  normal: {r: 0, g: 0.05882353, b: 1, a: 0.3843137}
+  attack: {r: 1, g: 0, b: 0, a: 0.3843137}
+  hitable: {r: 1, g: 0.9921569, b: 0, a: 0.3843137}
+  pointEntity: {fileID: 21300000, guid: 21255105a0c0c4148bb3924cec35960d, type: 3}
+  pointEntityColor: {r: 0.7372549, g: 1, b: 0, a: 0.3843137}
+  showCommands: 0
+  showInputHistory: 0
+  typeDrawCollider: 1
+  showInfoP1: 0
+  showInfoP2: 0
+  showInfoGeral: 0
+  showFPS: 1
+  showInfoREC: 0
+  hpRecovery: 1
+  percentP1HPMax: 10
+  percentP2HPMax: 10
+  powerRecovery: 0
+  stanceType: 4
+  guard: 0
+  guardTime: 0
+  teching: 0
+  COMLevel: 4

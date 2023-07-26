@@ -5,7 +5,7 @@ using UnityEngine;
 namespace UnityMugen.Commands
 {
 
-    [CreateAssetMenu(fileName = "Command List", menuName = "Unity Mugen/Command List")]
+    [CreateAssetMenu(fileName = "Command List", menuName = "Unity Mugen/Character/Command List")]
     public class CommandList : ScriptableObject
     {
 

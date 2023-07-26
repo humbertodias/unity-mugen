@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d60cda8dc72b6b47827fc0105d2d02a, type: 3}
+  m_Name: InitializationSettings
+  m_EditorClassIdentifier: 
+  VSync: 1
+  isFullScreen: 1
+  isShakeCamera: 1
+  RecordReplay: 1
+  QuitAfterReplay: 1
+  KeepLog: 0
+  SaveSeedDebug: 0
+  AiLevel: 4
+  NumberOfRounds: 2
+  RoundLength: 99
+  SpeedTime: 2
+  idVoiceLanguage: 0
+  idTextLanguage: 0
+  SoundChannels: 10
+  comboText: Combo
+  displaytimeCombo: 90
+  PreloadCharacterSprites: 1
+  GameSpeed: 60
+  Default_Attack_LifeToPowerMul: 0.7
+  Default_GetHit_LifeToPowerMul: 0.6
+  IntroDelay: 0
+  ControlTime: 30
+  KOSlowTime: 60
+  OverWaitTime: 45
+  OverTime: 210
+  WinTime: 60
+  controller1: 0
+  controller2: 1

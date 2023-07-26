@@ -35,14 +35,15 @@ namespace UnityMugen
         //public Palette fxPalette;
         //public ShowMessage showMessage;
 
-        public ScreenType screenType;
+        [HideInInspector] public ScreenType screenType;
         public ProfileLoader profileLoader;
+        public UnityMugenConfig unityMugenConfig;
+        public InitializationSettings initializationSettings;
+        public TrainnerSettings trainnerSettings;
+        public NetworkSettings networkSettings;
 
         public UnityMugen.Random random;
 
-        [NonSerialized] public InitializationSettings initializationSettings;
-        [NonSerialized] public TrainnerSettings trainnerSettings;
-        [NonSerialized] public NetworkSettings networkSettings;
         [NonSerialized] public EngineInitialization engineInitialization;
         [NonSerialized] public InputSystem inputSystem;
         [NonSerialized] public SoundSystem soundSystem;
@@ -67,17 +68,14 @@ namespace UnityMugen
                     throw new Exception("Profile loader is essential to start the project.");
 
                 Inst = this;
-                initializationSettings = GetComponent<InitializationSettings>();
                 Application.runInBackground = true;
-                Application.targetFrameRate = initializationSettings.GameSpeed; ;
+                Application.targetFrameRate = initializationSettings.GameSpeed;
 
                 //PlayerPrefs.DeleteAll();
                 if (!PlayerPrefs.HasKey("isFirstAccess"))
                     FirstAccess();
 
                 initializationSettings = initializationSettings.Initialize();
-                trainnerSettings = GetComponent<TrainnerSettings>();
-                networkSettings = GetComponent<NetworkSettings>();
                 
                 soundSystem = transform.Find("SoundSystem").gameObject.GetComponent<SoundSystem>().Initialize();
 

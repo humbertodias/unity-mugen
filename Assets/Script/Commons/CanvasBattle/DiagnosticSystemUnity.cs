@@ -114,6 +114,7 @@ namespace UnityMugen.Interface
 
                 bool error = false;
                 diagPlayer.posRefCamera.text = string.Format("{0}, {1}", ScreenPos.Evaluate(player, ref error, Axis.X), ScreenPos.Evaluate(player, ref error, Axis.Y));
+                //diagPlayer.posRefCamera.text = string.Format("{0}, {1}", Pos.Evaluate(player, ref error, Axis.X), Pos.Evaluate(player, ref error, Axis.Y));
                 diagPlayer.posRefStage.text = String.Format("{0}", player.CurrentLocation.ToString());
                 //player.Clipboard.ToString()
             }

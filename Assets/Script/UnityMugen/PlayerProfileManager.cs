@@ -7,7 +7,7 @@ using Object = UnityEngine.Object;
 namespace UnityMugen
 {
 
-    [CreateAssetMenu(fileName = "PlayerProfileManager", menuName = "Unity Mugen/Player Profile Manager")]
+    [CreateAssetMenu(fileName = "PlayerProfileManager", menuName = "Unity Mugen/Character/Player Profile Manager")]
     public class PlayerProfileManager : ScriptableObject
     {
 

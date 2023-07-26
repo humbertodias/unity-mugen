@@ -60,9 +60,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4809859322222656}
   - component: {fileID: 114267920799511268}
-  - component: {fileID: 114453851410523946}
-  - component: {fileID: 2031265454628502154}
-  - component: {fileID: 2528228452578393343}
   m_Layer: 0
   m_Name: LauncherEngine
   m_TagString: Untagged
@@ -99,125 +96,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   screenType: 0
   profileLoader: {fileID: 11400000, guid: feb6815e2d2311141861727cb5e52583, type: 2}
---- !u!114 &114453851410523946
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000691510154006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d60cda8dc72b6b47827fc0105d2d02a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  VSync: 1
-  isFullScreen: 1
-  isShakeCamera: 1
-  RecordReplay: 1
-  QuitAfterReplay: 1
-  KeepLog: 0
-  AiLevel: 4
-  NumberOfRounds: 2
-  RoundLength: 99
-  SpeedTime: 2
-  idVoiceLanguage: 0
-  idTextLanguage: 0
-  SoundChannels: 10
-  comboText: Combo
-  displaytimeCombo: 90
-  PreloadCharacterSprites: 1
-  GameSpeed: 60
-  Default_Attack_LifeToPowerMul: 0.7
-  Default_GetHit_LifeToPowerMul: 0.6
-  IntroDelay: 0
-  ControlTime: 30
-  KOSlowTime: 60
-  OverWaitTime: 45
-  OverTime: 210
-  WinTime: 60
-  controller1: 0
-  controller2: 1
---- !u!114 &2031265454628502154
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000691510154006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4694cd7a175a11d489dbb4f76d5c0bda, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boxCollider: {fileID: 21300000, guid: 88269f1a920958d4a92ffa5a7a57f9aa, type: 3}
-  normal: {r: 0, g: 0.058823533, b: 1, a: 0.38431373}
-  attack: {r: 1, g: 0, b: 0, a: 0.38431373}
-  hitable: {r: 1, g: 0.9921569, b: 0, a: 0.38431373}
-  pointEntity: {fileID: 21300000, guid: 21255105a0c0c4148bb3924cec35960d, type: 3}
-  pointEntityColor: {r: 0.7372549, g: 1, b: 0, a: 0.38431373}
-  showCommands: 0
-  showInputHistory: 0
-  typeDrawCollider: 1
-  showInfoP1: 0
-  showInfoP2: 0
-  showInfoGeral: 0
-  showFPS: 1
-  showInfoREC: 0
-  hpRecovery: 1
-  percentP1HPMax: 10
-  percentP2HPMax: 10
-  powerRecovery: 0
-  stanceType: 4
-  guard: 0
-  guardTime: 0
-  teching: 0
-  COMLevel: 4
---- !u!114 &2528228452578393343
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000691510154006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b83843c65eddfb34fb5d9bfd5c4835ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  portServer: 6002
-  portHostClient: 6001
-  fps: 60
-  debugMode: 1
-  emulateNetwork: 1
-  trainingModeDebugger: 1
-  preloadedObjects: 1
-  networkToggle: 1
-  connectionLog: 1
-  ping: 1
-  frameDelay: 1
-  currentLocalFrame: 1
-  currentNetworkFrame: 1
-  desyncErrorLog: 1
-  stateTrackerTest: 1
-  networkMessageSize: 2
-  inputMessageFrequency: 0
-  onlySendInputChanges: 1
-  synchronizationMessageFrequency: 2
-  allowRollBacks: 1
-  ufeTrackers: 0
-  maxFastForwards: 10
-  maxBufferSize: 10
-  rollbackBalancing: 2
-  disconnectOnDesynchronization: 1
-  desynchronizationRecovery: 1
-  allowedDesynchronizations: 0
-  floatDesynchronizationThreshold: 0.5
-  frameDelayType: 1
-  defaultFrameDelay: 0
-  minFrameDelay: 1
-  maxFrameDelay: 7
-  applyFrameDelayOffline: 1
+  unityMugenConfig: {fileID: 11400000, guid: bbdea4859f373ca43913d8bc568c63ed, type: 2}
+  initializationSettings: {fileID: 11400000, guid: 947f9f82118598c4eb4a1fbf40f5a406,
+    type: 2}
+  trainnerSettings: {fileID: 11400000, guid: 423022fabb3cf8244a0ea134b7daf2b0, type: 2}
+  networkSettings: {fileID: 11400000, guid: ee069fca929394246b0a29f0870eb489, type: 2}
 --- !u!1 &1724590284190758
 GameObject:
   m_ObjectHideFlags: 0

@@ -2947,8 +2947,8 @@ namespace UnityMugen.Evaluation.Triggers
             {
                 case Axis.X:
                     var screenrect = character.Engine.CameraFE.ScreenBounds();
-                    return (character.CurrentLocation.x - screenrect.xMin - screenrect.width / 2) * Constant.Scale2;
-
+                    //return (character.CurrentLocation.x - screenrect.xMin - screenrect.width / 2) * Constant.Scale2;
+                    return (character.CurrentLocation.x - screenrect.center.x) * Constant.Scale2;
                 case Axis.Y:
                     return character.CurrentLocation.y * Constant.Scale2;
 

@@ -3,8 +3,8 @@ using UnityMugen;
 
 namespace UnityMugen.NetcodeUM
 {
-
-    public class NetworkSettings : MonoBehaviour
+    [CreateAssetMenu(fileName = "NetworkSettings", menuName = "Unity Mugen/Settings/Network Settings")]
+    public class NetworkSettings : ScriptableObject
     {
         [Header("Network Options")]
         public int portServer = 6002;
@@ -14,11 +14,11 @@ namespace UnityMugen.NetcodeUM
         public int fps = 60;
 
         [Header("Debug Network")]
-        public bool debugMode;
-        public bool emulateNetwork;
-        public bool trainingModeDebugger;
-        public bool preloadedObjects;
-        public bool networkToggle;
+        public bool debugMode = true;
+        public bool emulateNetwork = true;
+        public bool trainingModeDebugger = true;
+        public bool preloadedObjects = true;
+        public bool networkToggle = true;
         public bool connectionLog = true;
 
         [Header("Debug - Network Info")]
@@ -39,21 +39,21 @@ namespace UnityMugen.NetcodeUM
         public bool allowRollBacks = true;
         public bool ufeTrackers = false;
         public int maxFastForwards = 10;
-        public int maxBufferSize = 30;
-        public NetworkRollbackBalancing rollbackBalancing = NetworkRollbackBalancing.Conservative;
+        public int maxBufferSize = 10;
+        public NetworkRollbackBalancing rollbackBalancing = NetworkRollbackBalancing.Aggressive;
 
-        public bool disconnectOnDesynchronization;
-        public bool desynchronizationRecovery;
-        public int allowedDesynchronizations;
+        public bool disconnectOnDesynchronization = true;
+        public bool desynchronizationRecovery = true;
+        public int allowedDesynchronizations = 0;
         public float floatDesynchronizationThreshold = 0.5f;
 
 
         [Header("Frame Delay Netcode")]
         public NetworkFrameDelay frameDelayType = NetworkFrameDelay.Fixed;
-        public int defaultFrameDelay = 6;
-        public int minFrameDelay = 4;
-        public int maxFrameDelay = 30;
-        public bool applyFrameDelayOffline;
+        public int defaultFrameDelay = 0;
+        public int minFrameDelay = 1;
+        public int maxFrameDelay = 7;
+        public bool applyFrameDelayOffline = false;
 
     }
 }
