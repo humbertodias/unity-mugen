@@ -73,7 +73,7 @@ public class ImporterCharEditorWindow : EditorWindow
         if (file.Length != 0)
         {
             m_charName = file.Substring(file.LastIndexOf('/') + 1, file.LastIndexOf('.') - file.LastIndexOf('/') - 1);
-            var text = System.IO.File.ReadAllText(file);
+            var text = System.IO.File.ReadAllText(file).Replace('\\','/');
             m_textFile = FileToTextFile.Build(text);
             string path = file.Substring(0, file.LastIndexOf('/') + 1);
             m_basePathInput = Path.GetDirectoryName(path);
@@ -100,18 +100,17 @@ public class ImporterCharEditorWindow : EditorWindow
         m_filesTextSection = m_textFile.GetSection("Files");
 
         m_sffPath = m_filesTextSection.GetAttribute<string>("sprite", String.Empty);
-        m_manager.sff = m_sffPath.Substring(0, m_sffPath.LastIndexOf('.'));
+        m_manager.sff = RemoveFolders(m_sffPath.Substring(0, m_sffPath.LastIndexOf('.')));
 
         m_airPath = m_filesTextSection.GetAttribute<string>("anim", String.Empty);
-        m_manager.air = m_airPath.Substring(0, m_airPath.LastIndexOf('.'));
+        m_manager.air = RemoveFolders(m_airPath.Substring(0, m_airPath.LastIndexOf('.')));
 
         m_sndPath = m_filesTextSection.GetAttribute<string>("sound", String.Empty);
-        m_manager.snd = m_sndPath.Substring(0, m_sndPath.LastIndexOf('.'));
+        m_manager.snd = RemoveFolders(m_sndPath.Substring(0, m_sndPath.LastIndexOf('.')));
 
         m_stCommon = m_filesTextSection.GetAttribute<string>("stcommon", String.Empty);
         m_constantFile = m_filesTextSection.GetAttribute<string>("cns", String.Empty);
         m_commandPath = m_filesTextSection.GetAttribute<string>("cmd", String.Empty);
-
     }
 
     void CreateFolders()
@@ -214,14 +213,17 @@ public class ImporterCharEditorWindow : EditorWindow
         if (filesection == null) throw new ArgumentNullException(nameof(filesection));
 
         var files = new List<string>();
-        files.Add("/" + m_charName + "/States/" + m_stCommon);
-        files.Add("/" + m_charName + "/States/" + m_commandPath);
+
+        files.Add("/Data/TrainnerState.cns");
+        files.Add("/Data/ScoreState.cns");
+        files.Add("/" + m_charName + "/States/" + RemoveFolders(m_stCommon));
+        files.Add("/" + m_charName + "/States/" + RemoveFolders(m_commandPath));
 
         foreach (var kvp in filesection.ParsedLines)
         {
             string pathCorrect = kvp.Value;
-            if (kvp.Value.LastIndexOf(@"\") > -1)
-                pathCorrect = kvp.Value.Substring(kvp.Value.LastIndexOf(@"\") + 1);
+            if (kvp.Value.LastIndexOf("/") > -1)
+                pathCorrect = kvp.Value.Substring(kvp.Value.LastIndexOf("/") + 1);
             
             if (string.Compare(kvp.Key, 0, "st", 0, 2, StringComparison.OrdinalIgnoreCase) != 0) continue;
 
@@ -334,6 +336,13 @@ public class ImporterCharEditorWindow : EditorWindow
         }
     }
 
+    string RemoveFolders(string path)
+    {
+        if (path.Contains("/"))
+            return path.Substring(path.LastIndexOf("/") + 1);
+        return path;
+    }
+
     private string FilterPathInput(string filepath)
     {
         string path = m_basePathInput;
@@ -350,16 +359,12 @@ public class ImporterCharEditorWindow : EditorWindow
     {
         if (string.IsNullOrEmpty(filepath)) return string.Empty;
 
-        if (filepath.Contains(@"\"))
+        if (filepath.Contains("/"))
         {
-            int firstIndex = 0;
-            if (filepath.Contains(m_charName + "/States/"))
-                firstIndex = (m_charName + "/States/").Length;
-            else if (filepath.Contains(m_charName + "/"))
-                firstIndex = (m_charName + "/").Length;
-
-            string dasdad = filepath.Substring(firstIndex, filepath.LastIndexOf(@"\") - firstIndex);
-            filepath = filepath.Remove(firstIndex, dasdad.Length);
+            if(filepath.Contains("/States/"))
+                filepath = m_charName + "/States/" + filepath.Substring(filepath.LastIndexOf("/") + 1);
+            else
+                filepath = m_charName + "/" + filepath.Substring(filepath.LastIndexOf("/") + 1);
         }
         return Path.Combine(m_basePathOutput, filepath);
     }

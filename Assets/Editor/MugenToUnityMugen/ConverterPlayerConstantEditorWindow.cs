@@ -76,11 +76,11 @@ public class ConverterPlayerConstantEditorWindow : EditorWindow
         playerConstants.AirJuggle = datasection.GetAttribute("airjuggle", 15);
 
         PrefixedExpression sparkno = datasection.GetAttribute<PrefixedExpression>("sparkno", null);
-        playerConstants.DefaultSparkNumber = (sparkno == null ? -1 : Convert.ToInt32(sparkno.Expression.ToString()));
+        playerConstants.DefaultSparkNumber = EvaluationHelper.AsInt32(null, sparkno, -1);
         playerConstants.DefaultSparkNumberIsCommon = !EvaluationHelper.IsCommon(sparkno, true);
 
         PrefixedExpression defaultguardspark = datasection.GetAttribute<PrefixedExpression>("guard.sparkno", null);
-        playerConstants.DefaultGuardSparkNumber = (defaultguardspark == null ? -1 : Convert.ToInt32(defaultguardspark.Expression.ToString()));
+        playerConstants.DefaultGuardSparkNumber = EvaluationHelper.AsInt32(null, defaultguardspark, -1);
         playerConstants.DefaultGuardSparkNumberIsCommon = !EvaluationHelper.IsCommon(defaultguardspark, true);
 
         playerConstants.KOEcho = datasection.GetAttribute("KO.echo", false);
