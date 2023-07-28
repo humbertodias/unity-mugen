@@ -317,8 +317,7 @@ namespace UnityMugen.Audio
             if (length <= 0) throw new ArgumentOutOfRangeException(nameof(length), "length must be greater than zero.");
 
             var buffer = file.ReadBytes(length);
-
-            return WavUtility.ToAudioClip(buffer, 0, soundId.ToString());
+            return WavDecode.LoadWave(buffer, soundId.ToString());
         }
 
         /// <summary>
