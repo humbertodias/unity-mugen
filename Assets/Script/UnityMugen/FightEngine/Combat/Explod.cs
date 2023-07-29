@@ -218,7 +218,9 @@ namespace UnityMugen.Combat
             if (Data.IgnoreHitPause)
                 return false;
             else if (IsBound && (Data.PositionType == PositionType.P1 || Data.PositionType == PositionType.P2))
-                return (Data.Offseter as Character).InHitPause;
+                if (Data.Offseter is Character chara)
+                    return chara.InHitPause;
+                else return false;
             else
                 return false;
         }

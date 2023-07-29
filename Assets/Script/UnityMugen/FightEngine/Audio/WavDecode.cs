@@ -129,6 +129,8 @@ namespace UnityMugen.Audio
                                 // Read extra data if present
                                 if (chunkSize > 16)
                                 {
+                                    reader.ReadBytes(chunkSize - 16);
+                                    /*
                                     int extraDataSize = reader.ReadInt16();
                                     if (audioFormat == FormatIma4)
                                     {
@@ -145,6 +147,7 @@ namespace UnityMugen.Audio
                                                 reader.ReadByte();
                                         }
                                     }
+                                    */
                                 }
                             }
                             break;

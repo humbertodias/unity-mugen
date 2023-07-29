@@ -224,6 +224,16 @@ namespace UnityMugen.Screens
 
         void AutomaticStartBattle()
         {
+            if (automaticStartBattle && (p1 == null || p2 == null))
+            {
+                Debug.LogWarning("when the automaticStartBattle field is active, add P1 and P2 characters.");
+#if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+#else
+                    Application.Quit();
+#endif
+                return;
+            }
             Launcher.engineInitialization.Mode = combatMode;
             Launcher.StartCombatScreen();
 
