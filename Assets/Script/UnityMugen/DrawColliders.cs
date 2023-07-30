@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityMugen;
 using UnityMugen.Animations;
 using UnityMugen.Combat;
 
@@ -57,7 +56,7 @@ namespace UnityMugen
             {
                 GameObject draws = new GameObject("DrawColliders");
                 draws.hideFlags = HideFlags.HideAndDontSave;
-                draws.transform.SetParent(m_entity.gameObject.transform);
+                draws.transform.SetParent(m_entity.gameObject.transform, false);
 
                 AnimationElement currentElement = m_entity.AnimationManager.CurrentElement;
                 foreach (Rect coll in currentElement.ClsnsTipe2Normal)
@@ -114,7 +113,13 @@ namespace UnityMugen
         {
             GameObject collider = new GameObject();
             collider.name = "Collider";
+
+            var currentelement = m_entity.AnimationManager.CurrentElement;
+            Vector2 vec = new Vector2(CurrentFacing == Facing.Right ? -currentelement.Offset.x : currentelement.Offset.x, currentelement.Offset.y);
+            
             Vector2 pos = m_entity.CurrentLocationYTransform();
+            pos = pos + vec;
+
             float posX = CurrentFacing == Facing.Right ? (rect.xMin + pos.x) : -(rect.xMin - pos.x);
             float posY = rect.yMin + pos.y;
             collider.transform.position = new Vector3(posX, posY);
@@ -135,7 +140,13 @@ namespace UnityMugen
         {
             GameObject collider = new GameObject();
             collider.name = "Collider";
+
+            var currentelement = m_entity.AnimationManager.CurrentElement;
+            Vector2 vec = new Vector2(CurrentFacing == Facing.Right ? -currentelement.Offset.x : currentelement.Offset.x, currentelement.Offset.y);
+
             Vector2 pos = m_entity.CurrentLocationYTransform();
+            pos = pos + vec;
+
             float posX = CurrentFacing == Facing.Right ? (rect.xMin + pos.x) : -(rect.xMin - pos.x);
             float posY = rect.yMin + pos.y;
             collider.transform.position = new Vector3(posX, posY - ((rect.height / 2) * 0.01f));
@@ -155,7 +166,13 @@ namespace UnityMugen
         {
             GameObject collider = new GameObject();
             collider.name = "Collider";
+
+            var currentelement = m_entity.AnimationManager.CurrentElement;
+            Vector2 vec = new Vector2(CurrentFacing == Facing.Right ? -currentelement.Offset.x : currentelement.Offset.x, currentelement.Offset.y);
+
             Vector2 pos = m_entity.CurrentLocationYTransform();// gameObject.transform.position;
+            pos = pos + vec;
+
             float posX = CurrentFacing == Facing.Right ? (rect.xMin + pos.x) : -(rect.xMin - pos.x);
             float posY = rect.yMin + pos.y;
             collider.transform.position = new Vector3(posX, posY);

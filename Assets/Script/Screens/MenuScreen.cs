@@ -495,7 +495,6 @@ namespace UnityMugen.Screens
                     panelExit.SetActive(true);
                 }
             }
-
             else if (InputManager.GetButtonDown("Y"))
             {
                 Launcher.soundSystem.PlayChannelPrimary(TypeSound.CANCEL);
@@ -641,8 +640,7 @@ namespace UnityMugen.Screens
                     panelOptions.SetActive(false);
                 }
             }
-
-            if (InputManager.GetButtonDown("Y"))
+            else if (InputManager.GetButtonDown("Y"))
             {
                 Launcher.soundSystem.PlayChannelPrimary(TypeSound.CANCEL);
                 currentSCREEN = CURRENT_SCREEN.MAIN;
@@ -1305,8 +1303,7 @@ namespace UnityMugen.Screens
                 //    panelControlJoy.GetComponent<ConfigurationControl>().SetParameters(2, 1);
                 //}
             }
-
-            if (InputManager.GetButtonDown("Y"))
+            else if (InputManager.GetButtonDown("Y"))
             {
                 Launcher.soundSystem.PlayChannelPrimary(TypeSound.CANCEL);
                 currentSCREEN = CURRENT_SCREEN.OPTIONS;

@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityMugen;
 using UnityMugen.IO;
+using UnityMugen.Screens;
 
 public class ImporterCharEditorWindow : EditorWindow
 {
@@ -24,6 +25,7 @@ public class ImporterCharEditorWindow : EditorWindow
 
     const string OutputChars = "Assets/Chars/";
     const string OutputStreamingAssets = "Assets/StreamingAssets/";
+    bool setWhenComplete = true;
 
     [MenuItem("UnityMugen/Importer Char")]
     static void Init()
@@ -37,6 +39,9 @@ public class ImporterCharEditorWindow : EditorWindow
         SerializedObject serializedObject = new SerializedObject(this);
 
         serializedObject.ApplyModifiedProperties();
+
+        EditorGUIUtility.labelWidth = 210;
+        setWhenComplete = EditorGUILayout.Toggle("Set players on automatic battle start:", setWhenComplete);
 
         if (GUILayout.Button("Load and Converter File def"))
         {
@@ -55,6 +60,17 @@ public class ImporterCharEditorWindow : EditorWindow
                 CreateAssets();
 
                 AssetDatabase.Refresh();
+
+                
+                if (setWhenComplete) {
+                    var menuScreen = GameObject.Find("MenuScreen")?.GetComponent<MenuScreen>();
+                    if (menuScreen != null)
+                    {
+                        menuScreen.automaticStartBattle = true;
+                        menuScreen.p1 = m_manager;
+                        menuScreen.p2 = m_manager;
+                    }
+                }
             }
         }
 
@@ -216,7 +232,10 @@ public class ImporterCharEditorWindow : EditorWindow
 
         files.Add("/Data/TrainnerState.cns");
         files.Add("/Data/ScoreState.cns");
-        files.Add("/" + m_charName + "/States/" + RemoveFolders(m_stCommon));
+
+        if(!string.IsNullOrEmpty(m_stCommon))
+            files.Add("/" + m_charName + "/States/" + RemoveFolders(m_stCommon));
+
         files.Add("/" + m_charName + "/States/" + RemoveFolders(m_commandPath));
 
         foreach (var kvp in filesection.ParsedLines)

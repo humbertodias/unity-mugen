@@ -63,10 +63,10 @@ namespace UnityMugen.Combat
             get => _CurrentLocation;
             set
             {
-                if (float.IsNaN(value.x) || float.IsInfinity(value.x))
-                    _CurrentLocation = new Vector2(_CurrentLocation.x, value.y);
-                if (float.IsNaN(value.y) || float.IsInfinity(value.y))
-                    _CurrentLocation = new Vector2(value.x, _CurrentLocation.y);
+                //if (float.IsNaN(value.x) || float.IsInfinity(value.x))
+                //    _CurrentLocation = new Vector2(_CurrentLocation.x, value.y);
+                //if (float.IsNaN(value.y) || float.IsInfinity(value.y))
+                //    _CurrentLocation = new Vector2(value.x, _CurrentLocation.y);
 
                 _CurrentLocation = value;
             }

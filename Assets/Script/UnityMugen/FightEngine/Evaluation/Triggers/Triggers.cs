@@ -2824,7 +2824,7 @@ namespace UnityMugen.Evaluation.Triggers
             switch (axis)
             {
                 case Axis.X:
-                    var distance = Math.Abs(helper.CurrentLocation.x - helper.Creator.CurrentLocation.x);
+                    var distance = Math.Abs(helper.CurrentLocation.x - helper.Creator.CurrentLocation.x) * Constant.Scale2;
                     if (helper.CurrentFacing == UnityMugen.Facing.Right)
                     {
                         return helper.Creator.CurrentLocation.x >= helper.CurrentLocation.x ? distance : -distance;
