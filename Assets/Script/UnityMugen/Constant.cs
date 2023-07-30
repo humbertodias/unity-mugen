@@ -1,4 +1,5 @@
-﻿
+﻿using UnityEngine;
+
 namespace UnityMugen
 {
 
@@ -6,6 +7,8 @@ namespace UnityMugen
     {
         public const float Scale = 0.01f;
         public const float Scale2 = 100;
+
+        public static Vector2 LocalCoord = new Vector2(320, 240);
 
         public const float VelAddKillX = .66f;
         public const float VelAddKillX2 = 2.5f;

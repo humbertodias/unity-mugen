@@ -256,9 +256,10 @@ namespace UnityMugen.Combat
         {
             var offset = Data.Location + Random;
             var camerabounds = Engine.CameraFE.ScreenBounds();
-            var y = Screen.height - ((offset.y * Constant.Scale2) * (Screen.height / 240));
+            var x = ((offset.x * Constant.Scale2) * (Screen.width / Constant.LocalCoord.x));
+            var y = Screen.height - ((offset.y * Constant.Scale2) * (Screen.height / Constant.LocalCoord.y));
             var z = -Camera.main.transform.position.z;
-            Vector2 point = Camera.main.ScreenToWorldPoint(new Vector3(0, y, z));
+            Vector2 point = Camera.main.ScreenToWorldPoint(new Vector3(x, y, z));
 
             switch (Data.PositionType)
             {
@@ -274,9 +275,9 @@ namespace UnityMugen.Combat
                 case PositionType.Left:
                     //localcoord = 320, 240 [valor encontrado em .def de stages];
                     CurrentFacing = Facing.Right;
-                    float leftCam = Misc.GetOffset(camerabounds.xMin, Facing.Right, offset.x);
+                    //float leftCam = Misc.GetOffset(camerabounds.xMin, Facing.Right, offset.x);
                     if (IsBound || startLocation)
-                        return new Vector3(leftCam, -point.y, transform.localPosition.z);
+                        return new Vector3(point.x, -point.y, transform.localPosition.z);
                     else
                         return CurrentLocation;
 

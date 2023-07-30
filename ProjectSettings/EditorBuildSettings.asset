@@ -24,9 +24,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Stages/TheGarden/Stage_TheGarden.unity
     guid: 75a98f32b2e24e445b08100ab727b8fc
   - enabled: 1
-    path: Assets/Scenes/Stages/KOF/Stage_KOF.unity
-    guid: 07a666d1acc80c044bac86001e0ea80c
-  - enabled: 1
     path: Assets/Scenes/Canvas/HudCanvasBattle.unity
     guid: 185be6b738363a84eb4a510a5cbbff3a
   - enabled: 1

@@ -46,7 +46,7 @@ namespace UnityMugen.StateMachine.Controllers
             data.Scale = Vector2.one;
             data.AnimationNumber = animationnumber;
             data.CommonAnimation = true;
-            data.Location = (Vector2)offset;
+            data.Location = offset;
             data.PositionType = PositionType.P1;
             data.RemoveTime = -2;
             data.DrawOnTop = false;

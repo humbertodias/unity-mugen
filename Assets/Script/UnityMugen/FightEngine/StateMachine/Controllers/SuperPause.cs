@@ -75,7 +75,7 @@ namespace UnityMugen.StateMachine.Controllers
 
             var data = new ExplodData();
             data.PositionType = PositionType.P1;
-            data.Location = (Vector2)animationposition;
+            data.Location = animationposition;
             data.RemoveTime = -2;
             data.CommonAnimation = EvaluationHelper.IsCommon(m_sparkNumber, true);
             data.AnimationNumber = animationnumber;

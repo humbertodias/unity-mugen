@@ -153,7 +153,7 @@ namespace UnityMugen.StateMachine.Controllers
             data.AnimationNumber = animationnumber.Value;
             data.ExplodId = id;
             data.RemoveTime = removetime;
-            data.Location = (Vector2)location;
+            data.Location = location;
             data.PositionType = m_posType.Value;
             data.Velocity = velocity;
             data.Acceleration = acceleration;

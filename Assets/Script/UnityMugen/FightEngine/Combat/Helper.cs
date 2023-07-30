@@ -85,9 +85,10 @@ namespace UnityMugen.Combat
             var offset = Data.CreationOffset;
             var camerabounds = Engine.CameraFE.ScreenBounds();
             var facing = m_offsetcharacter.CurrentFacing;
+            var x = ((offset.x * Constant.Scale2) * (Screen.width / Constant.LocalCoord.x));
             var y = Screen.height - ((offset.y * Constant.Scale2) * (Screen.height / 240));
             var z = -Camera.main.transform.position.z;
-            Vector2 point = Camera.main.ScreenToWorldPoint(new Vector3(0, y, z));
+            Vector2 point = Camera.main.ScreenToWorldPoint(new Vector3(x, y, z));
 
             switch (Data.PositionType)
             {

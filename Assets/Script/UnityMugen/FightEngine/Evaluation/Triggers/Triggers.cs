@@ -3679,23 +3679,16 @@ namespace UnityMugen.Evaluation.Triggers
                 return 0;
             }
 
-            Vector2 invertYChar = character.GetDrawLocationYTransform();
-            var drawlocation = invertYChar - (Vector2)character.Engine.CameraFE.Location;
+            var drawlocation = Camera.main.WorldToScreenPoint(character.CurrentLocationYTransform());
 
-            //var drawlocation = character.GetDrawLocation() - (Vector2)character.Engine.CameraFE.Location; Original
-            //analizar melhor
-            drawlocation = Camera.main.WorldToScreenPoint(character.transform.position);
-            //AudioImporter não deveria ser de screenpointo para word?
-            //((720 / 2) + 30) - screenPos.y
-
-            drawlocation.y = Screen.height - drawlocation.y;
             switch (axis)
             {
                 case Axis.X:
-                    return drawlocation.x /** Constant.Scale2*/;
+                    return drawlocation.x / (Screen.width / Constant.LocalCoord.x);
 
                 case Axis.Y:
-                    return drawlocation.y /** Constant.Scale2*/;
+                    return (Screen.height - drawlocation.y) / 
+                        (Screen.height / Constant.LocalCoord.y);
 
                 default:
                     if (KeepLog)

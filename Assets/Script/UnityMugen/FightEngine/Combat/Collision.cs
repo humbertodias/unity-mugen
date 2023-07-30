@@ -125,6 +125,7 @@ namespace UnityMugen.Combat
 
         public static Bounds Make(Entity entity/*Vector2 position*/, Facing facing, Rect boxCollider2D)
         {
+            Vector2 position = entity.CurrentLocationYTransform();
             Bounds bounds = new Bounds();
             if (facing == Facing.Right)
             {
@@ -137,7 +138,7 @@ namespace UnityMugen.Combat
                 var currentelement = entity.AnimationManager.CurrentElement;
                 Vector2 vec = new Vector2(facing == Facing.Right ? -currentelement.Offset.x : currentelement.Offset.x, currentelement.Offset.y);
 
-                bounds.SetMinMax(new Vector3(xMin + entity.CurrentLocation.x + vec.x, -yMin + entity.CurrentLocation.y + vec.y), new Vector3(xMax + entity.CurrentLocation.x + vec.x, -yMax + entity.CurrentLocation.y + vec.y));
+                bounds.SetMinMax(new Vector3(xMin + position.x + vec.x, -yMin + position.y + vec.y), new Vector3(xMax + position.x + vec.x, -yMax + position.y + vec.y));
             }
             else
             {
@@ -150,7 +151,7 @@ namespace UnityMugen.Combat
                 var currentelement = entity.AnimationManager.CurrentElement;
                 Vector2 vec = new Vector2(facing == Facing.Right ? -currentelement.Offset.x : currentelement.Offset.x, currentelement.Offset.y);
 
-                bounds.SetMinMax(new Vector3(-xMax + entity.CurrentLocation.x + vec.x, -yMin + entity.CurrentLocation.y + vec.y), new Vector3(xMin + entity.CurrentLocation.x + vec.x, yMax + entity.CurrentLocation.y + vec.y));
+                bounds.SetMinMax(new Vector3(-xMax + position.x + vec.x, -yMin + position.y + vec.y), new Vector3(xMin + position.x + vec.x, yMax + position.y + vec.y));
             }
 
             return bounds;
