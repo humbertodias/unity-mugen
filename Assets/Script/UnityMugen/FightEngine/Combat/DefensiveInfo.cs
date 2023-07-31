@@ -33,7 +33,6 @@ namespace UnityMugen.Combat
                 m_hitoverrides.Add(new HitOverride());
 
             m_hitcount = 0;
-            FirstAttackForDef = false;
         }
 
         public DefensiveInfo(DefensiveInfo defensiveInfo)
@@ -54,7 +53,6 @@ namespace UnityMugen.Combat
             m_hitoverrides = new List<HitOverride>(defensiveInfo.HitOverrides);
             
             m_hitcount = defensiveInfo.HitCount;
-            FirstAttackForDef = defensiveInfo.FirstAttackForDef;
         }
 
         public void ResetFE()
@@ -75,7 +73,6 @@ namespace UnityMugen.Combat
             for (var i = 0; i != 8; ++i) m_hitoverrides[i].ResetFE();
 
             m_hitcount = 0;
-            FirstAttackForDef = false;
         }
 
         public void UpdateFE()
@@ -122,7 +119,7 @@ namespace UnityMugen.Combat
             }
             else
             {
-                m_character.JugglePoints = m_character.BasePlayer.playerConstants.AirJuggle;
+                Juggle = m_character.BasePlayer.playerConstants.AirJuggle;
             }
 
             HitCount = m_character.MoveType == MoveType.BeingHit ? HitCount + 1 : 1;
@@ -147,15 +144,16 @@ namespace UnityMugen.Combat
                 m_character.PaletteFx.Set(HitDef.PalFxTime, HitDef.PalFxAdd, HitDef.PalFxMul, HitDef.PalFxSinAdd, HitDef.PalFxInvert, HitDef.PalFxBaseColor);
                 if (IsFalling)
                 {
-                    int neededjugglepoints = EvaluationHelper.AsInt32(m_character, Attacker.StateManager.CurrentState.jugglePoints, 0);
-                    if (FirstAttackForDef)
-                    {
-                        FirstAttackForDef = false;
-                        m_character.JugglePoints -= neededjugglepoints;
-                    }
+                    if(isProjectile)
+                        Juggle -= HitDef.JugglePointsNeeded;
+                    else
+                        Juggle -= Attacker.JugglePoints;
+                    
+                    Attacker.JugglePoints = 0;
                 }
             }
         }
+
 
         public HitOverride GetOverride(HitDefinition hitdef)
         {
@@ -277,7 +275,7 @@ namespace UnityMugen.Combat
         }
 
         public bool HitUsed;
-        public bool FirstAttackForDef;
+        public int Juggle;
 
         public HitBy HitBy1 => m_hitby1;
 

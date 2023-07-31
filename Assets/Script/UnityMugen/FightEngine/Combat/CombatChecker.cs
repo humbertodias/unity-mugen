@@ -282,7 +282,7 @@ namespace UnityMugen.Combat
 
             var attacker = projectile.Creator;
 
-            target.DefensiveInfo.OnHit(hitdef, projectile.Creator, blocked, true);
+            target.DefensiveInfo.OnHit(hitdef, projectile.Creator, blocked, true, true);
             hitdef = target.DefensiveInfo.HitDef;
 
             projectile.TotalHits += 1;
@@ -828,12 +828,7 @@ namespace UnityMugen.Combat
                             return false;
                     }
 
-                    if (!target.DefensiveInfo.FirstAttackForDef)
-                        return true;
-
-
-                    int neededjugglepoints = EvaluationHelper.AsInt32(player, player.StateManager.CurrentState.jugglePoints, 0);
-                    if (neededjugglepoints > target.JugglePoints && player.Assertions.NoJuggleCheck == false)
+                    if (target.DefensiveInfo.Juggle < player.JugglePoints)
                         return false;
                 }
             }

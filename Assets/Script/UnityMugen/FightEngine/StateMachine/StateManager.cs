@@ -89,6 +89,8 @@ namespace UnityMugen.StateMachine
             if (facep2 && P2Dist.Evaluate(m_character, ref error, Axis.X) < 0 && error == false)
                 Character.CurrentFacing = Character.FlipFacing(Character.CurrentFacing);
 
+            int? jugglePoints = EvaluationHelper.AsInt32(m_character, state.jugglePoints, null);
+            if (jugglePoints != null) Character.JugglePoints = jugglePoints.Value;
 
             bool hitdefpersist = EvaluationHelper.AsBoolean(m_character, state.hitdefPersistance, false);
             if (hitdefpersist == false)
@@ -112,9 +114,6 @@ namespace UnityMugen.StateMachine
                 Character.OffensiveInfo.HitCount = 0;
                 Character.OffensiveInfo.UniqueHitCount = 0;
             }
-
-            var chara = EnemyNear.RedirectState(Character, ref error, 0);
-            if (error == false) chara.DefensiveInfo.FirstAttackForDef = true;
         }
 
         public bool ChangeState(int statenumber)

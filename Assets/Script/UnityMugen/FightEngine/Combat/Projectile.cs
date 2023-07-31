@@ -14,6 +14,11 @@ namespace UnityMugen.Combat
             if (creator == null) throw new ArgumentNullException(nameof(creator));
             if (data == null) throw new ArgumentNullException(nameof(data));
 
+            spriteRenderer = gameObject.AddComponent<SpriteRenderer>();
+            spriteRenderer.material = new Material(Shader.Find("UnityMugen/Sprites/ColorSwap"));
+            spriteRenderer.sortingOrder = 3;
+            spriteRenderer.sortingLayerName = "Entity";
+
             Id = data.ProjectileId;
             NameSearch = data.ProjectileId.ToString();
             typeEntity = TypeEntity.Projectile;

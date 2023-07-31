@@ -298,7 +298,6 @@ namespace UnityMugen.StateMachine.Controllers
             hitdef.GuardCornerPush = EvaluationHelper.AsSingle(character, m_guardCornerPushOff, hitdef.GroundCornerPush * Constant.Scale2) * Constant.Scale;
             hitdef.AirGuardCornerPush = EvaluationHelper.AsSingle(character, m_airGuardCornerPushOff, hitdef.GroundCornerPush * Constant.Scale2) * Constant.Scale;
 
-#warning  Tiago - possivel valor nao aplicado
             hitdef.JugglePointsNeeded = EvaluationHelper.AsInt32(character, m_airJuggle, 0);
 
             hitdef.MininumDistance = EvaluationHelper.AsVector2(character, m_minDistance, null) * Constant.Scale;

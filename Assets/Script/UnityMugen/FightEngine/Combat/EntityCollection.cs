@@ -202,8 +202,7 @@ namespace UnityMugen.Combat
                 var helper = (Helper)entity;
                 helper.BasePlayer.Helpers[helper.Id].Remove(helper);
             }
-
-            if (entity.typeEntity == TypeEntity.Explod)
+            else if (entity.typeEntity == TypeEntity.Explod)
             {
                 var explod = (Explod)entity;
                 if (explod.Creator.Explods.ContainsKey(explod.Id))
@@ -213,8 +212,7 @@ namespace UnityMugen.Combat
                         explod.Creator.Explods.Remove(explod.Id);
                 }
             }
-
-            if (entity.typeEntity == TypeEntity.GraphicUI)
+            else if (entity.typeEntity == TypeEntity.GraphicUI)
             {
                 var graphicUI = (GraphicUIEntity)entity;
                 graphicUI.Creator.GraphicUIs[graphicUI.Id].Remove(graphicUI);
