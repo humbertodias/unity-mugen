@@ -1,22 +1,27 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(MoveList))]
-public class CharacterEditor : Editor
+namespace UnityMugen.Editors
 {
 
-    public override void OnInspectorGUI()
+    [CustomEditor(typeof(MoveList))]
+    public class CharacterEditor : Editor
     {
-        EditorGUILayout.BeginHorizontal();
 
-        var moveList = (MoveList)target;
-        if (moveList != null && moveList.iconChar != null)
-            GUILayout.Label(moveList.iconChar, GUILayout.Width(25), GUILayout.Height(25));
+        public override void OnInspectorGUI()
+        {
+            EditorGUILayout.BeginHorizontal();
 
-        if (GUILayout.Button("Open Move List Editor", GUILayout.Height(25)))
-            MoveListEditorWindow.Init(moveList);
+            var moveList = (MoveList)target;
+            if (moveList != null && moveList.iconChar != null)
+                GUILayout.Label(moveList.iconChar, GUILayout.Width(25), GUILayout.Height(25));
 
-        EditorGUILayout.EndHorizontal();
+            if (GUILayout.Button("Open Move List Editor", GUILayout.Height(25)))
+                MoveListEditorWindow.Init(moveList);
+
+            EditorGUILayout.EndHorizontal();
+        }
+
     }
 
 }

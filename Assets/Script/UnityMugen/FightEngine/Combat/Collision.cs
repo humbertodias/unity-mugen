@@ -39,7 +39,7 @@ namespace UnityMugen.Combat
 
             foreach (var lhs_clsn in playerMix)
             {
-                Bounds b1 = Make(lhs/*.CurrentLocation*//*transform.localPosition*/, lhs.CurrentFacing, lhs_clsn);
+                Bounds b1 = Make(lhs, lhs_clsn);
 
                 List<Rect> oponentMix = new List<Rect>();
                 if (rhs.AnimationManager.CurrentElement != null)
@@ -50,7 +50,7 @@ namespace UnityMugen.Combat
                 }
                 foreach (var rhs_clsn in oponentMix)
                 {
-                    Bounds b2 = Make(rhs/*.CurrentLocation*//*transform.localPosition*/, rhs.CurrentFacing, rhs_clsn);
+                    Bounds b2 = Make(rhs, rhs_clsn);
                     if (b1.Intersects(b2))
                         return true;
                 }
@@ -70,7 +70,7 @@ namespace UnityMugen.Combat
 
             foreach (var lhs_clsn in playerMix)
             {
-                Bounds b1 = Make(lhs/*.CurrentLocation*//*.transform.localPosition*/, lhs.CurrentFacing, lhs_clsn);
+                Bounds b1 = Make(lhs, lhs_clsn);
 
                 List<Rect> oponentMix = new List<Rect>();
                 if (rhs.AnimationManager.CurrentElement != null)
@@ -81,7 +81,7 @@ namespace UnityMugen.Combat
                 }
                 foreach (var rhs_clsn in oponentMix)
                 {
-                    Bounds b2 = Make(rhs/*.CurrentLocation*//*.transform.localPosition*/, rhs.CurrentFacing, rhs_clsn);
+                    Bounds b2 = Make(rhs, rhs_clsn);
                     if (b1.Intersects(b2))
                         return true;
                 }
@@ -101,7 +101,7 @@ namespace UnityMugen.Combat
 
             foreach (var lhs_clsn in playerMix)
             {
-                Bounds b1 = Make(lhs/*.CurrentLocation*//*.transform.localPosition*/, lhs.CurrentFacing, lhs_clsn);
+                Bounds b1 = Make(lhs, lhs_clsn);
 
                 List<Rect> oponentMix = new List<Rect>();
                 if (rhs.AnimationManager.CurrentElement != null)
@@ -115,7 +115,7 @@ namespace UnityMugen.Combat
                 }
                 foreach (var rhs_clsn in oponentMix)
                 {
-                    Bounds b2 = Make(rhs/*.CurrentLocation*//*.transform.localPosition*/, rhs.CurrentFacing, rhs_clsn);
+                    Bounds b2 = Make(rhs, rhs_clsn);
                     if (b1.Intersects(b2))
                         return true;
                 }
@@ -123,11 +123,11 @@ namespace UnityMugen.Combat
             return false;
         }
 
-        public static Bounds Make(Entity entity/*Vector2 position*/, Facing facing, Rect boxCollider2D)
+        public static Bounds Make(Entity entity, Rect boxCollider2D)
         {
             Vector2 position = entity.CurrentLocationYTransform();
             Bounds bounds = new Bounds();
-            if (facing == Facing.Right)
+            if (entity.CurrentFacing == Facing.Right)
             {
                 float xMin = -((boxCollider2D.width / 2) - boxCollider2D.x);
                 float xMax = (boxCollider2D.width / 2) + boxCollider2D.x;
@@ -136,7 +136,7 @@ namespace UnityMugen.Combat
                 float yMax = -((boxCollider2D.height / 2) + boxCollider2D.y);
 
                 var currentelement = entity.AnimationManager.CurrentElement;
-                Vector2 vec = new Vector2(facing == Facing.Right ? -currentelement.Offset.x : currentelement.Offset.x, currentelement.Offset.y);
+                Vector2 vec = new Vector2(entity.CurrentFacing == Facing.Right ? -currentelement.Offset.x : currentelement.Offset.x, currentelement.Offset.y);
 
                 bounds.SetMinMax(new Vector3(xMin + position.x + vec.x, -yMin + position.y + vec.y), new Vector3(xMax + position.x + vec.x, -yMax + position.y + vec.y));
             }
@@ -149,7 +149,7 @@ namespace UnityMugen.Combat
                 float yMax = ((boxCollider2D.height / 2) + boxCollider2D.y);
 
                 var currentelement = entity.AnimationManager.CurrentElement;
-                Vector2 vec = new Vector2(facing == Facing.Right ? -currentelement.Offset.x : currentelement.Offset.x, currentelement.Offset.y);
+                Vector2 vec = new Vector2(entity.CurrentFacing == Facing.Right ? -currentelement.Offset.x : currentelement.Offset.x, currentelement.Offset.y);
 
                 bounds.SetMinMax(new Vector3(-xMax + position.x + vec.x, -yMin + position.y + vec.y), new Vector3(xMin + position.x + vec.x, yMax + position.y + vec.y));
             }
