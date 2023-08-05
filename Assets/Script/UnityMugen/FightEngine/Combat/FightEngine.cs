@@ -59,10 +59,6 @@ namespace UnityMugen.Combat
             EnvironmentShake = new EnvironmentShake();
             Speed = GameSpeed.Normal;
 
-            //   FightAnimations = launcherEngine.animationSystem.CreateManager(textfile.Filepath);
-            //    FE.Elements = new fightEngine.Elements.Collection(/*FightSprites, FightAnimations,*/ FE.FightSounds/*, Fonts*/);
-            // new RoundInformation(textfile);
-            //    FE.FightSounds = FE.RoundInformation.FightSound();
             CommonSounds = Launcher.soundSystem.CreateManager(Application.streamingAssetsPath + "/Data/common.snd");
 
             Team1 = new Team(TeamSide.Left);
@@ -70,14 +66,11 @@ namespace UnityMugen.Combat
 
             m_logic = new PreIntro();
             Clock = new Clock();
-            //    FE.CameraFE = new CameraFE(FE);
 
-            FxSprites = Launcher.spriteSystem.CreateManager(Application.streamingAssetsPath + "/Data/FxPalette.sff"/*Launcher.fxSprites*/);
-            FxAnimations = Launcher.animationSystem.CreateManager(Application.streamingAssetsPath + "/Data/fightfx.air"/*Launcher.fxAnimations*/, Vector2.one);
-            //FxPalettes = Launcher.paletteSystem.BuildPalettes(Launcher.fxPalette);
-            /*FxPalettes = */
-            Launcher.paletteSystem.LoadPalette(Application.streamingAssetsPath + "/Data/FxPalette.sff");
-            PaletteListFX = Launcher.paletteSystem.LoadPalette(Application.streamingAssetsPath + "/Data/FxPalette.sff");
+            FxSprites = Launcher.spriteSystem.CreateManager(Application.streamingAssetsPath + "/Data/FxPalette.sff", null);
+            FxAnimations = Launcher.animationSystem.CreateManager(Application.streamingAssetsPath + "/Data/fightfx.air", Vector2.one);
+
+            PaletteListFX = FxSprites.Palettes;
         }
 
 

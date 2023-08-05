@@ -52,8 +52,6 @@ namespace UnityMugen.Combat
             m_palfx = new PaletteFx();
 
             PaletteList = Creator.PaletteList;
-            //PalettesSprite = Creator.PalettesSprite;
-            CurrentPalette = Creator.CurrentPalette;
             CurrentScale = Data.scale.Value;
             DrawOrder = Data.sprpriority.Value;
             Transparency = Data.transparency.Value;
@@ -191,7 +189,7 @@ namespace UnityMugen.Combat
                 angle += currentelement.Rotate;
                 transform.localEulerAngles = new Vector3(0, 0, angle);
 
-                var drawstate = SpriteManager.SetupDrawing(currentelement.SpriteId, PaletteList, CurrentPalette);
+                var drawstate = SpriteManager.SetupDrawing(currentelement.SpriteId, PaletteList);
                 PaletteFx.SetShader(drawstate.ShaderParameters);
                 drawstate.Blending = Transparency == new Blending() ? currentelement.Blending : Transparency;
                 drawstate.Use(image.material);

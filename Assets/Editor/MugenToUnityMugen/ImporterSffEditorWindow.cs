@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
@@ -22,7 +21,7 @@ public class ImporterSffEditorWindow : EditorWindow
     bool separatedByGroup = true;
     HashSet<int> groups;
     List<int> only;
-    SffUnpack s;
+    Sff s;
 
 
     [MenuItem("UnityMugen/Importer sff")]
@@ -98,9 +97,9 @@ public class ImporterSffEditorWindow : EditorWindow
                         {
                             if (!groups.Contains(spriteDatas.ElementAt(i).Key.Group))
                             {
-                                if (!Directory.Exists(path + "/" + spriteDatas.ElementAt(i).Key.Group.ToString()))
+                                if (!System.IO.Directory.Exists(path + "/" + spriteDatas.ElementAt(i).Key.Group.ToString()))
                                 {
-                                    Directory.CreateDirectory(Application.dataPath.Replace("Assets", "") + PathSaveSprites + spriteDatas.ElementAt(i).Key.Group.ToString());
+                                    System.IO.Directory.CreateDirectory(Application.dataPath.Replace("Assets", "") + PathSaveSprites + spriteDatas.ElementAt(i).Key.Group.ToString());
                                 }
 
                                 groups.Add(spriteDatas.ElementAt(i).Key.Group);
@@ -124,7 +123,7 @@ public class ImporterSffEditorWindow : EditorWindow
             spriteDatas = new Dictionary<SpriteId, SpriteData>();
             groups = new HashSet<int>();
             nameChar = "";
-            s = new SffUnpack();
+            s = new Sff();
 
             this.ShowNotification(new GUIContent("Clear."));
         }
@@ -147,10 +146,10 @@ public class ImporterSffEditorWindow : EditorWindow
     {
         if (filepath == null) throw new ArgumentNullException(nameof(filepath));
 
-        var file = new FileUnpack(filepath, new FileStream(filepath, FileMode.Open, FileAccess.Read));
+        var file = new File(filepath, new System.IO.FileStream(filepath, System.IO.FileMode.Open, System.IO.FileAccess.Read));
 
         groups = new HashSet<int>();
-        s = new SffUnpack();
+        s = new Sff();
         s = s.newSff();
 
         UInt32 lofs, tofs;
@@ -274,9 +273,9 @@ public class ImporterSffEditorWindow : EditorWindow
                             {
                                 if (!groups.Contains(spriteList[i].Group))
                                 {
-                                    if (!Directory.Exists(path + "/" + spriteList[i].Group.ToString()))
+                                    if (!System.IO.Directory.Exists(path + "/" + spriteList[i].Group.ToString()))
                                     {
-                                        Directory.CreateDirectory(Application.dataPath.Replace("Assets", "") + PathSaveSprites + spriteList[i].Group.ToString());
+                                        System.IO.Directory.CreateDirectory(Application.dataPath.Replace("Assets", "") + PathSaveSprites + spriteList[i].Group.ToString());
                                     }
 
                                     groups.Add(spriteList[i].Group);
@@ -336,15 +335,15 @@ public class ImporterSffEditorWindow : EditorWindow
     }
 
 
-    void ReadHeaderFile(FileUnpack file, out SffHeader sh, out UInt32 lofs, out UInt32 tofs)
+    void ReadHeaderFile(File file, out SffHeader sh, out UInt32 lofs, out UInt32 tofs)
     {
         if (file == null) throw new ArgumentNullException(nameof(file));
 
         lofs = tofs = 0;
 
-        BinaryReader binaryReader = new BinaryReader(file.Stream);
+        System.IO.BinaryReader binaryReader = new System.IO.BinaryReader(file.Stream);
         var data = binaryReader.ReadBytes(65);
-        file.Stream.Seek(0, SeekOrigin.Begin);
+        file.Stream.Seek(0, System.IO.SeekOrigin.Begin);
 
         sh.Ver3 = data[12];
         sh.Ver2 = data[13];
@@ -394,7 +393,7 @@ public class ImporterSffEditorWindow : EditorWindow
         return s;
     }
 
-    public void readV2(FileUnpack f, ref SpriteUnpack s, UInt32 offset, UInt32 datasize)
+    public void readV2(File f, ref SpriteUnpack s, UInt32 offset, UInt32 datasize)
     {
         f.SeekFromBeginning(offset + 4);
 
@@ -449,7 +448,7 @@ public class ImporterSffEditorWindow : EditorWindow
         }
     }
 
-    public void read(FileUnpack f, ref SpriteUnpack s, ref SffHeader sh, UInt32 offset, UInt32 datasize,
+    public void read(File f, ref SpriteUnpack s, ref SffHeader sh, UInt32 offset, UInt32 datasize,
         UInt32 nextSubheader, SpriteUnpack prev, ref PaletteList pl, byte copyLastPalette, bool c00)
     {
 
@@ -521,7 +520,7 @@ public class ImporterSffEditorWindow : EditorWindow
     }
 
 
-    public void readHeader(FileUnpack file, ref SpriteUnpack s, out UInt32 ofs, out UInt32 size, out UInt16 link, out byte copyLastPalette)
+    public void readHeader(File file, ref SpriteUnpack s, out UInt32 ofs, out UInt32 size, out UInt16 link, out byte copyLastPalette)
     {
         if (file == null) throw new ArgumentNullException(nameof(file));
 
@@ -541,7 +540,7 @@ public class ImporterSffEditorWindow : EditorWindow
 
     }
 
-    public void readHeaderV2(FileUnpack file, ref SpriteUnpack s, ref UInt32 ofs, ref UInt32 size, UInt32 lofs, UInt32 tofs, ref UInt16 link)
+    public void readHeaderV2(File file, ref SpriteUnpack s, ref UInt32 ofs, ref UInt32 size, UInt32 lofs, UInt32 tofs, ref UInt16 link)
     {
         if (file == null) throw new ArgumentNullException(nameof(file));
 
@@ -571,7 +570,7 @@ public class ImporterSffEditorWindow : EditorWindow
     }
 
 
-    public void readPcxHeader(FileUnpack file, Int64 offset, ref SpriteUnpack s)
+    public void readPcxHeader(File file, Int64 offset, ref SpriteUnpack s)
     {
         UInt16 dummy;
         byte bpp;
@@ -635,9 +634,9 @@ public class ImporterSffEditorWindow : EditorWindow
             {
                 if (!groups.Contains(s.Group))
                 {
-                    if (!Directory.Exists(path + "/" + s.Group.ToString()))
+                    if (!System.IO.Directory.Exists(path + "/" + s.Group.ToString()))
                     {
-                        Directory.CreateDirectory(Application.dataPath.Replace("Assets", "") + PathSaveSprites + s.Group.ToString());
+                        System.IO.Directory.CreateDirectory(Application.dataPath.Replace("Assets", "") + PathSaveSprites + s.Group.ToString());
                     }
 
                     groups.Add(s.Group);

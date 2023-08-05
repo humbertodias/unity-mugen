@@ -6,7 +6,7 @@ namespace UnityMugen
     /// <summary>
     /// Base class to ease proper resource disposal.
     /// </summary>
-    public abstract class Resource
+    public abstract class Resource : IDisposable
     {
         /// <summary>
         /// Initializes a new instance of this class.

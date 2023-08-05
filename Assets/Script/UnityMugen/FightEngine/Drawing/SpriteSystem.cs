@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using System.Text;
 using UnityEngine;
+using UnityMugen.Collections;
 using UnityMugen.IO;
 
 namespace UnityMugen.Drawing
@@ -11,42 +12,132 @@ namespace UnityMugen.Drawing
     {
         private static LauncherEngine Launcher => LauncherEngine.Inst;
 
-        private Dictionary<int, Dictionary<SpriteId, SpriteData>> managers = new Dictionary<int, Dictionary<SpriteId, SpriteData>>();
+        private Sff s;
 
-        public SpriteManager CreateManager(string nameFile)
+        private Dictionary<int, (Dictionary<SpriteId, SpriteData>, PaletteList)> managers = 
+            new Dictionary<int, (Dictionary<SpriteId, SpriteData>, PaletteList)>();
+
+        private Dictionary<SpriteId, SpriteData> spriteDatas = new Dictionary<SpriteId, SpriteData>();
+
+        static Texture2D m_nullpalette;
+        public static Texture2D CreatePaletteTexture
         {
-            if (managers.TryGetValue(nameFile.GetHashCode(), out Dictionary<SpriteId, SpriteData> value))
+            get
             {
-                return new SpriteManager(value);
+                if (m_nullpalette == null)
+                {
+                    m_nullpalette = new Texture2D(1, 1);
+                    m_nullpalette.filterMode = FilterMode.Point;
+                    m_nullpalette.SetPixel(0, 0, Color.white);
+                    m_nullpalette.Apply();
+                }
+                return m_nullpalette;
+            }
+        }
+
+        public ReadOnlyList<Texture2D> BuildPalettes(string[] palettesName)
+        {
+            var palettes = new List<Texture2D>(12);
+
+            for (var i = 0; i != palettesName.Length; ++i)
+            {
+                var filepath = palettesName[i];
+                if (string.Equals(filepath, string.Empty))
+                {
+                    palettes.Add(CreatePaletteTexture);
+                }
+                else
+                {
+                    var palette = LoadPaletteFile(filepath);
+                    palettes.Add(palette);
+                }
+            }
+
+            return new ReadOnlyList<Texture2D>(palettes);
+        }
+
+        public Texture2D LoadPaletteFile(string filepath)
+        {
+            if (filepath == null) throw new ArgumentNullException(nameof(filepath));
+
+            Texture2D palette = new Texture2D(256, 1, TextureFormat.RGBA32, false, false);
+            palette.filterMode = FilterMode.Point;
+
+            //if (m_palettefilecache.TryGetValue(filepath, out palette)) return palette;
+
+            //palette = GetSubSystem<Video.VideoSystem>().CreatePaletteTexture();
+            //m_palettefilecache.Add(filepath, palette);
+
+            using (var file = Launcher.fileSystem.OpenFile(filepath))
+            {
+                if (file.FileLength != 256 * 3)
+                {
+                    Debug.LogError(string.Format("{0} is not a character palette file", filepath));
+                }
+                else
+                {
+                    var buffer = new byte[256 * 4];
+                    var filedata = file.ReadBytes(256 * 3);
+
+                    for (var i = 0; i != 256; ++i)
+                    {
+                        var fileindex = i * 3;
+                        Color32 color32 = new Color32(filedata[fileindex + 0], filedata[fileindex + 1], filedata[fileindex + 2], 255);
+                        palette.SetPixel(255 - i, 0, color32);
+                    }
+                    palette.Apply();
+                }
+            }
+
+            return palette;
+        }
+
+        public SpriteManager CreateManager(string nameFile, string[] palettesName)
+        {
+            if (managers.TryGetValue(nameFile.GetHashCode(), 
+                out (Dictionary<SpriteId, SpriteData>, PaletteList) value))
+            {
+                PaletteList pal = new PaletteList();
+                pal.PalTable = value.Item2.PalTable;
+                pal.PalTex = new List<Texture2D>(value.Item2.PalTex);
+                pal.PalTexBackup = new List<Texture2D>(value.Item2.PalTex);
+                pal.palettes = value.Item2.palettes;
+                pal.numcols = value.Item2.numcols;
+                pal.paletteMap = value.Item2.paletteMap;
+
+                return new SpriteManager((value.Item1, pal));
             }
 
             spriteDatas = new Dictionary<SpriteId, SpriteData>();
             GetOpenFile(nameFile);
-            CreateDadosSprites();
-            managers.Add(nameFile.GetHashCode(), spriteDatas);
-            return new SpriteManager(spriteDatas);
-        }
+            
 
-        public Dictionary<SpriteId, SpriteData> spriteDatas = new Dictionary<SpriteId, SpriteData>();
-        SffUnpack s;
-
-
-        public void CreateDadosSprites()
-        {
-            int numberPaletteOverride = 0;
-
-            if (spriteDatas.TryGetValue(new SpriteId(0, 0), out SpriteData sprite))
-                numberPaletteOverride = sprite.indexPalette;
-
-            foreach (SpriteId spriteId in spriteDatas.Keys)
+            if (palettesName != null)
             {
-                if (spriteDatas[spriteId].indexPalette == numberPaletteOverride ||
-                    spriteDatas[spriteId].indexPalette == 0)
+                var pale = BuildPalettes(palettesName);
+                for (int i = 0; i < pale.Count; i++)
                 {
-                    spriteDatas[spriteId].paletteOverride = true;
+                    s.palList.PalTex[i] = pale[i];
                 }
             }
 
+            s.palList.PalTexBackup = new List<Texture2D>(s.palList.PalTex);
+
+            //int count = 0;
+            //foreach (Texture2D tex in s.palList.PalTexBackup)
+            //{
+            //    byte[] bytes = tex.EncodeToPNG();
+            //    var dirPath = Application.dataPath + "/SaveImages/";
+            //    if (!System.IO.Directory.Exists(dirPath))
+            //    {
+            //        System.IO.Directory.CreateDirectory(dirPath);
+            //    }
+            //    System.IO.File.WriteAllBytes(dirPath + "Image"+ (count++) + ".png", bytes);
+            //    //throw new ArgumentNullException("");
+            //}
+
+            managers.Add(nameFile.GetHashCode(), (spriteDatas, s.palList));
+            return new SpriteManager((spriteDatas, s.palList));
         }
 
 
@@ -56,19 +147,18 @@ namespace UnityMugen.Drawing
         {
             if (filepath == null) throw new ArgumentNullException(nameof(filepath));
 
-            var file = new FileUnpack(filepath, new FileStream(filepath, FileMode.Open, FileAccess.Read));
+            var file = new File(filepath, new System.IO.FileStream(filepath, System.IO.FileMode.Open, System.IO.FileAccess.Read));
 
-            s = new SffUnpack();
+            s = new Sff();
             s = s.newSff();
 
             UInt32 lofs, tofs;
             ReadHeaderFile(file, out s.header, out lofs, out tofs);
 
             // Leitura de Palette de Sff V2.x
-            /*
             if (s.header.Ver0 != 1)
             {
-                Dictionary<Tuple<int, int>, int> uniquePals = new Dictionary<Tuple<int, int>, int>();
+                Dictionary<PaletteId, int> uniquePals = new Dictionary<PaletteId, int>();
                 for (int i = 0; i < s.header.NumberOfPalettes; i++)
                 {
                     file.SeekFromBeginning(s.header.FirstPaletteHeaderOffset + (i * 16));
@@ -84,11 +174,11 @@ namespace UnityMugen.Drawing
 
                     Color[] pal;
                     int idx;
-                    if (uniquePals.TryGetValue(new Tuple<int, int>(groupNo, itemNo), out int old))
+                    if (uniquePals.TryGetValue(new PaletteId(groupNo, itemNo), out int old))
                     {
                         idx = old;
                         pal = s.palList.Get(old);
-                        Debug.Log("duplicated palette");
+                        Debug.LogWarning("duplicated palette");
                     }
                     else if (siz == 0)
                     {
@@ -114,35 +204,34 @@ namespace UnityMugen.Drawing
                         idx = i;
                     }
 
-                    if (!uniquePals.ContainsKey(new Tuple<int, int>(groupNo, itemNo)))
-                        uniquePals.Add(new Tuple<int, int>(groupNo, itemNo), idx);
+                    if (!uniquePals.ContainsKey(new PaletteId(groupNo, itemNo)))
+                        uniquePals.Add(new PaletteId(groupNo, itemNo), idx);
 
                     s.palList = s.palList.SetSource(i, pal);
 
-                    if (!s.palList.PalTable.ContainsKey(new Tuple<UInt32, UInt32>((UInt32)groupNo, (UInt32)itemNo)))
-                        s.palList.PalTable.Add(new Tuple<UInt32, UInt32>((UInt32)groupNo, (UInt32)itemNo), idx);
+                    if (!s.palList.PalTable.ContainsKey(new PaletteId(groupNo, itemNo)))
+                        s.palList.PalTable.Add(new PaletteId(groupNo, itemNo), idx);
 
-                    if (!s.palList.numcols.ContainsKey(new Tuple<Int16, Int16>(groupNo, itemNo)))
-                        s.palList.numcols.Add(new Tuple<Int16, Int16>(groupNo, itemNo), numCols);
+                    if (!s.palList.numcols.ContainsKey(new PaletteId(groupNo, itemNo)))
+                        s.palList.numcols.Add(new PaletteId(groupNo, itemNo), numCols);
 
-                    bool exis1 = s.palList.PalTable.TryGetValue(new Tuple<UInt32, UInt32>(1, (UInt32)i + 1), out int value1);
-                    bool exis2 = s.palList.PalTable.TryGetValue(new Tuple<UInt32, UInt32>((UInt32)groupNo, (UInt32)itemNo), out int value2);
+                    bool exis1 = s.palList.PalTable.TryGetValue(new PaletteId(1, i + 1), out int value1);
+                    bool exis2 = s.palList.PalTable.TryGetValue(new PaletteId(groupNo, itemNo), out int value2);
                     if ((exis1 && exis2) && i <= 12 && value1 == value2 && groupNo != 1 && itemNo != (i + 1))
                     {
-                        if (!s.palList.PalTable.ContainsKey(new Tuple<UInt32, UInt32>(1, (UInt32)i + 1)))
-                            s.palList.PalTable.Add(new Tuple<UInt32, UInt32>(1, (UInt32)i + 1), -1);
+                        if (!s.palList.PalTable.ContainsKey(new PaletteId(1, i + 1)))
+                            s.palList.PalTable.Add(new PaletteId(1, i + 1), -1);
                     }
 
                     if (i <= 12 && i + 1 == s.header.NumberOfPalettes)
                     {
                         for (int j = i + 1; j < 12; j++)
                         {
-                            s.palList.PalTable.Remove(new Tuple<UInt32, UInt32>(1, (UInt32)(j + 1)));
+                            s.palList.PalTable.Remove(new PaletteId(1, (j + 1)));
                         }
                     }
                 }
             }
-            */
 
             SpriteUnpack[] spriteList = new SpriteUnpack[s.header.NumberOfSprites];
             SpriteUnpack prev = null;
@@ -182,18 +271,11 @@ namespace UnityMugen.Drawing
 
                             Sprite sprite = Sprite.Create(spriteList[i].Tex, rect, pivot, 100.0f, 0, SpriteMeshType.FullRect);
                             sprite.name = spriteList[i].Group + "-" + spriteList[i].Number;
-                            ////////TESTE////////
-                            //string fileName = nameChar + "_" + spriteList[i].Group + "-" + spriteList[i].Number + ".png";
-                            //MiscTools.Texture2DToPng(spriteList[i].Tex, fileName, PathSaveSprites);
-
                             SpriteData spriteData = new SpriteData();
                             spriteData.indexPalette = spriteList[i].palidx;
                             spriteData.sprite = sprite;
-
-
                             spriteDatas.Add(spriteId, spriteData);
                         }
-                        ////////TESTE////////
                     }
                     else
                     {
@@ -230,15 +312,15 @@ namespace UnityMugen.Drawing
         }
 
 
-        public static void ReadHeaderFile(FileUnpack file, out SffHeader sh, out UInt32 lofs, out UInt32 tofs)
+        public static void ReadHeaderFile(UnityMugen.IO.File file, out SffHeader sh, out UInt32 lofs, out UInt32 tofs)
         {
             if (file == null) throw new ArgumentNullException(nameof(file));
 
             lofs = tofs = 0;
 
-            BinaryReader binaryReader = new BinaryReader(file.Stream);
+            System.IO.BinaryReader binaryReader = new System.IO.BinaryReader(file.Stream);
             var data = binaryReader.ReadBytes(65);
-            file.Stream.Seek(0, SeekOrigin.Begin);
+            file.Stream.Seek(0, System.IO.SeekOrigin.Begin);
 
             sh.Ver3 = data[12];
             sh.Ver2 = data[13];
@@ -288,7 +370,7 @@ namespace UnityMugen.Drawing
             return s;
         }
 
-        public void readV2(FileUnpack f, ref SpriteUnpack s, UInt32 offset, UInt32 datasize)
+        public void readV2(File f, ref SpriteUnpack s, UInt32 offset, UInt32 datasize)
         {
             f.SeekFromBeginning(offset + 4);
 
@@ -296,9 +378,7 @@ namespace UnityMugen.Drawing
             {
                 int format = -s.rle;
                 byte[] px = null;
-                Color rgba;
-                Rect rect;
-                bool isPng = false;
+                bool isRaw = false;
 
                 if (2 <= format && format <= 4)
                 {
@@ -321,32 +401,71 @@ namespace UnityMugen.Drawing
                         px = DecodeSFF.Lz5Decode(ref s, px);
                         break;
                     case 10:
-                        Debug.LogError("Não implementei Format case 10");
-                        break;
-                    case 11 | 12:
-                        Debug.LogError("Não implementei Format case 11, 12");
-                        break;
+                        {
+                            px = f.ReadBytes((int)datasize - 4);
+
+                            //if (s.Group == 3001 && s.Number == 1)
+                            //{
+                            //    StringBuilder sb = new StringBuilder();
+                            //    foreach (byte p in px)
+                            //    {
+                            //        sb.Append(p + ",");
+                            //    }
+                            //    sb.ToString();
+                            //}
+#warning ainda esta em teste
+                            px = new PngIndexedDecoder().Decode(px);
+                            MiscSprites.Flip(s.Size, ref px);
+                            break;
+                        }
+                    case 11:
+                    case 12:
+                        {
+                            px = f.ReadBytes((int)datasize - 4);
+                            Texture2D tex = new Texture2D(2, 2);
+                            ImageConversion.LoadImage(tex, px);
+
+                            //byte[] bytes = tex.EncodeToPNG();
+                            //var dirPath = Application.dataPath + "/../SaveImages/";
+                            //if (!System.IO.Directory.Exists(dirPath))
+                            //{
+                            //    System.IO.Directory.CreateDirectory(dirPath);
+                            //}
+                            //System.IO.File.WriteAllBytes(dirPath + "Image" + s.Group + "-" + s.Number + ".png", bytes);
+
+                            Rect rect2 = new Rect(0.0f, 0.0f, tex.width, tex.height);
+                            Vector2 pivot = new Vector2((float)s.Offset[0] / (float)tex.width, (((float)s.Size[1] - (float)s.Offset[1]) / (float)tex.height));
+                            Sprite sprite = Sprite.Create(tex, rect2, pivot, 100.0f, 0, SpriteMeshType.FullRect);
+                            sprite.name = s.Group + "-" + s.Number;
+
+                            SpriteData spriteData = new SpriteData();
+                            spriteData.indexPalette = s.palidx;
+                            spriteData.sprite = sprite;
+
+                            var id = new SpriteId(s.Group, s.Number);
+                            if (!spriteDatas.ContainsKey(id))
+                                spriteDatas.Add(id, spriteData);
+
+                            s.Tex = tex;
+
+                            return;
+                        }
 
                     default:
                         throw new ArgumentNullException("Unknown format");
 
                 }
 
-                if (!isPng)
+                if (!isRaw)
                 {
                     s = SetPxl(ref s, px);
-                }
-                else
-                {
-                    //s = s.SetPng();
                 }
             }
         }
 
-        public void read(FileUnpack f, ref SpriteUnpack s, ref SffHeader sh, UInt32 offset, UInt32 datasize,
+        public void read(File f, ref SpriteUnpack s, ref SffHeader sh, UInt32 offset, UInt32 datasize,
             UInt32 nextSubheader, SpriteUnpack prev, ref PaletteList pl, byte copyLastPalette, bool c00)
         {
-
             //byte ps;
             bool paletteSame;
             UInt32 palSize;
@@ -406,6 +525,8 @@ namespace UnityMugen.Drawing
                     Color32 color = new Color32(data3[0], data3[1], data3[2], (byte)(i == 0 ? 0 : 255));
                     colors[i] = color;
                 }
+
+                pl.PalTex[palidx] = (GenericClass.BuildPalettes(colors));
             }
 
             var imgSprite = DecodeSFF.RlePcxDecode(ref s, px);
@@ -414,7 +535,7 @@ namespace UnityMugen.Drawing
         }
 
 
-        public void readHeader(FileUnpack file, ref SpriteUnpack s, out UInt32 ofs, out UInt32 size, out UInt16 link, out byte copyLastPalette)
+        public void readHeader(File file, ref SpriteUnpack s, out UInt32 ofs, out UInt32 size, out UInt16 link, out byte copyLastPalette)
         {
             if (file == null) throw new ArgumentNullException(nameof(file));
 
@@ -431,10 +552,9 @@ namespace UnityMugen.Drawing
             s.Number = BitConverter.ToInt16(data, 14);
             link = BitConverter.ToUInt16(data, 16);
             copyLastPalette = data[18];
-
         }
 
-        public void readHeaderV2(FileUnpack file, ref SpriteUnpack s, ref UInt32 ofs, ref UInt32 size, UInt32 lofs, UInt32 tofs, ref UInt16 link)
+        public void readHeaderV2(File file, ref SpriteUnpack s, ref UInt32 ofs, ref UInt32 size, UInt32 lofs, UInt32 tofs, ref UInt16 link)
         {
             if (file == null) throw new ArgumentNullException(nameof(file));
 
@@ -464,7 +584,7 @@ namespace UnityMugen.Drawing
         }
 
 
-        public void readPcxHeader(FileUnpack file, Int64 offset, ref SpriteUnpack s)
+        public void readPcxHeader(File file, Int64 offset, ref SpriteUnpack s)
         {
             UInt16 dummy;
             byte bpp;
@@ -507,8 +627,6 @@ namespace UnityMugen.Drawing
             {
                 s.rle = 0;
             }
-
-            //return s;
         }
 
 
@@ -550,10 +668,10 @@ namespace UnityMugen.Drawing
     public static class GenericClass
     {
 
-        public static SffUnpack newSff(this SffUnpack s)
+        public static Sff newSff(this Sff s)
         {
             s.sprites = new Dictionary<Int16[], SpriteUnpack>();
-            s.palList.init();
+            s.palList = new PaletteList();
             for (int i = 1; i <= /*MaxPalNo*/12; i++)
             {
                 (int index, _, PaletteList palList) = s.palList.NewPal();

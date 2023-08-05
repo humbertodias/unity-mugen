@@ -9,7 +9,6 @@ namespace UnityMugen.Drawing
     {
         public Sprite sprite;
         public Vector2 offset;
-        public bool paletteOverride;
         public int indexPalette;
     }
 }

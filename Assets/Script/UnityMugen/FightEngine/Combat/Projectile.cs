@@ -49,8 +49,6 @@ namespace UnityMugen.Combat
             m_palfx = new PaletteFx();
 
             PaletteList = Creator.PaletteList;
-            //PalettesSprite = Creator.PalettesSprite;
-            CurrentPalette = Creator.CurrentPalette;
             CurrentFacing = Creator.CurrentFacing;
             CurrentLocation = GetStartLocation();
             CurrentVelocity = Data.InitialVelocity;

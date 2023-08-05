@@ -12,18 +12,22 @@ namespace UnityMugen.Drawing
     {
 
         Dictionary<SpriteId, SpriteData> m_sprites;
+        public PaletteList Palettes { private set; get; }
 
-        public SpriteManager(Dictionary<SpriteId, SpriteData> spriteDatas)
+        public SpriteManager((Dictionary<SpriteId, SpriteData>, PaletteList) data)
         {
-            if (spriteDatas == null) throw new ArgumentNullException(nameof(spriteDatas));
+            if (data.Item1 == null) throw new ArgumentNullException(nameof(data.Item1));
+            if (data.Item2 == null) throw new ArgumentNullException(nameof(data.Item2));
 
-            m_sprites = new Dictionary<SpriteId, SpriteData>(spriteDatas);
+            m_sprites = new Dictionary<SpriteId, SpriteData>(data.Item1);
+            Palettes = data.Item2;
+
             DrawState = new DrawState();
         }
 
         public SpriteManager Clone()
         {
-            var clone = new SpriteManager(m_sprites);
+            var clone = new SpriteManager((m_sprites, Palettes));
             //clone.OverridePalette = OverridePalette;
             //clone.UseOverride = UseOverride;
             return clone;
@@ -38,17 +42,12 @@ namespace UnityMugen.Drawing
             return null;
         }
 
-        public DrawState SetupDrawing(SpriteId id, PaletteList paletteList, Texture2D CurrentPalette)
+        public DrawState SetupDrawing(SpriteId id, PaletteList paletteList)
         {
             var sprite = GetSprite(id);
 
             DrawState.Reset();
 
-            //if (sprite != null && sprite.paletteOverride)
-            //{ 
-            //    DrawState.Set(CurrentPalette);
-            //}
-            //else
             if (sprite != null)
             {
                 try

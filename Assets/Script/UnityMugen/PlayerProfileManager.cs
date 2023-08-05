@@ -22,6 +22,7 @@ namespace UnityMugen
         public Sprite smallPortrait;
         public Sprite largePortrait;
         public int[] palettesIndex;
+        public string[] palettesName;
 
         [Header("Commons")]
         public PlayerConstants playerConstants;
@@ -41,6 +42,15 @@ namespace UnityMugen
         [Header("State Path")]
         public string[] states;
 
+        public string[] NamePalettes()
+        {
+            string[] palettes = new string[palettesName.Length];
+            for (int i = 0; i < palettesName.Length; i++)
+            {
+                palettes[i] = Application.streamingAssetsPath + "/" + charName + "/Palettes/" + palettesName[i] + ".act";
+            }
+            return palettes;
+        }
 
         public string NamefileSFF()
         {

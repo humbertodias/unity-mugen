@@ -10,6 +10,12 @@ namespace UnityMugen.Drawing
     [Serializable]
     public struct PaletteId : IEquatable<PaletteId>
     {
+
+        static PaletteId()
+        {
+            s_default = new PaletteId(1, 1);
+        }
+
         /// <summary>
         /// Initializes an instance of this class.
         /// </summary>
@@ -106,5 +112,9 @@ namespace UnityMugen.Drawing
         /// </summary>
         /// <returns>The Image number.</returns>
         public int Number;
+
+        public static PaletteId Default => s_default;
+
+        private static readonly PaletteId s_default;
     }
 }

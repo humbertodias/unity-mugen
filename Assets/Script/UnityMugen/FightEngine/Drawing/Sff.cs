@@ -5,7 +5,7 @@ using UnityEngine;
 namespace UnityMugen.Drawing
 {
 
-    public struct SffUnpack
+    public struct Sff
     {
         public SffHeader header;
         public Dictionary<Int16[], SpriteUnpack> sprites;
@@ -19,7 +19,7 @@ namespace UnityMugen.Drawing
         public Int16 Group, Number;
         public UInt16[] Size;
         public Int16[] Offset;
-        public int palidx;
+        public int palidx = -1;
         public int rle;
         public byte coldepth;
         public UInt32[] paltemp;
@@ -37,22 +37,13 @@ namespace UnityMugen.Drawing
     }
 
 
-    public struct PaletteList
+    public class PaletteList
     {
-        public List<Color[]> palettes;
-        public int[] paletteMap;
-        public Dictionary<PaletteId, int> PalTable;
-        public Dictionary<PaletteId, int> numcols;
-        public List<Texture2D> PalTex;
+        public List<Color[]> palettes = new List<Color[]>();
+        public int[] paletteMap = new int[0];
+        public Dictionary<PaletteId, int> PalTable = new Dictionary<PaletteId, int>();
+        public Dictionary<PaletteId, int> numcols = new Dictionary<PaletteId, int>();
+        public List<Texture2D> PalTex = new List<Texture2D>(0);
         public List<Texture2D> PalTexBackup;
-
-        public void init()
-        {
-            palettes = new List<Color[]>();
-            paletteMap = new int[0];
-            PalTable = new Dictionary<PaletteId, int>();
-            numcols = new Dictionary<PaletteId, int>();
-            PalTex = new List<Texture2D>(0);
-        }
     }
 }

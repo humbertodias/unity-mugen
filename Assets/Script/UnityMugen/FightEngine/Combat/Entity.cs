@@ -16,8 +16,6 @@ namespace UnityMugen.Combat
         public long Id { get; set; }
         public string NameSearch { get; set; }
         public TypeEntity typeEntity { get; set; }
-
-        public Texture2D CurrentPalette { get; set; }
         public PaletteList PaletteList { get; set; }
 
         [NonSerialized] public SpriteRenderer spriteRenderer;
@@ -244,7 +242,7 @@ namespace UnityMugen.Combat
                 spriteRenderer.flipY = GetDrawFlip() == SpriteEffects.FlipVertically || GetDrawFlip() == SpriteEffects.Both;
 
 
-                var drawstate = SpriteManager.SetupDrawing(currentelement.SpriteId, PaletteList, CurrentPalette);
+                var drawstate = SpriteManager.SetupDrawing(currentelement.SpriteId, PaletteList);
                 PaletteFx.SetShader(drawstate.ShaderParameters);
                 drawstate.Blending = Transparency == new Blending() ? currentelement.Blending : Transparency;
                 drawstate.Use(spriteRenderer.material);
@@ -325,7 +323,7 @@ namespace UnityMugen.Combat
                 reflection.sortingOrder = -orderDraw - 20;
 
                 var currentelement = AnimationManager.CurrentElement;
-                var drawstate = SpriteManager.SetupDrawing(currentelement.SpriteId, PaletteList, CurrentPalette);
+                var drawstate = SpriteManager.SetupDrawing(currentelement.SpriteId, PaletteList);
                 PaletteFx.SetShader(drawstate.ShaderParameters);
 
                 drawstate.Blending = new Blending(BlendType.Add, 255, 127);

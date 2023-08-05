@@ -14,7 +14,7 @@ namespace UnityMugen.Video
 
         public Renderer()
         {
-            m_nullpalette = PaletteSystem.CreatePaletteTexture;
+            m_nullpalette = SpriteSystem.CreatePaletteTexture;
 
             var pixels = new byte[] { 1, 2, 1, 2 };
 

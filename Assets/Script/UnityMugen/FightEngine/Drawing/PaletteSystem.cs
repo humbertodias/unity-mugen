@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 using UnityMugen.IO;
 
@@ -43,21 +42,6 @@ namespace UnityMugen.Drawing
             return new List<Texture2D>(palettesTex2D);
         }
 
-        static Texture2D m_nullpalette;
-        public static Texture2D CreatePaletteTexture
-        {
-            get
-            {
-                if (m_nullpalette == null)
-                {
-                    m_nullpalette = new Texture2D(1, 1);
-                    m_nullpalette.SetPixel(0, 0, Color.white);
-                    m_nullpalette.Apply();
-                }
-                return m_nullpalette;
-            }
-        }
-
 
         public PaletteList LoadPalette(string filepath)
         {
@@ -74,7 +58,7 @@ namespace UnityMugen.Drawing
             }
             else
             {
-                SffUnpack sffUnpack = LoadPaletteFile(filepath);
+                Sff sffUnpack = LoadPaletteFile(filepath);
                 //   Palette pal = SpriteSystem.CreatePalettes();
                 managers.Add(filepath.GetHashCode(), sffUnpack.palList);
                 sffUnpack.palList.PalTexBackup = new List<Texture2D>(sffUnpack.palList.PalTex);
@@ -82,13 +66,13 @@ namespace UnityMugen.Drawing
             }
         }
 
-        public SffUnpack LoadPaletteFile(string filepath)
+        public Sff LoadPaletteFile(string filepath)
         {
             if (filepath == null) throw new ArgumentNullException(nameof(filepath));
 
-            var file = new FileUnpack(filepath, new FileStream(filepath, FileMode.Open, FileAccess.Read));
+            var file = new File(filepath, new System.IO.FileStream(filepath, System.IO.FileMode.Open, System.IO.FileAccess.Read));
 
-            SffUnpack s = new SffUnpack();
+            Sff s = new Sff();
             s = s.newSff();
 
             UInt32 lofs, tofs;

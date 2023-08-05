@@ -59,8 +59,6 @@ namespace UnityMugen.Combat
             m_palfx = Data.OwnPaletteFx ? new PaletteFx() : Creator.PaletteFx;
 
             PaletteList = Creator.PaletteList;
-            //PalettesSprite = Parent.PalettesSprite;
-            CurrentPalette = Creator.CurrentPalette;
             CurrentFacing = GetFacing(Data.PositionType, m_offsetcharacter.CurrentFacing, Data.FacingFlag < 0);
             CurrentLocation = GetStartLocation();
             CurrentScale = Data.Scale;

@@ -98,28 +98,23 @@ namespace UnityMugen.Combat
             draw.attack = trainner.attack;
             draw.hitable = trainner.hitable;
 
-            //m_soundmanager = Launcher.soundSystem.CreateManager(profile.audiosClipsManager);
-
             m_soundmanager = Launcher.soundSystem.CreateManager(profile.NamefileSND());
-            m_spriteManager = Launcher.spriteSystem.CreateManager(profile.NamefileSFF()/*, out Palette pal*/);
+            m_spriteManager = Launcher.spriteSystem.CreateManager(profile.NamefileSFF(), profile.NamePalettes());
             m_animationmanager = Launcher.animationSystem.CreateManager(profile.NamefileAIR(), CurrentScale);
             m_commandmanager = Launcher.commandSystem.CreateManager(mode, Instantiate(profile.commandsList).Internal());
             m_dimensions = new CharacterDimensions(playerConstants);
-
-            PaletteList = Launcher.paletteSystem.LoadPalette(profile.NamefileSFF());
-
-            PaletteList.PalTable.TryGetValue(new PaletteId(1, 1), out int sourceIndex);
+            
+            PaletteList = m_spriteManager.Palettes;
+            
+            PaletteList.PalTable.TryGetValue(PaletteId.Default, out int sourceIndex);
             PaletteList.PalTable.TryGetValue(new PaletteId(1, PaletteNumber), out int destIndex);
             PaletteList.PalTex[sourceIndex] = PaletteList.PalTexBackup[destIndex];
-
-            //m_palettenumber = 0;
 
             m_power = 0;
             m_palfx = new PaletteFx();
             m_team = team;
             m_helpers = new Dictionary<long, List<Helper>>();
 
-            //SpriteManager.UseOverride = true;
             SetLocalAnimation(0, 0);
 
             PushFlag = true;

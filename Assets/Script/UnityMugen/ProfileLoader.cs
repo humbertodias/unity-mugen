@@ -89,14 +89,14 @@ namespace UnityMugen
             {
                 int stage = UnityEngine.Random.Range(0, totalStages);
 
-            reloadRondomCharacter:
+                reloadRandomCharacter:
                 int charac = UnityEngine.Random.Range(0, totalCharaters);
                 if (!orderBattleSurvival.ContainsKey(charac))
                 {
                     orderBattleSurvival.Add(charac, stage);
                 }
                 else
-                    goto reloadRondomCharacter;
+                    goto reloadRandomCharacter;
             }
         }
 

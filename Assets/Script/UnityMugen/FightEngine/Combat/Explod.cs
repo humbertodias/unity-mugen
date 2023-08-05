@@ -37,22 +37,15 @@ namespace UnityMugen.Combat
                 m_spritemanager = BasePlayer.SpriteManager.Clone();
                 m_animationmanager = BasePlayer.AnimationManager.Clone();
                 PaletteList = Creator.PaletteList;
-                //PalettesSprite = Creator.PalettesSprite;
-                CurrentPalette = Creator.CurrentPalette;
             }
             else
             {
                 m_spritemanager = Engine.FxSprites.Clone();
                 m_animationmanager = Engine.FxAnimations.Clone();
                 PaletteList = Engine.PaletteListFX;
-                //PalettesSprite = Engine.FxPalettes;
-                CurrentPalette = Engine.PaletteListFX.PalTex[0];
             }
 
             CreationFacing = Data.Offseter.CurrentFacing;
-
-
-            //CurrentPalette = Creator.CurrentPalette;
 
             CurrentFacing = GetStartFacing();
 

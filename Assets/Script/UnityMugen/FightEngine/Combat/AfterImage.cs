@@ -230,7 +230,7 @@ namespace UnityMugen.Combat
                 var data = m_imagedata.ElementAt(m_imagedata.Count - 1 - i);
                 if ((m_imagedata.Count + 1 - i) % FrameGap == 0)
                 {
-                    var drawstate = m_entity.SpriteManager.SetupDrawing(data.Element.SpriteId, m_entity.PaletteList, m_entity.CurrentPalette);
+                    var drawstate = m_entity.SpriteManager.SetupDrawing(data.Element.SpriteId, m_entity.PaletteList);
                     drawstate.Blending = Transparency ?? data.Transparency;
                     drawstate.ShaderParameters.AfterImageEnable = true;
                     drawstate.ShaderParameters.AfterImageColor = m_basecolor;
