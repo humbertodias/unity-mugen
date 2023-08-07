@@ -2,6 +2,22 @@
 
 ![Project Logo](./.github/logo.png)
 
+
+<p align="center">
+  <a href="https://discord.gg/cWFA4kzqfb">
+  <img src="https://img.shields.io/discord/1115699984734625802?logo=discord" alt="chat on Discord">
+  </a>
+
+  <a href="https://github.com/levelalfaomega/UnityMugen/graphs/contributors" alt="Contributors">
+  <img src="https://img.shields.io/github/contributors/levelalfaomega/UnityMugen" />
+  </a>
+  
+  <a href="https://github.com/levelalfaomega/UnityMugen/pulse" alt="Activity">
+  <img src="https://img.shields.io/github/commit-activity/m/levelalfaomega/UnityMugen" />
+  </a>
+</p>
+
+
 O Project ports Mugen mechanics to Unity.
 
 Visit the [Documentation](https://levelalfaomega.gitbook.io/unity-mugen/).
