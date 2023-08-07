@@ -160,7 +160,7 @@ namespace UnityMugen.Editors
             m_manager.charName = m_charName;// title.GetAttribute<string>("name", String.Empty);
             m_manager.displayName = title.GetAttribute<string>("displayname", String.Empty);
             m_manager.author = title.GetAttribute<string>("author", String.Empty);
-            m_manager.versionDate = title.GetAttribute<string>("versiondate");
+            m_manager.versionDate = title.GetAttribute<string>("versiondate", String.Empty);
             m_manager.mugenVersion = BuildMugenVersion(title.GetAttribute<string>("mugenversion", String.Empty));
             m_manager.palettesIndex = BuildPaletteOrder(title.GetAttribute<string>("pal.defaults", null));
 
