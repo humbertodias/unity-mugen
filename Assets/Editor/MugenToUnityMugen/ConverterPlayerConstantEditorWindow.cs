@@ -29,7 +29,7 @@ public class ConverterPlayerConstantEditorWindow : EditorWindow
 
         if (GUILayout.Button("Converter Constant File"))
         {
-            string file = EditorUtility.OpenFilePanel("Falha ao Carregar o arquivo em formato .CNS", "", "cns");
+            string file = EditorUtility.OpenFilePanel("Load .cns file", "", "cns");
             if (file.Length != 0)
             {
                 m_textFile = new FileSystem().OpenTextFile(file);
@@ -77,11 +77,11 @@ public class ConverterPlayerConstantEditorWindow : EditorWindow
 
         PrefixedExpression sparkno = datasection.GetAttribute<PrefixedExpression>("sparkno", null);
         playerConstants.DefaultSparkNumber = EvaluationHelper.AsInt32(null, sparkno, -1);
-        playerConstants.DefaultSparkNumberIsCommon = !EvaluationHelper.IsCommon(sparkno, true);
+        playerConstants.DefaultSparkNumberIsCommon = !EvaluationHelper.IsCommon(sparkno, false);// if equal "" ou "s" is common
 
         PrefixedExpression defaultguardspark = datasection.GetAttribute<PrefixedExpression>("guard.sparkno", null);
         playerConstants.DefaultGuardSparkNumber = EvaluationHelper.AsInt32(null, defaultguardspark, -1);
-        playerConstants.DefaultGuardSparkNumberIsCommon = !EvaluationHelper.IsCommon(defaultguardspark, true);
+        playerConstants.DefaultGuardSparkNumberIsCommon = !EvaluationHelper.IsCommon(defaultguardspark, false);// if equal "" ou "s" is common
 
         playerConstants.KOEcho = datasection.GetAttribute("KO.echo", false);
         playerConstants.VolumeOffset = datasection.GetAttribute("volume", 0);

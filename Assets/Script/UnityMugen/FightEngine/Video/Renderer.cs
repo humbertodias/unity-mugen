@@ -40,15 +40,16 @@ namespace UnityMugen.Video
         {
             if (drawstate == null) throw new ArgumentNullException(nameof(drawstate));
 
-            SetShaderParameters(drawstate.ShaderParameters, drawstate.Palette);
+            SetShaderParameters(drawstate.ShaderParameters, drawstate.Palette, drawstate.IsRGBA);
         }
 
-        private void SetShaderParameters(ShaderParameters parameters, Texture2D palette)
+        private void SetShaderParameters(ShaderParameters parameters, Texture2D palette, bool isRGBA)
         {
             if (parameters == null) throw new ArgumentNullException(nameof(parameters));
             if (palette == null) throw new ArgumentNullException(nameof(palette));
 
             m_material.SetTexture("xPalette", palette);
+            m_material.SetInt("IsRGBA", isRGBA ? 1 : 0);
 
             OnDeviceReset();
 
@@ -95,18 +96,21 @@ namespace UnityMugen.Video
                 case BlendType.AddAlpha:
                     m_material.SetFloat("Alpha", 1);
                     m_material.SetFloat("DstMode", 1);
+                    m_material.SetFloat("BlendOp", 0);
                     m_material.SetFloat("Subtraction", 10);
                     break;
 
                 case BlendType.Add:
                     m_material.SetFloat("Alpha", Alpha(blending));
                     m_material.SetFloat("DstMode", 1);
+                    m_material.SetFloat("BlendOp", 0);
                     m_material.SetFloat("Subtraction", 0);
                     break;
 
                 case BlendType.Subtract:
                     m_material.SetFloat("Alpha", 0.5f);
                     m_material.SetFloat("DstMode", 10);
+                    m_material.SetFloat("BlendOp", 2);
                     m_material.SetFloat("Subtraction", 1);
                     break;
 
@@ -114,6 +118,7 @@ namespace UnityMugen.Video
                 default:
                     m_material.SetFloat("Alpha", 1);
                     m_material.SetFloat("DstMode", 10);
+                    m_material.SetFloat("BlendOp", 0);
                     m_material.SetFloat("Subtraction", 0);
                     break;
             }

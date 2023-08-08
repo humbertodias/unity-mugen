@@ -7,6 +7,7 @@ namespace UnityMugen.Video
     {
         public ShaderParameters ShaderParameters { get; set; }
         public Texture2D Palette { get; set; }
+        public bool IsRGBA { get; set; }
         public Blending Blending { get; set; }
         private readonly Renderer r_renderer;
 
@@ -30,8 +31,9 @@ namespace UnityMugen.Video
             ShaderParameters.Reset();
         }
 
-        public void Set(Texture2D CurrentPalette)
+        public void Set(Texture2D CurrentPalette, bool isRGBA)
         {
+            IsRGBA = isRGBA;
             if (CurrentPalette != null)
             {
                 Palette = CurrentPalette;

@@ -25,7 +25,13 @@ namespace UnityMugen.StateMachine.Controllers
         private Expression m_scale;
         private Expression m_spritePriority;
         private Expression m_drawOnTop;
-        private Expression m_ownPalette;
+
+#warning Não aplicado ainda
+        private Expression m_ownPal;
+
+#warning Não aplicado ainda
+        private Expression m_remapPal;
+
         private Expression m_removeOnGetHit;
         private Expression m_explodIgnoreHitPause;
         private Blending m_blending;
@@ -86,7 +92,8 @@ namespace UnityMugen.StateMachine.Controllers
                 m_spritePriority = textSection.GetAttribute<Expression>("sprpriority", null);
                 m_drawOnTop = textSection.GetAttribute<Expression>("ontop", null);
                 m_shadow = textSection.GetAttribute<Expression>("shadow", null);
-                m_ownPalette = textSection.GetAttribute<Expression>("ownpal", null);
+                m_ownPal = textSection.GetAttribute<Expression>("ownpal", null);
+                m_remapPal = textSection.GetAttribute<Expression>("remappal", null);
                 m_removeOnGetHit = textSection.GetAttribute<Expression>("removeongethit", null);
                 m_explodIgnoreHitPause = textSection.GetAttribute<Expression>("ignorehitpause", null);
 
@@ -140,7 +147,7 @@ namespace UnityMugen.StateMachine.Controllers
             var scale = EvaluationHelper.AsVector2(character, m_scale, Vector2.one);
             var spritepriority = EvaluationHelper.AsInt32(character, m_spritePriority, 0);
             var ontop = EvaluationHelper.AsBoolean(character, m_drawOnTop, false);
-            var ownpalette = EvaluationHelper.AsBoolean(character, m_ownPalette, false);
+            var ownpalette = EvaluationHelper.AsBoolean(character, m_ownPal, false);
             var removeongethit = EvaluationHelper.AsBoolean(character, m_removeOnGetHit, false);
             var ignorehitpause = EvaluationHelper.AsBoolean(character, m_explodIgnoreHitPause, true);
             var shadow = EvaluationHelper.AsBoolean(character, m_shadow, false);

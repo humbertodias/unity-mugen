@@ -34,7 +34,7 @@ namespace UnityMugen.StateMachine.Controllers
 
             var x = EvaluationHelper.AsSingle(character, m_x, null);
             var y = EvaluationHelper.AsSingle(character, m_y, null);
-            var targetId = EvaluationHelper.AsInt32(character, m_targetId, int.MinValue);
+            var targetId = EvaluationHelper.AsInt32(character, m_targetId, -1);
 
             foreach (var target in character.GetTargets(targetId))
             {

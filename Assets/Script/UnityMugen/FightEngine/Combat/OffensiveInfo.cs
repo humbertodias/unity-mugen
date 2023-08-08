@@ -139,8 +139,8 @@ namespace UnityMugen.Combat
 
         public HitDefinition HitDef => m_hitdef;
 
-        public int? P1NewState { get; set; }
-        public int? P2NewState { get; set; }
+        public int P1NewState { get; set; }
+        public int P2NewState { get; set; }
 
         public bool ActiveHitDef
         {

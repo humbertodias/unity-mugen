@@ -9,7 +9,7 @@ namespace UnityMugen.StateMachine.Controllers
     public class VictoryQuote : StateController
     {
 
-        private Expression m_index;
+        private Expression m_value;
         private string m_language;
 
         public VictoryQuote(StateSystem statesystem, string label, TextSection textsection)
@@ -21,7 +21,7 @@ namespace UnityMugen.StateMachine.Controllers
             {
                 base.Load();
 
-                m_index = textSection.GetAttribute<Expression>("value ", null);
+                m_value = textSection.GetAttribute<Expression>("value ", null);
                 m_language = textSection.GetAttribute<string>("language ", "Def");
             }
         }
@@ -29,6 +29,8 @@ namespace UnityMugen.StateMachine.Controllers
         public override void Run(Character character)
         {
             Load();
+
+            var value = EvaluationHelper.AsInt32(character, m_value, -1);
         }
 
     }

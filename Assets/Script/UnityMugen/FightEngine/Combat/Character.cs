@@ -219,13 +219,16 @@ namespace UnityMugen.Combat
             // Em teste - Esta funcionando, só não sei se é o melhor lugar para colocar este codigo.
             if (InHitPause == false)
             {
-                if (OffensiveInfo.P1NewState != null && OffensiveInfo.MoveHit != 0)
+                if (OffensiveInfo.P1NewState >= 0 && 
+                    OffensiveInfo.MoveHit != 0)
                 {
-                    StateManager.ChangeState(OffensiveInfo.P1NewState.Value);
-                    OffensiveInfo.P1NewState = null;
+                    StateManager.ChangeState(OffensiveInfo.P1NewState);
+                    OffensiveInfo.P1NewState = -1;
                 }
 
-                if (OffensiveInfo.P2NewState != null && OffensiveInfo.TargetList.Count > 0)
+                if (
+                    OffensiveInfo.P2NewState >= 0 &&
+                    OffensiveInfo.TargetList.Count > 0)
                 {
                     foreach (Character c in OffensiveInfo.TargetList)
                     {
@@ -234,9 +237,9 @@ namespace UnityMugen.Combat
                         else
                             c.StateManager.ForeignManager = null;
 
-                        c.StateManager.ChangeState(OffensiveInfo.P2NewState.Value);
+                        c.StateManager.ChangeState(OffensiveInfo.P2NewState);
                     }
-                    OffensiveInfo.P2NewState = null;
+                    OffensiveInfo.P2NewState = -1;
                 }
 
             }

@@ -65,7 +65,7 @@ namespace UnityMugen.StateMachine.Controllers
             ParsePositionString(m_pos, out Expression m_position, out BindToTargetPostion m_bindpos);
 
             var time = EvaluationHelper.AsInt32(character, m_time, 1);
-            var targetId = EvaluationHelper.AsInt32(character, m_targetId, int.MinValue);
+            var targetId = EvaluationHelper.AsInt32(character, m_targetId, -1);
             var offset = EvaluationHelper.AsVector2(character, m_position, Vector2.zero) * Constant.Scale;
 
             foreach (var target in character.GetTargets(targetId))

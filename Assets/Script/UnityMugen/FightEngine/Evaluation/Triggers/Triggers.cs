@@ -329,8 +329,8 @@ namespace UnityMugen.Evaluation.Triggers
 
             ++state.TokenIndex;
 
-            var @operator = state.CurrentOperator;
-            if (@operator == Operator.Equals || @operator == Operator.NotEquals)
+            var ope = state.CurrentOperator;
+            if (ope == Operator.Equals || ope == Operator.NotEquals)
             {
                 ++state.TokenIndex;
 
@@ -339,7 +339,7 @@ namespace UnityMugen.Evaluation.Triggers
                 {
                     state.BaseNode.Children.Add(rangenode.Children[1]);
                     state.BaseNode.Children.Add(rangenode.Children[2]);
-                    state.BaseNode.Arguments.Add(@operator);
+                    state.BaseNode.Arguments.Add(ope);
                     state.BaseNode.Arguments.Add(rangenode.Arguments[1]);
                     state.BaseNode.Arguments.Add(rangenode.Arguments[2]);
 
@@ -349,7 +349,7 @@ namespace UnityMugen.Evaluation.Triggers
                 --state.TokenIndex;
             }
 
-            switch (@operator)
+            switch (ope)
             {
                 case Operator.Equals:
                 case Operator.NotEquals:
@@ -360,6 +360,21 @@ namespace UnityMugen.Evaluation.Triggers
                     ++state.TokenIndex;
                     break;
 
+                case Operator.None:
+#warning em analize - Tiago Solution Problem - AnimElem = 6, 1
+                    if (state.TokenIndex <= state.TokenCount)
+                    {
+                        var arg2 = state.BuildNode(false);
+                        if (arg2.Token.Data is NumberData)
+                        {
+                            ope = Operator.Equals;
+                            --state.TokenIndex;
+                            break;
+                        }
+                        return null;
+                    }
+                    else return null;
+                    
                 default:
                     return null;
             }
@@ -367,7 +382,7 @@ namespace UnityMugen.Evaluation.Triggers
             var arg = state.BuildNode(false);
             if (arg == null) return null;
 
-            state.BaseNode.Arguments.Add(@operator);
+            state.BaseNode.Arguments.Add(ope);
             state.BaseNode.Children.Add(arg);
 
             return state.BaseNode;

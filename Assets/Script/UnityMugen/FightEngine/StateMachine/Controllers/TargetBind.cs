@@ -33,7 +33,7 @@ namespace UnityMugen.StateMachine.Controllers
             Load();
 
             var time = EvaluationHelper.AsInt32(character, m_time, 1);
-            var targetId = EvaluationHelper.AsInt32(character, m_id, int.MinValue);
+            var targetId = EvaluationHelper.AsInt32(character, m_id, -1);
             var position = EvaluationHelper.AsVector2(character, m_pos, Vector2.zero) * Constant.Scale;
 
             foreach (var target in character.GetTargets(targetId))

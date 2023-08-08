@@ -63,7 +63,7 @@ public class ImporterSffEditorWindow : EditorWindow
 
         if (GUILayout.Button("Load Sprite Mugen"))
         {
-            string file = EditorUtility.OpenFilePanel("Carregar o arquivo em formato .sff", "", "sff");
+            string file = EditorUtility.OpenFilePanel("Load .sff file", "", "sff");
             if (file.Length != 0)
             {
                 only = new List<int>();

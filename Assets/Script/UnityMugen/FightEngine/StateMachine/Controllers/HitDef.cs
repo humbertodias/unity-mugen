@@ -308,8 +308,8 @@ namespace UnityMugen.StateMachine.Controllers
             hitdef.P1Facing = EvaluationHelper.AsInt32(character, m_p1Facing, 0);
             hitdef.P1GetP2Facing = EvaluationHelper.AsInt32(character, m_p1GetP2Facing, 0);
             hitdef.P2Facing = EvaluationHelper.AsInt32(character, m_p2Facing, 0);
-            hitdef.P1NewState = EvaluationHelper.AsInt32(character, m_p1StateNumber, null);
-            hitdef.P2NewState = EvaluationHelper.AsInt32(character, m_p2StateNumber, null);
+            hitdef.P1NewState = EvaluationHelper.AsInt32(character, m_p1StateNumber, -1);
+            hitdef.P2NewState = EvaluationHelper.AsInt32(character, m_p2StateNumber, -1);
             hitdef.P2UseP1State = EvaluationHelper.AsBoolean(character, m_p2GetP1State, true);
             hitdef.ForceStand = EvaluationHelper.AsBoolean(character, m_forceStand, hitdef.GroundVelocity.y != 0 ? true : false);
             hitdef.Fall = EvaluationHelper.AsBoolean(character, m_fall, false);

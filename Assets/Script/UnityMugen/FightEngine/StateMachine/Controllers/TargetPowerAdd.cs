@@ -33,7 +33,7 @@ namespace UnityMugen.StateMachine.Controllers
             Load();
 
             var amount = EvaluationHelper.AsInt32(character, m_power, null);
-            var targetId = EvaluationHelper.AsInt32(character, m_targetId, int.MinValue);
+            var targetId = EvaluationHelper.AsInt32(character, m_targetId, -1);
 
             if (amount == null)
             {

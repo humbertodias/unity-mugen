@@ -137,7 +137,7 @@ namespace UnityMugen.Editors
 
         private bool LoadFile()
         {
-            string file = EditorUtility.OpenFilePanel("Carregar o arquivo em formato .def", "", "def");
+            string file = EditorUtility.OpenFilePanel("Load .def file", "", "def");
             if (file.Length != 0)
             {
                 m_charName = file.Substring(file.LastIndexOf('/') + 1, file.LastIndexOf('.') - file.LastIndexOf('/') - 1);

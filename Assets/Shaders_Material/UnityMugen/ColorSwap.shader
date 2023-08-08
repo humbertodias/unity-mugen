@@ -6,12 +6,14 @@ Shader "UnityMugen/Sprites/ColorSwap"
 	{
 		[PerRendererData] _MainTex("Sprite Texture", 2D) = "white" {}
 		xPalette("xPalette", 2D) = "transparent" {}
+		IsRGBA("IsRGBA", Float) = 0
 		[MaterialToggle] PixelSnap("Pixel snap", Float) = 1
 
 		Subtraction("Subtraction", Range(0,1)) = 0
 		Alpha("Alpha", Range(0,1)) = 1
+		BlendOPs("BlendOp",Range(0, 4)) = 0
 		//SrcMode ("SrcMode",Range(0, 7)) = 1
-		DstMode ("DstMode", Range(1, 10)) = 10
+		DstMode("DstMode", Range(1, 10)) = 10
 
 		[Header(PalFx)]
 		[MaterialToggle] xPalFx_Use("xPalFx_Use", Float) = 0
@@ -48,7 +50,10 @@ Shader "UnityMugen/Sprites/ColorSwap"
 		Cull Off
 		Lighting Off
 		ZWrite Off
+		//BlendOp [BlendOPs]
 		Blend One [DstMode]
+		
+		//Blend One One
 		//Blend One OneMinusSrcAlpha
 		//Blend OneMinusDstColor One // Soft additive
 

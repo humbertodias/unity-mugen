@@ -93,6 +93,8 @@ namespace UnityMugen.Evaluation
 
         public string CurrentUnknown => CurrentToken != null ? CurrentToken.AsUnknown : null;
 
+        public int TokenCount => m_tokens.Count;
+
         public int TokenIndex
         {
             get { return m_currentindex; }

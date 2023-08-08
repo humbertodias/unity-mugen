@@ -41,7 +41,7 @@ public class FastConverter : EditorWindow
         {
             if (string.IsNullOrEmpty(stringConverter))
             {
-                string file = EditorUtility.OpenFilePanel("Carregar o arquivo em formato .CNS", "", "cns,cmd,st,txt,mfg");
+                string file = EditorUtility.OpenFilePanel("Load .cns file", "", "cns,cmd,st,txt,mfg");
                 if (file.Length != 0)
                 {
                     OpenTextFile(file);

@@ -14,6 +14,12 @@ namespace UnityMugen.StateMachine.Controllers
         private Expression m_pauseTime;
         private Expression m_pauseMoveTime;
 
+#warning Não aplicado ainda
+        private Expression m_ownPal;
+
+#warning Não aplicado ainda
+        private Expression m_remapPal;
+
         private Expression m_projectileId;
         private Expression m_animation;
         private Expression m_hitAnimation;
@@ -75,6 +81,9 @@ namespace UnityMugen.StateMachine.Controllers
 
                 m_pauseTime = textSection.GetAttribute<Expression>("pausetime", null);
                 m_pauseMoveTime = textSection.GetAttribute<Expression>("pausemovetime", null);
+
+                m_ownPal = textSection.GetAttribute<Expression>("ownpal", null);
+                m_remapPal = textSection.GetAttribute<Expression>("remappal", null);
 
                 AfterImageData afterImageData = new AfterImageData();
                 afterImageData.m_time = textSection.GetAttribute<Expression>("afterimage.time", null);

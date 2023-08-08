@@ -52,12 +52,12 @@ namespace UnityMugen.Drawing
             {
                 try
                 {
-                    DrawState.Set(paletteList.PalTex[sprite.indexPalette]);
+                    DrawState.Set(paletteList.PalTex[sprite.indexPalette], sprite.isRGBA);
                 }
                 catch
                 {
                     UnityEngine.Debug.LogWarning("Palette de index: " + sprite.indexPalette);
-                    DrawState.Set(paletteList.PalTex[0]);
+                    DrawState.Set(paletteList.PalTex[0], false);
                 }
             }
 

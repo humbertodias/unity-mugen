@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using UnityEngine;
 using UnityMugen.Collections;
+using UnityMugen.Drawing.PngDecode;
 using UnityMugen.IO;
 
 namespace UnityMugen.Drawing
@@ -14,7 +14,7 @@ namespace UnityMugen.Drawing
 
         private Sff s;
 
-        private Dictionary<int, (Dictionary<SpriteId, SpriteData>, PaletteList)> managers = 
+        private Dictionary<int, (Dictionary<SpriteId, SpriteData>, PaletteList)> managers =
             new Dictionary<int, (Dictionary<SpriteId, SpriteData>, PaletteList)>();
 
         private Dictionary<SpriteId, SpriteData> spriteDatas = new Dictionary<SpriteId, SpriteData>();
@@ -94,7 +94,7 @@ namespace UnityMugen.Drawing
 
         public SpriteManager CreateManager(string nameFile, string[] palettesName)
         {
-            if (managers.TryGetValue(nameFile.GetHashCode(), 
+            if (managers.TryGetValue(nameFile.GetHashCode(),
                 out (Dictionary<SpriteId, SpriteData>, PaletteList) value))
             {
                 PaletteList pal = new PaletteList();
@@ -110,7 +110,7 @@ namespace UnityMugen.Drawing
 
             spriteDatas = new Dictionary<SpriteId, SpriteData>();
             GetOpenFile(nameFile);
-            
+
 
             if (palettesName != null)
             {
@@ -386,8 +386,10 @@ namespace UnityMugen.Drawing
                     {
                         datasize = 4;
                     }
-                    px = f.ReadBytes((int)datasize - 4);
+                    
                 }
+
+                px = f.ReadBytes((int)datasize - 4);
 
                 switch (format)
                 {
@@ -402,36 +404,15 @@ namespace UnityMugen.Drawing
                         break;
                     case 10:
                         {
-                            px = f.ReadBytes((int)datasize - 4);
-
-                            //if (s.Group == 3001 && s.Number == 1)
-                            //{
-                            //    StringBuilder sb = new StringBuilder();
-                            //    foreach (byte p in px)
-                            //    {
-                            //        sb.Append(p + ",");
-                            //    }
-                            //    sb.ToString();
-                            //}
-#warning ainda esta em teste
-                            px = new PngIndexedDecoder().Decode(px);
+                            px = Png.IDataFiltered(px);
                             MiscSprites.Flip(s.Size, ref px);
                             break;
                         }
                     case 11:
                     case 12:
                         {
-                            px = f.ReadBytes((int)datasize - 4);
                             Texture2D tex = new Texture2D(2, 2);
                             ImageConversion.LoadImage(tex, px);
-
-                            //byte[] bytes = tex.EncodeToPNG();
-                            //var dirPath = Application.dataPath + "/../SaveImages/";
-                            //if (!System.IO.Directory.Exists(dirPath))
-                            //{
-                            //    System.IO.Directory.CreateDirectory(dirPath);
-                            //}
-                            //System.IO.File.WriteAllBytes(dirPath + "Image" + s.Group + "-" + s.Number + ".png", bytes);
 
                             Rect rect2 = new Rect(0.0f, 0.0f, tex.width, tex.height);
                             Vector2 pivot = new Vector2((float)s.Offset[0] / (float)tex.width, (((float)s.Size[1] - (float)s.Offset[1]) / (float)tex.height));
@@ -441,6 +422,7 @@ namespace UnityMugen.Drawing
                             SpriteData spriteData = new SpriteData();
                             spriteData.indexPalette = s.palidx;
                             spriteData.sprite = sprite;
+                            spriteData.isRGBA = true;
 
                             var id = new SpriteId(s.Group, s.Number);
                             if (!spriteDatas.ContainsKey(id))

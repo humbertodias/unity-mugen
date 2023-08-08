@@ -36,7 +36,7 @@ namespace UnityMugen.StateMachine.Controllers
             Load();
 
             var amount = EvaluationHelper.AsInt32(character, m_life, null);
-            var targetId = EvaluationHelper.AsInt32(character, m_targetId, int.MinValue);
+            var targetId = EvaluationHelper.AsInt32(character, m_targetId, -1);
             var cankill = EvaluationHelper.AsBoolean(character, m_kill, true);
             var absolute = EvaluationHelper.AsBoolean(character, m_abs, false);
 

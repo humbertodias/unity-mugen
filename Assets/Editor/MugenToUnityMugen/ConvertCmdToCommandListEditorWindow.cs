@@ -40,7 +40,7 @@ public class ConvertCmdToCommandListEditorWindow : EditorWindow
 
     private void LoadGameData()
     {
-        string file = EditorUtility.OpenFilePanel("Carregar o arquivo em formato .cmd, .mfg", "", "cmd,mfg");
+        string file = EditorUtility.OpenFilePanel("Load .cmd file, .mfg", "", "cmd,mfg");
         if (file.Length != 0)
         {
             var text = System.IO.File.ReadAllText(file);

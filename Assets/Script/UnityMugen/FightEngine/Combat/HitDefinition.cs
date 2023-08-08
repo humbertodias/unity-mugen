@@ -204,9 +204,9 @@ namespace UnityMugen.Combat
         public int P1GetP2Facing { get; set; }
         public int P2Facing { get; set; }
 
-        public int? P1NewState { get; set; }
+        public int P1NewState { get; set; }
         public bool P2UseP1State { get; set; }
-        public int? P2NewState { get; set; }
+        public int P2NewState { get; set; }
 
         public bool ForceStand { get; set; }
         public bool Fall { get; set; }

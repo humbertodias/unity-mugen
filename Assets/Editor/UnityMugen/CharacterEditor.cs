@@ -881,7 +881,7 @@ public class CharacterEditor : EditorWindow
                     if (GUILayout.Button(new GUIContent(open, "Import new palette .act"), GUILayout.MaxWidth(40), GUILayout.MaxHeight(30)))
                     {
                         List<Color> colors = new List<Color>();
-                        string file = EditorUtility.OpenFilePanel("Falha ao Carregar o arquivo em formato .act", "", "act");
+                        string file = EditorUtility.OpenFilePanel("Load .act file", "", "act");
                         if (file.Length != 0)
                         {
                             var filedata = File.ReadAllBytes(file);

@@ -32,7 +32,7 @@ namespace UnityMugen.StateMachine.Controllers
             Load();
 
             var statenumber = EvaluationHelper.AsInt32(character, m_stateNumber, null);
-            var targetId = EvaluationHelper.AsInt32(character, m_targetId, int.MinValue);
+            var targetId = EvaluationHelper.AsInt32(character, m_targetId, -1);
 
             if (statenumber == null) return;
 
