@@ -307,6 +307,8 @@ namespace UnityMugen.Combat
                 RunEntityUpdates(m_tempqueue);
             }
 
+            foreach (var entity in this) entity.UpdateInput();
+
             RemoveCheck();
             RemoveEntities();
 
@@ -320,8 +322,6 @@ namespace UnityMugen.Combat
             entities.Sort(m_updateordercomparer);
 
             foreach (var entity in entities) entity.CleanUp();
-
-            foreach (var entity in entities) entity.UpdateInput();
 
             foreach (var entity in entities) entity.UpdateAnimations();
 

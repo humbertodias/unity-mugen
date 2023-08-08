@@ -209,8 +209,15 @@ namespace UnityMugen.StateMachine
         {
             if (textsection == null) throw new ArgumentNullException(nameof(textsection));
 
-            var match = m_controllerTitleRegex.Match(textsection.Title);
-            if (match.Success == false) return null;
+            string title = "";
+            //var match = m_controllerTitleRegex.Match(textsection.Title);
+            if (textsection.Title.ToLower().Contains("state "))
+                title = textsection.Title.Substring(6);
+            else
+                return null;
+
+            //if (match.Success == false) 
+            //    return null;
 
             var typename = textsection.GetAttribute<string>("type", null);
 
@@ -227,7 +234,7 @@ namespace UnityMugen.StateMachine
                 return null;
             }
 
-            var controller = (StateController)m_controllerMap[typename](this, match.Groups[1].Value, textsection, false);
+            var controller = (StateController)m_controllerMap[typename](this, title/*match.Groups[1].Value*/, textsection, false);
             return controller;
         }
     }
