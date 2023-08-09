@@ -13,21 +13,25 @@ namespace UnityMugen.Drawing
 
         Dictionary<SpriteId, SpriteData> m_sprites;
         public PaletteList Palettes { private set; get; }
+        public int Version;
+        public int PallSource;
 
-        public SpriteManager((Dictionary<SpriteId, SpriteData>, PaletteList) data)
+        public SpriteManager((Dictionary<SpriteId, SpriteData>, PaletteList, int, int) data)
         {
             if (data.Item1 == null) throw new ArgumentNullException(nameof(data.Item1));
             if (data.Item2 == null) throw new ArgumentNullException(nameof(data.Item2));
 
             m_sprites = new Dictionary<SpriteId, SpriteData>(data.Item1);
             Palettes = data.Item2;
+            Version = data.Item3;
+            PallSource = data.Item4;
 
             DrawState = new DrawState();
         }
 
         public SpriteManager Clone()
         {
-            var clone = new SpriteManager((m_sprites, Palettes));
+            var clone = new SpriteManager((m_sprites, Palettes, Version, PallSource));
             //clone.OverridePalette = OverridePalette;
             //clone.UseOverride = UseOverride;
             return clone;

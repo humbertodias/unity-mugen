@@ -22,21 +22,10 @@ namespace UnityMugen.Drawing
                 for (int i = 0; i < Palette.Length; i++)
                 {
                     Color32 color32 = Palette[i];
-                    //colorSwapTex.SetPixel((int)(color32.r), 0, Palette.colors[i]);
                     colorSwapTex.SetPixel(i, 0, color32);
                 }
                 colorSwapTex.Apply();
                 palettesTex2D.Add(colorSwapTex);
-
-
-                //byte[] bytes = colorSwapTex.EncodeToPNG();
-                //var dirPath = Application.dataPath + "/../SaveImages/";
-                //if (!Directory.Exists(dirPath))
-                //{
-                //    Directory.CreateDirectory(dirPath);
-                //}
-                //System.IO.File.WriteAllBytes(dirPath + Palette.namePalette + "Image" + ".png", bytes);
-                //throw new ArgumentNullException("");
             }
 
             return new List<Texture2D>(palettesTex2D);
@@ -76,7 +65,7 @@ namespace UnityMugen.Drawing
             s = s.newSff();
 
             UInt32 lofs, tofs;
-            SpriteSystem.ReadHeaderFile(file, out s.header, out lofs, out tofs);
+            SpriteSystem.ReadHeaderFile(file, ref s.header, out lofs, out tofs);
 
             // Leitura de Palette de SffV2
             if (s.header.Ver0 != 1)

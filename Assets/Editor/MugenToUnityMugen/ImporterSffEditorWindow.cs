@@ -153,7 +153,7 @@ public class ImporterSffEditorWindow : EditorWindow
         s = s.newSff();
 
         UInt32 lofs, tofs;
-        ReadHeaderFile(file, out s.header, out lofs, out tofs);
+        ReadHeaderFile(file, ref s.header, out lofs, out tofs);
 
         // Leitura de Palette de SffV2
         if (s.header.Ver0 != 1)
@@ -335,7 +335,7 @@ public class ImporterSffEditorWindow : EditorWindow
     }
 
 
-    void ReadHeaderFile(File file, out SffHeader sh, out UInt32 lofs, out UInt32 tofs)
+    void ReadHeaderFile(File file, ref SffHeader sh, out UInt32 lofs, out UInt32 tofs)
     {
         if (file == null) throw new ArgumentNullException(nameof(file));
 

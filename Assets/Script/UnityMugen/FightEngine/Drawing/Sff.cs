@@ -26,6 +26,14 @@ namespace UnityMugen.Drawing
         public Texture2D PalTex;
     }
 
+    [Serializable]
+    public class SpriteData
+    {
+        public Sprite sprite;
+        public int indexPalette;
+        public bool isRGBA;
+    }
+
     public struct SffHeader
     {
         public byte Ver0, Ver1, Ver2, Ver3;
@@ -34,6 +42,8 @@ namespace UnityMugen.Drawing
         //public UInt32 NumberOfGroups;
         public UInt32 NumberOfSprites;
         public UInt32 NumberOfPalettes;
+
+        public int IdSourcePal;
     }
 
 

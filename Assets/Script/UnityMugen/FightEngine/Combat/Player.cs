@@ -105,10 +105,14 @@ namespace UnityMugen.Combat
             m_dimensions = new CharacterDimensions(playerConstants);
             
             PaletteList = m_spriteManager.Palettes;
-            
-            PaletteList.PalTable.TryGetValue(PaletteId.Default, out int sourceIndex);
+
+            int sourceIndex = m_spriteManager.PallSource;
+            if (m_spriteManager.Version == 2)
+                PaletteList.PalTable.TryGetValue(PaletteId.Default, out sourceIndex);
+
             PaletteList.PalTable.TryGetValue(new PaletteId(1, PaletteNumber), out int destIndex);
-            PaletteList.PalTex[sourceIndex] = PaletteList.PalTexBackup[destIndex];
+            if(profile.palettesName.Length > destIndex)
+                PaletteList.PalTex[sourceIndex] = PaletteList.PalTexBackup[destIndex];
 
             m_power = 0;
             m_palfx = new PaletteFx();

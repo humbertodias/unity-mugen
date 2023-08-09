@@ -8,14 +8,19 @@ using UnityMugen.IO;
 
 namespace UnityMugen.Drawing
 {
+    public class SpriteInfo
+    {
+        SpriteUnpack asd;
+    }
+
     public class SpriteSystem
     {
         private static LauncherEngine Launcher => LauncherEngine.Inst;
 
         private Sff s;
 
-        private Dictionary<int, (Dictionary<SpriteId, SpriteData>, PaletteList)> managers =
-            new Dictionary<int, (Dictionary<SpriteId, SpriteData>, PaletteList)>();
+        private Dictionary<int, (Dictionary<SpriteId, SpriteData>, PaletteList, int , int)> managers =
+            new Dictionary<int, (Dictionary<SpriteId, SpriteData>, PaletteList, int, int)>();
 
         private Dictionary<SpriteId, SpriteData> spriteDatas = new Dictionary<SpriteId, SpriteData>();
 
@@ -95,7 +100,7 @@ namespace UnityMugen.Drawing
         public SpriteManager CreateManager(string nameFile, string[] palettesName)
         {
             if (managers.TryGetValue(nameFile.GetHashCode(),
-                out (Dictionary<SpriteId, SpriteData>, PaletteList) value))
+                out (Dictionary<SpriteId, SpriteData>, PaletteList, int, int) value))
             {
                 PaletteList pal = new PaletteList();
                 pal.PalTable = value.Item2.PalTable;
@@ -105,7 +110,7 @@ namespace UnityMugen.Drawing
                 pal.numcols = value.Item2.numcols;
                 pal.paletteMap = value.Item2.paletteMap;
 
-                return new SpriteManager((value.Item1, pal));
+                return new SpriteManager((value.Item1, pal, value.Item3, value.Item4));
             }
 
             spriteDatas = new Dictionary<SpriteId, SpriteData>();
@@ -123,21 +128,8 @@ namespace UnityMugen.Drawing
 
             s.palList.PalTexBackup = new List<Texture2D>(s.palList.PalTex);
 
-            //int count = 0;
-            //foreach (Texture2D tex in s.palList.PalTexBackup)
-            //{
-            //    byte[] bytes = tex.EncodeToPNG();
-            //    var dirPath = Application.dataPath + "/SaveImages/";
-            //    if (!System.IO.Directory.Exists(dirPath))
-            //    {
-            //        System.IO.Directory.CreateDirectory(dirPath);
-            //    }
-            //    System.IO.File.WriteAllBytes(dirPath + "Image"+ (count++) + ".png", bytes);
-            //    //throw new ArgumentNullException("");
-            //}
-
-            managers.Add(nameFile.GetHashCode(), (spriteDatas, s.palList));
-            return new SpriteManager((spriteDatas, s.palList));
+            managers.Add(nameFile.GetHashCode(), (spriteDatas, s.palList, s.header.Ver0, s.header.IdSourcePal));
+            return new SpriteManager((spriteDatas, s.palList, s.header.Ver0, s.header.IdSourcePal));
         }
 
 
@@ -153,7 +145,7 @@ namespace UnityMugen.Drawing
             s = s.newSff();
 
             UInt32 lofs, tofs;
-            ReadHeaderFile(file, out s.header, out lofs, out tofs);
+            ReadHeaderFile(file, ref s.header, out lofs, out tofs);
 
             // Leitura de Palette de Sff V2.x
             if (s.header.Ver0 != 1)
@@ -211,6 +203,8 @@ namespace UnityMugen.Drawing
 
                     if (!s.palList.PalTable.ContainsKey(new PaletteId(groupNo, itemNo)))
                         s.palList.PalTable.Add(new PaletteId(groupNo, itemNo), idx);
+                    else
+                        s.palList.PalTable[new PaletteId(groupNo, itemNo)] = idx;
 
                     if (!s.palList.numcols.ContainsKey(new PaletteId(groupNo, itemNo)))
                         s.palList.numcols.Add(new PaletteId(groupNo, itemNo), numCols);
@@ -309,10 +303,16 @@ namespace UnityMugen.Drawing
                 }
 
             }
+
+            //foreach(var sp in s.sprites)
+            //{
+            //    System.Diagnostics.Debug.WriteLine("G:" + sp.Value.Group+" N:"+ sp.Value.Number+" id:"+ sp.Value.palidx);
+            //}
+
         }
 
 
-        public static void ReadHeaderFile(UnityMugen.IO.File file, out SffHeader sh, out UInt32 lofs, out UInt32 tofs)
+        public static void ReadHeaderFile(UnityMugen.IO.File file, ref SffHeader sh, out UInt32 lofs, out UInt32 tofs)
         {
             if (file == null) throw new ArgumentNullException(nameof(file));
 
@@ -513,6 +513,9 @@ namespace UnityMugen.Drawing
 
             var imgSprite = DecodeSFF.RlePcxDecode(ref s, px);
 
+            if (s.Group == 0 && s.Number == 0)
+                sh.IdSourcePal = s.palidx;
+
             s = SetPxl(ref s, imgSprite);
         }
 
@@ -555,8 +558,8 @@ namespace UnityMugen.Drawing
             link = BitConverter.ToUInt16(data, 12);
             s.rle = -data[14]; // fmt = Format(0 raw, 1 invalid(no use), 2 RLE8, 3 RLE5, 4 LZ5)
             s.coldepth = data[15];
-            ofs = BitConverter.ToUInt32(data, 16); // int offsetInto
-            size = BitConverter.ToUInt32(data, 20); // int SpriteData
+            ofs = BitConverter.ToUInt32(data, 16);
+            size = BitConverter.ToUInt32(data, 20);
             s.palidx = BitConverter.ToInt16(data, 24);
             var flags = BitConverter.ToInt16(data, 26);
             if ((flags & 1) == 0)
