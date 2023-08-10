@@ -17,12 +17,14 @@ namespace UnityMugen.Editors
         private string m_basePathInput;
         private string m_basePathOutput;
         private List<Tuple<int, string>> m_listFiles;
-        //private List<string> statesDirectory;
+
         private string m_charName;
         private List<FileDirectory> m_fileDirectories;
+        private List<FileDirectory> m_filesACT;
         private TextSection m_filesTextSection;
         private string m_constantFile;
         private string m_stCommon, m_commandPath, m_sffPath, m_airPath, m_sndPath;
+        private List<string> m_palettefiles;
         private PlayerProfileManager m_manager;
 
         const string OutputChars = "Assets/Chars/";
@@ -53,14 +55,7 @@ namespace UnityMugen.Editors
         {
             SerializedObject serializedObject = new SerializedObject(this);
 
-            //try
-            //{
             UpdateInterface();
-            //}
-            //catch
-            //{
-            //    Init();
-            //}
 
             serializedObject.ApplyModifiedProperties();
         }
@@ -69,8 +64,6 @@ namespace UnityMugen.Editors
 
         private void UpdateInterface()
         {
-
-
             EditorGUILayout.LabelField("If you extract a [CHAR] from a directory", colorYellow);
             EditorGUILayout.LabelField("[MugenGame>>char>>YourChar].", colorYellow);
 
@@ -100,15 +93,17 @@ namespace UnityMugen.Editors
 
                         m_fileDirectories = new List<FileDirectory>();
                         BuildFileDirectory(m_filesTextSection);
-
                         m_manager.states = StatesImport(m_filesTextSection);
+
+                        m_filesACT = new List<FileDirectory>();
+                        BuildPaletteFiles(m_filesTextSection);
+                        m_manager.palettesName = ACTImport(m_filesACT);
 
                         CreateFolders();
                         ImportFiles();
                         CreateAssets();
 
                         AssetDatabase.Refresh();
-
 
                         if (setWhenComplete)
                         {
@@ -157,7 +152,7 @@ namespace UnityMugen.Editors
 
             //INFO
             var title = m_textFile.GetSection("Info");
-            m_manager.charName = m_charName;// title.GetAttribute<string>("name", String.Empty);
+            m_manager.charName = m_charName;
             m_manager.displayName = title.GetAttribute<string>("displayname", String.Empty);
             m_manager.author = title.GetAttribute<string>("author", String.Empty);
             m_manager.versionDate = title.GetAttribute<string>("versiondate", String.Empty);
@@ -195,7 +190,9 @@ namespace UnityMugen.Editors
             if (!AssetDatabase.IsValidFolder("Assets/StreamingAssets/" + m_charName + "/States"))
                 AssetDatabase.CreateFolder("Assets/StreamingAssets/" + m_charName, "States");
 
-
+            if (m_palettefiles.Count > 0 &&
+                !AssetDatabase.IsValidFolder("Assets/StreamingAssets/" + m_charName + "/Palettes"))
+                AssetDatabase.CreateFolder("Assets/StreamingAssets/" + m_charName, "Palettes");
         }
 
         void ImportFiles()
@@ -219,6 +216,14 @@ namespace UnityMugen.Editors
                             }
                         }
                     }
+                }
+            }
+
+            foreach (FileDirectory fileDirectory in m_filesACT)
+            {
+                if (!System.IO.File.Exists(fileDirectory.directoryOutput))
+                {
+                    System.IO.File.Copy(fileDirectory.directoryInput, fileDirectory.directoryOutput);
                 }
             }
         }
@@ -374,7 +379,7 @@ namespace UnityMugen.Editors
                 fileName = m_sndPath,
                 directoryInput = FilterPathInput(m_sndPath),
                 directoryOutput = FilterPathOutput(m_charName + "/" + m_sndPath),
-                directoryUnity = "/" + m_charName + "/" + m_airPath
+                directoryUnity = "/" + m_charName + "/" + m_sndPath
             });
 
             m_fileDirectories.Add(new FileDirectory()
@@ -457,6 +462,46 @@ namespace UnityMugen.Editors
                     filepath = m_charName + "/" + filepath.Substring(filepath.LastIndexOf("/") + 1);
             }
             return Path.Combine(m_basePathOutput, filepath);
+        }
+
+        private void BuildPaletteFiles(TextSection filesection)
+        {
+            if (filesection == null) throw new ArgumentNullException(nameof(filesection));
+
+            for (var i = 0; i < filesection.Lines.Count; ++i)
+            {
+                string pal = filesection.GetAttribute("pal" + (i + 1), string.Empty);
+
+                if (!string.IsNullOrEmpty(pal))
+                {
+                    string fullPalName = pal.Substring(pal.LastIndexOf('/') + 1);
+                    string palName = fullPalName.Remove(fullPalName.LastIndexOf('.'));
+                    string input = FilterPathInput(pal);
+                    string output = m_basePathOutput + m_charName + "/Palettes/" + fullPalName;
+                    if (!System.IO.File.Exists(input))
+                        continue;
+
+                    m_filesACT.Add(new FileDirectory()
+                    {
+                        fileName = pal,
+                        directoryInput = input,
+                        directoryOutput = output,
+                        directoryUnity = palName
+                    });
+
+                }
+            }
+        }
+
+
+        private string[] ACTImport(List<FileDirectory> m_filesACT)
+        {
+            List<string> ACTs = new List<string>();
+
+            foreach (var name in m_filesACT)
+                ACTs.Add(name.directoryUnity);
+
+            return ACTs.ToArray();
         }
 
         private struct FileDirectory

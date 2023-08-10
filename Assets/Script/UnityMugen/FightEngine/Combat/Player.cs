@@ -111,7 +111,7 @@ namespace UnityMugen.Combat
                 PaletteList.PalTable.TryGetValue(PaletteId.Default, out sourceIndex);
 
             PaletteList.PalTable.TryGetValue(new PaletteId(1, PaletteNumber), out int destIndex);
-            if(profile.palettesName.Length > destIndex)
+            if(m_spriteManager.Version == 2 || profile.palettesName.Length > destIndex)
                 PaletteList.PalTex[sourceIndex] = PaletteList.PalTexBackup[destIndex];
 
             m_power = 0;

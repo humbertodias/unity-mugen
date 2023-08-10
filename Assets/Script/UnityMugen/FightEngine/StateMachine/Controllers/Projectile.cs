@@ -134,7 +134,7 @@ namespace UnityMugen.StateMachine.Controllers
             data.ScreenEdgeBound = EvaluationHelper.AsInt32(character, m_edgeBound, 40) * Constant.Scale;
             data.StageEdgeBound = EvaluationHelper.AsInt32(character, m_stageBound, 40) * Constant.Scale;
 
-            var heightbounds = EvaluationHelper.AsVector2(character, m_heightBound, new Vector2(-240, 1)) * Constant.Scale;
+            var heightbounds = EvaluationHelper.AsVector2(character, m_heightBound, new Vector2(-240, 1));
             data.HeightLowerBound = heightbounds.x;
             data.HeightUpperBound = heightbounds.y;
 

@@ -33,9 +33,9 @@ namespace UnityMugen.Combat
             draw.attack = trainner.attack;
             draw.hitable = trainner.hitable;
 
-            Creator = creator; 
+            Creator = creator;
             BasePlayer = Creator.BasePlayer;
-            
+
             m_offsetcharacter = data.PositionType == PositionType.P2 ? creator.GetOpponent() : creator;
             Data = data;
             m_animationmanager = Creator.AnimationManager.Clone();
@@ -161,9 +161,15 @@ namespace UnityMugen.Combat
             if (CurrentLocation.x > camera_rect.xMax + Data.ScreenEdgeBound) StartRemoval();
 
 #warning This could be an issue.
-            //este Codigo siguinifica se o projectle sera destruido se ultrapassar os limites da tela
-            //if (CurrentLocation.y < Data.HeightLowerBound) StartRemoval();
-            //if (CurrentLocation.y > Data.HeightUpperBound) StartRemoval();
+            var z = -Camera.main.transform.position.z;
+            float HeightUpperBound = Camera.main.ScreenToWorldPoint(new Vector3(0, Screen.height + (Data.HeightUpperBound *(Screen.height / 240)), z)).y;
+            var camerabounds = Engine.CameraFE.ScreenBounds();
+            if (CurrentVelocity.y < 0 && CurrentLocationYTransform().y > (HeightUpperBound + (Screen.height / (Screen.height + Data.HeightUpperBound))))
+                StartRemoval();
+
+            float HeightLowerBound = ((240+Data.HeightLowerBound) * (Screen.height / 240));
+            if (CurrentVelocity.y > 0 && CurrentLocationYTransform().y < HeightLowerBound)
+                StartRemoval();
 
             if (Data.RemoveOnHit && TotalHits >= Data.HitsBeforeRemoval)
                 StartHitRemoval();
