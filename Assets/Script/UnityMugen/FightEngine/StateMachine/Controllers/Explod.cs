@@ -69,7 +69,7 @@ namespace UnityMugen.StateMachine.Controllers
                 m_position = textSection.GetAttribute<Expression>("pos", null);
 
                 if (chara.BasePlayer.profile.mugenVersion == MugenVersion.V_1_1)
-                    Debug.LogError("postype is deprecated. Read the documentation.");
+                    Debug.LogWarning("postype is deprecated. Read the documentation.");
                 //    m_posType = textSection.GetAttribute("postype", UnityMugen.PositionType.None);
                 //else
                     m_posType = textSection.GetAttribute("postype", UnityMugen.PositionType.P1);

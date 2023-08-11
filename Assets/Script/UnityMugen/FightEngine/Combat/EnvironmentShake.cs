@@ -11,20 +11,20 @@ namespace UnityMugen.Combat
 
         public void ResetFE()
         {
-            m_timeticks = 0;
-            m_time = 0;
-            m_frequency = 0;
-            m_amplitude = 0;
-            m_phase = 0;
+            TimeElasped = 0;
+            Time = 0;
+            Frequency = 0;
+            Amplitude = 0;
+            Phase = 0;
         }
 
         public void Set(int time, float frequency, float amplitude, float phase)
         {
-            m_timeticks = 0;
-            m_time = time;
-            m_frequency = frequency;
-            m_amplitude = amplitude;
-            m_phase = phase;
+            TimeElasped = 0;
+            Time = time;
+            Frequency = frequency;
+            Amplitude = amplitude;
+            Phase = phase;
         }
 
         public void UpdateFE()
@@ -35,17 +35,17 @@ namespace UnityMugen.Combat
             Engine.CameraFE.gameObject.transform.position =
                 new Vector3(PosCam.x + DrawOffset.x, PosCam.y + DrawOffset.y, PosCam.z);
 
-            if (m_timeticks == 0)
+            if (TimeElasped == 0)
             {
                 foreach (Animation anim in Engine.stageScreen.StageActions.envShakeAnimations)
                 {
                     anim.Play();
                 }
             }
-            ++m_timeticks;
+            ++TimeElasped;
         }
 
-        public bool IsActive => m_time > 0 && m_timeticks < m_time;
+        public bool IsActive => Time > 0 && TimeElasped < Time;
 
         public Vector2 DrawOffset
         {
@@ -60,33 +60,11 @@ namespace UnityMugen.Combat
             }
         }
 
-        public int TimeElasped => m_timeticks;
+        public int TimeElasped;
+        public int Time;
+        public float Frequency;
+        public float Amplitude;
+        public float Phase;
 
-        public int Time => m_time;
-
-        public float Frequency => m_frequency;
-
-        public float Amplitude => m_amplitude;
-
-        public float Phase => m_phase;
-
-        #region Fields
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private int m_timeticks;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private int m_time;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private float m_frequency;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private float m_amplitude;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private float m_phase;
-
-        #endregion
     }
 }

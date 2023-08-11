@@ -12,6 +12,7 @@ namespace UnityMugen.Editors
     public class ImporterCharEditorWindow : ExtendEditorWindow
     {
         static ImporterCharEditorWindow s_editorWindow;
+        const string HelperPage = "https://levelalfaomega.gitbook.io/unity-mugen/editors/importer-char";
 
         private TextFile m_textFile;
         private string m_basePathInput;
@@ -24,12 +25,11 @@ namespace UnityMugen.Editors
         private TextSection m_filesTextSection;
         private string m_constantFile;
         private string m_stCommon, m_commandPath, m_sffPath, m_airPath, m_sndPath;
-        private List<string> m_palettefiles;
         private PlayerProfileManager m_manager;
 
         const string OutputChars = "Assets/Chars/";
         const string OutputStreamingAssets = "Assets/StreamingAssets/";
-        bool setWhenComplete = true;
+        bool setWhenComplete = true, extrasFolders = true;
 
         //Style
         GUIStyle colorYellow;
@@ -38,7 +38,7 @@ namespace UnityMugen.Editors
         static void Init()
         {
             s_editorWindow = EditorWindow.GetWindow<ImporterCharEditorWindow>(false, "Importer Char", true);
-            s_editorWindow.minSize = new Vector2(500, 220);
+            s_editorWindow.minSize = new Vector2(500, 235);
             s_editorWindow.Show();
             s_editorWindow.Inicialize();
         }
@@ -60,8 +60,6 @@ namespace UnityMugen.Editors
             serializedObject.ApplyModifiedProperties();
         }
 
-        const string HelperPage = "https://levelalfaomega.gitbook.io/unity-mugen/editors/importer-char";
-
         private void UpdateInterface()
         {
             EditorGUILayout.LabelField("If you extract a [CHAR] from a directory", colorYellow);
@@ -81,6 +79,12 @@ namespace UnityMugen.Editors
 
             EditorGUIUtility.labelWidth = 210;
             setWhenComplete = EditorGUILayout.Toggle("Set players on automatic battle start:", setWhenComplete);
+
+            GUILayout.BeginHorizontal();
+            EditorGUIUtility.labelWidth = 305;
+            extrasFolders = EditorGUILayout.Toggle("Create extra folders: Apresentation, Interface, Sprites.", extrasFolders);
+            EditorGUILayout.LabelField("");
+            GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             {
@@ -190,9 +194,24 @@ namespace UnityMugen.Editors
             if (!AssetDatabase.IsValidFolder("Assets/StreamingAssets/" + m_charName + "/States"))
                 AssetDatabase.CreateFolder("Assets/StreamingAssets/" + m_charName, "States");
 
-            if (m_palettefiles.Count > 0 &&
+            if (m_filesACT.Count > 0 &&
                 !AssetDatabase.IsValidFolder("Assets/StreamingAssets/" + m_charName + "/Palettes"))
                 AssetDatabase.CreateFolder("Assets/StreamingAssets/" + m_charName, "Palettes");
+
+            if (extrasFolders)
+            {
+                if (!AssetDatabase.IsValidFolder("Assets/Chars/" + m_charName+"/Apresentation"))
+                    AssetDatabase.CreateFolder("Assets/Chars/"+ m_charName, "Apresentation");
+
+                if (!AssetDatabase.IsValidFolder("Assets/Chars/" + m_charName + "/Interface"))
+                    AssetDatabase.CreateFolder("Assets/Chars/"+ m_charName, "Interface");
+
+                if (!AssetDatabase.IsValidFolder("Assets/Chars/" + m_charName + "/Sprites"))
+                    AssetDatabase.CreateFolder("Assets/Chars/"+ m_charName, "Sprites");
+
+                if (!AssetDatabase.IsValidFolder("Assets/Chars/" + m_charName + "/Interface/MoveList"))
+                    AssetDatabase.CreateFolder("Assets/Chars/"+ m_charName+ "/Interface", "MoveList");
+            }
         }
 
         void ImportFiles()
@@ -218,12 +237,14 @@ namespace UnityMugen.Editors
                     }
                 }
             }
-
+            
             foreach (FileDirectory fileDirectory in m_filesACT)
             {
+                string input = fileDirectory.directoryInput.Replace('/', '\\');
+                string output = fileDirectory.directoryOutput.Replace('/', '\\');
                 if (!System.IO.File.Exists(fileDirectory.directoryOutput))
                 {
-                    System.IO.File.Copy(fileDirectory.directoryInput, fileDirectory.directoryOutput);
+                    System.IO.File.Copy(input, output);
                 }
             }
         }

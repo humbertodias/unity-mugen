@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using UnityMugen;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityMugen.Combat;
 using UnityMugen.Commands;
 using Object = UnityEngine.Object;
@@ -44,22 +44,34 @@ namespace UnityMugen
 
         public string[] NamePalettes()
         {
-            string[] palettes = new string[palettesName.Length];
+            List<string> palettes = new List<string>();
             for (int i = 0; i < palettesName.Length; i++)
             {
-                palettes[i] = Application.streamingAssetsPath + "/" + charName + "/Palettes/" + palettesName[i] + ".act";
+                string path = Application.streamingAssetsPath + "/" + charName + "/Palettes/" + palettesName[i] + ".act";
+                if (System.IO.File.Exists(path))
+                    palettes.Add(path);
+                else
+                    Debug.LogWarning("File not exist: " + path);
             }
-            return palettes;
+            return palettes.ToArray();
         }
 
         public string NamefileSFF()
         {
-            return Application.streamingAssetsPath + "/" + charName + "/" + (sff ?? charName) + ".sff";
+            string path = Application.streamingAssetsPath + "/" + charName + "/" + (sff ?? charName) + ".sff";
+            if (System.IO.File.Exists(path))
+                return path;
+            else
+                throw new UnityMugenException("Essential File not exist: " + path);
         }
 
         public string NamefileAIR()
         {
-            return Application.streamingAssetsPath + "/" + charName + "/" + (air ?? charName) + ".air";
+            string path = Application.streamingAssetsPath + "/" + charName + "/" + (air ?? charName) + ".air";
+            if (System.IO.File.Exists(path))
+                return path;
+            else
+                throw new UnityMugenException("Essential File not exist: " + path);
         }
 
         public string NamefileSND()
@@ -67,7 +79,11 @@ namespace UnityMugen
             if (string.IsNullOrEmpty(snd))
                 return null;
 
-            return Application.streamingAssetsPath + "/" + charName + "/" + (snd ?? charName) + ".snd";
+            string path = Application.streamingAssetsPath + "/" + charName + "/" + (snd ?? charName) + ".snd";
+            if (System.IO.File.Exists(path))
+                return path;
+            else
+                throw new UnityMugenException("Essential File not exist: " + path);
         }
 
     }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -343,14 +344,14 @@ public class FullDebugEditorWindow : EditorWindow
             EditorGUILayout.BeginHorizontal();
             {
                 EditorGUILayout.LabelField("Power: ");
-                EditorGUILayout.LabelField(mainPlayer.Power.ToString());
+                mainPlayer.Power = EditorGUILayout.FloatField(mainPlayer.Power);
                 EditorGUILayout.LabelField("float");
             }
             EditorGUILayout.EndHorizontal();
 
             EntityData(mainPlayer as Entity);
             CharacterData(mainPlayer as Character);
-            
+
         }
         EditorGUILayout.EndVertical();
     }
@@ -398,7 +399,7 @@ public class FullDebugEditorWindow : EditorWindow
         EditorGUILayout.BeginHorizontal();
         {
             EditorGUILayout.LabelField("Position: ");
-            EditorGUILayout.LabelField(entity.CurrentLocation.ToString());
+            entity.CurrentLocation = EditorGUILayout.Vector2Field("",entity.CurrentLocation);
             EditorGUILayout.LabelField("Vector2");
         }
         EditorGUILayout.EndHorizontal();
@@ -406,7 +407,7 @@ public class FullDebugEditorWindow : EditorWindow
         EditorGUILayout.BeginHorizontal();
         {
             EditorGUILayout.LabelField("Velocity: ");
-            EditorGUILayout.LabelField(entity.CurrentVelocity.ToString());
+            entity.CurrentVelocity = EditorGUILayout.Vector2Field("", entity.CurrentVelocity);
             EditorGUILayout.LabelField("Vector2");
         }
         EditorGUILayout.EndHorizontal();
@@ -434,7 +435,7 @@ public class FullDebugEditorWindow : EditorWindow
         EditorGUILayout.BeginHorizontal();
         {
             EditorGUILayout.LabelField("Life: ");
-            EditorGUILayout.LabelField(character.Life.ToString());
+            character.Life = EditorGUILayout.FloatField(character.Life);
             EditorGUILayout.LabelField("float");
         }
         EditorGUILayout.EndHorizontal();
@@ -515,7 +516,7 @@ public class FullDebugEditorWindow : EditorWindow
         EditorGUILayout.BeginHorizontal();
         {
             EditorGUILayout.LabelField("StateNo: ");
-            EditorGUILayout.LabelField(character.StateManager.CurrentState.number.ToString());
+            character.StateManager.CurrentState.number = EditorGUILayout.IntField(character.StateManager.CurrentState.number);
             EditorGUILayout.LabelField("int");
         }
         EditorGUILayout.EndHorizontal();
@@ -532,7 +533,7 @@ public class FullDebugEditorWindow : EditorWindow
         EditorGUILayout.BeginHorizontal();
         {
             EditorGUILayout.LabelField("StateTime: ");
-            EditorGUILayout.LabelField(character.StateManager.StateTime.ToString());
+            character.StateManager.StateTime = EditorGUILayout.IntField(character.StateManager.StateTime);
             EditorGUILayout.LabelField("int");
         }
         EditorGUILayout.EndHorizontal();
@@ -652,10 +653,10 @@ public class FullDebugEditorWindow : EditorWindow
 
         Cmd(character.CommandManager);
 
-        ShowVars<int>("Vars:", character.Variables.IntegerVariables, ref m_intVars);
-        ShowVars<float>("FloatVars:", character.Variables.FloatVariables, ref m_floatVars);
-        ShowVars<int>("SysVars:", character.Variables.SystemIntegerVariables, ref m_sysIntVars);
-        ShowVars<float>("SysFloatVars:", character.Variables.SystemFloatVariables, ref m_sysFloatVars);
+        ShowVarsInt("Vars:", character.Variables.IntegerVariables, ref m_intVars);
+        ShowVarsFloat("FloatVars:", character.Variables.FloatVariables, ref m_floatVars);
+        ShowVarsInt("SysVars:", character.Variables.SystemIntegerVariables, ref m_sysIntVars);
+        ShowVarsFloat("SysFloatVars:", character.Variables.SystemFloatVariables, ref m_sysFloatVars);
     }
 
     void OtherInfo()
@@ -780,31 +781,31 @@ public class FullDebugEditorWindow : EditorWindow
     {
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("TimeElasped:");
-        EditorGUILayout.LabelField(shake.TimeElasped.ToString());
+        shake.TimeElasped = EditorGUILayout.IntField(shake.TimeElasped);
         EditorGUILayout.LabelField("int");
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Time:");
-        EditorGUILayout.LabelField(shake.Time.ToString());
+        shake.Time = EditorGUILayout.IntField(shake.Time);
         EditorGUILayout.LabelField("int");
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Frequency:");
-        EditorGUILayout.LabelField(shake.Frequency.ToString());
+        shake.Frequency = EditorGUILayout.FloatField(shake.Frequency);
         EditorGUILayout.LabelField("float");
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Amplitude:");
-        EditorGUILayout.LabelField(shake.Amplitude.ToString());
+        shake.Amplitude = EditorGUILayout.FloatField(shake.Amplitude);
         EditorGUILayout.LabelField("float");
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Phase:");
-        EditorGUILayout.LabelField(shake.Phase.ToString());
+        shake.Phase = EditorGUILayout.FloatField(shake.Phase);
         EditorGUILayout.LabelField("float");
         EditorGUILayout.EndHorizontal();
     }
@@ -813,13 +814,13 @@ public class FullDebugEditorWindow : EditorWindow
     {
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Round.Time:");
-        EditorGUILayout.LabelField(engine.TickCount.ToString());
+        engine.TickCount = EditorGUILayout.IntField(engine.TickCount);
         EditorGUILayout.LabelField("int");
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("RoundNumber:");
-        EditorGUILayout.LabelField(engine.RoundNumber.ToString());
+        engine.RoundNumber = EditorGUILayout.IntField(engine.RoundNumber);
         EditorGUILayout.LabelField("int");
         EditorGUILayout.EndHorizontal();
 
@@ -831,7 +832,7 @@ public class FullDebugEditorWindow : EditorWindow
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("MatchNumber:");
-        EditorGUILayout.LabelField(engine.MatchNumber.ToString());
+        engine.MatchNumber = EditorGUILayout.IntField(engine.MatchNumber);
         EditorGUILayout.LabelField("int");
         EditorGUILayout.EndHorizontal();
 
@@ -849,7 +850,7 @@ public class FullDebugEditorWindow : EditorWindow
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("DrawGames:");
-        EditorGUILayout.LabelField(engine.DrawGames.ToString());
+        engine.DrawGames = EditorGUILayout.IntField(engine.DrawGames);
         EditorGUILayout.LabelField("int");
         EditorGUILayout.EndHorizontal();
     }
@@ -965,7 +966,7 @@ public class FullDebugEditorWindow : EditorWindow
 
                     EditorGUILayout.LabelField(active.ToString());
                     EditorGUILayout.LabelField("bool");
-                    
+
                     EditorGUILayout.EndHorizontal();
                 }
             }
@@ -973,7 +974,7 @@ public class FullDebugEditorWindow : EditorWindow
         EditorGUILayout.EndVertical();
     }
 
-    void ShowVars<T>(string label, ListIterator<T> variables, ref bool foldout)
+    void ShowVarsInt(string label, ListIterator<int> variables, ref bool foldout)
     {
         EditorGUILayout.BeginVertical("ObjectFieldThumb");
         {
@@ -984,7 +985,32 @@ public class FullDebugEditorWindow : EditorWindow
                 {
                     EditorGUILayout.BeginHorizontal();
                     EditorGUILayout.LabelField(string.Format("ID: {0}", i), m_optionsVars);
-                    EditorGUILayout.LabelField(string.Format("VALUE: {0}", variables[i]));
+                    EditorGUIUtility.labelWidth = 5;
+                    EditorGUILayout.LabelField("VALUE:");
+                    variables[i] = EditorGUILayout.IntField(variables[i]);
+                    GUILayout.FlexibleSpace();
+                    EditorGUILayout.EndHorizontal();
+                }
+            }
+        }
+        EditorGUILayout.EndVertical();
+    }
+
+    void ShowVarsFloat(string label, ListIterator<float> variables, ref bool foldout)
+    {
+        EditorGUILayout.BeginVertical("ObjectFieldThumb");
+        {
+            foldout = EditorGUILayout.Foldout(foldout, label, true, "Foldout");
+            if (foldout)
+            {
+                for (int i = 0; i < variables.Count; i++)
+                {
+                    EditorGUILayout.BeginHorizontal();
+                    EditorGUILayout.LabelField(string.Format("ID: {0}", i), m_optionsVars);
+                    EditorGUIUtility.labelWidth = 5;
+                    EditorGUILayout.LabelField("VALUE:");
+                    variables[i] = EditorGUILayout.FloatField(variables[i]);
+                    GUILayout.FlexibleSpace();
                     EditorGUILayout.EndHorizontal();
                 }
             }
