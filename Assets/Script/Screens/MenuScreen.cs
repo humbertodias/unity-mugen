@@ -39,19 +39,6 @@ namespace UnityMugen.Screens
     {
         LauncherEngine Launcher => LauncherEngine.Inst;
 
-        static float[] Volume = {
-        -80f,
-        -39.6f,
-        -35.2f,
-        -30.8f,
-        -26.4f,
-        -22f,
-        -17.6f,
-        -13.2f,
-        -8.8f,
-        -4.4f,
-        0f
-    };
         static string[] PercentVolume = {
         "0%",
         "10%",
@@ -1097,7 +1084,7 @@ namespace UnityMugen.Screens
                 if (vol > 0)
                 {
                     PlayerPrefs.SetInt("MusicVolume", vol - 1);
-                    audioMixer.SetFloat("MusicVolume", Volume[vol - 1]);
+                    audioMixer.SetFloat("MusicVolume", Constant.Volume[vol - 1]);
                     styleAudio[0].textPercentVolume.text = PercentVolume[vol - 1];
                 }
             }
@@ -1107,7 +1094,7 @@ namespace UnityMugen.Screens
                 if (vol > 0)
                 {
                     PlayerPrefs.SetInt("SFXVolume", vol - 1);
-                    audioMixer.SetFloat("SFXVolume", Volume[vol - 1]);
+                    audioMixer.SetFloat("SFXVolume", Constant.Volume[vol - 1]);
                     styleAudio[1].textPercentVolume.text = PercentVolume[vol - 1];
 
                     Launcher.soundSystem.PlayChannelPrimary(TypeSound.SELECTED);
@@ -1119,7 +1106,7 @@ namespace UnityMugen.Screens
                 if (vol > 0)
                 {
                     PlayerPrefs.SetInt("VoiceVolume", vol - 1);
-                    audioMixer.SetFloat("VoiceVolume", Volume[vol - 1]);
+                    audioMixer.SetFloat("VoiceVolume", Constant.Volume[vol - 1]);
                     styleAudio[2].textPercentVolume.text = PercentVolume[vol - 1];
 
                     int voiceRandom = UnityEngine.Random.Range(0, voicesTest.Length);
@@ -1136,7 +1123,7 @@ namespace UnityMugen.Screens
                 if (vol < 10)
                 {
                     PlayerPrefs.SetInt("MusicVolume", vol + 1);
-                    audioMixer.SetFloat("MusicVolume", Volume[vol + 1]);
+                    audioMixer.SetFloat("MusicVolume", Constant.Volume[vol + 1]);
                     styleAudio[0].textPercentVolume.text = PercentVolume[vol + 1];
                 }
             }
@@ -1146,7 +1133,7 @@ namespace UnityMugen.Screens
                 if (vol < 10)
                 {
                     PlayerPrefs.SetInt("SFXVolume", vol + 1);
-                    audioMixer.SetFloat("SFXVolume", Volume[vol + 1]);
+                    audioMixer.SetFloat("SFXVolume", Constant.Volume[vol + 1]);
                     styleAudio[1].textPercentVolume.text = PercentVolume[vol + 1];
 
                     Launcher.soundSystem.PlayChannelPrimary(TypeSound.SELECTED);
@@ -1158,7 +1145,7 @@ namespace UnityMugen.Screens
                 if (vol < 10)
                 {
                     PlayerPrefs.SetInt("VoiceVolume", vol + 1);
-                    audioMixer.SetFloat("VoiceVolume", Volume[vol + 1]);
+                    audioMixer.SetFloat("VoiceVolume", Constant.Volume[vol + 1]);
                     styleAudio[2].textPercentVolume.text = PercentVolume[vol + 1];
 
                     int voiceRandom = UnityEngine.Random.Range(0, voicesTest.Length - 1);
@@ -1177,15 +1164,15 @@ namespace UnityMugen.Screens
         void InicialValuesVolume()
         {
             int volMusic = PlayerPrefs.GetInt("MusicVolume");
-            audioMixer.SetFloat("MusicVolume", Volume[volMusic]);
+            audioMixer.SetFloat("MusicVolume", Constant.Volume[volMusic]);
             styleAudio[0].textPercentVolume.text = PercentVolume[volMusic];
 
             int volSFX = PlayerPrefs.GetInt("SFXVolume");
-            audioMixer.SetFloat("SFXVolume", Volume[volSFX]);
+            audioMixer.SetFloat("SFXVolume", Constant.Volume[volSFX]);
             styleAudio[1].textPercentVolume.text = PercentVolume[volSFX];
 
             int volVoice = PlayerPrefs.GetInt("VoiceVolume");
-            audioMixer.SetFloat("VoiceVolume", Volume[volVoice]);
+            audioMixer.SetFloat("VoiceVolume", Constant.Volume[volVoice]);
             styleAudio[2].textPercentVolume.text = PercentVolume[volVoice];
         }
 

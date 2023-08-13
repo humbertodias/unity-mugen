@@ -2,10 +2,12 @@
 using System.Collections;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.UI;
 using UnityMugen.Combat;
 using UnityMugen.CustomInput;
 using UnityMugen.Drawing;
+using UnityMugen.Prefabs;
 
 namespace UnityMugen.Screens
 {
@@ -59,8 +61,6 @@ namespace UnityMugen.Screens
         public Text namePlayer1;
         public Text namePlayer2;
 
-        public CharacterSelect currentPositionP1;
-        public CharacterSelect currentPositionP2;
         CharacterSelect lastPositionP1;
         CharacterSelect lastPositionP2;
 
@@ -73,10 +73,12 @@ namespace UnityMugen.Screens
 
         public AudioClip music;
 
-
         public Image imageChar1;
         public Image imageChar2;
 
+        [Header("Current Position")]
+        public CharacterSelect currentPositionP1;
+        public CharacterSelect currentPositionP2;
 
         [Header("Colors Palette")]
         public GameObject colorsP1;
@@ -105,15 +107,47 @@ namespace UnityMugen.Screens
 
         public Transform Select;
         CharacterSelect[] selects;
-        public CharacterSelect[] randomsPosition;
 
         //[Header("Grid Players")]
         //public CharacterSelectPC[] grid;
         //private Dictionary<string, CharacterSelect> m_grid;
 
+        bool forceStart = false;
+        void Awake()
+        {
+            if (Launcher is null)
+            {
+                var loadInput = Resources.Load<DontDestroyOnLoadInput>("DontDestroyOnLoadInput");
+                var launcherEngine = Resources.Load<DontDestroyOnLoadLauncherEngine>("DontDestroyOnLoadLauncherEngine");
+                GameObject.Instantiate(loadInput);
+                GameObject.Instantiate(launcherEngine);
+                Launcher.engineInitialization.Mode = CombatMode.Training;
+                Launcher.StartCombatScreen();
+                forceStart = true;
+            }
+        }
+
+        
 
         public void Start()
         {
+            if (forceStart)
+            {
+                var audioMixer = Resources.Load<AudioMixer>("AudioMixer");
+                void InicialValuesVolume()
+                {
+                    int volMusic = PlayerPrefs.GetInt("MusicVolume");
+                    audioMixer.SetFloat("MusicVolume", Constant.Volume[volMusic]);
+
+                    int volSFX = PlayerPrefs.GetInt("SFXVolume");
+                    audioMixer.SetFloat("SFXVolume", Constant.Volume[volSFX]);
+
+                    int volVoice = PlayerPrefs.GetInt("VoiceVolume");
+                    audioMixer.SetFloat("VoiceVolume", Constant.Volume[volVoice]);
+                }
+                InicialValuesVolume();
+            }
+
             Launcher.screenType = ScreenType.Select;
 
             InputCustom.ActiveUpdate = true;
@@ -227,16 +261,7 @@ namespace UnityMugen.Screens
             }
         }
 
-
-        public void teste()
-        {
-
-        }
-
-
         private BTPress btPress;
-
-        public PlayerButton oldPlayerButton;
 
         void UpdatePress()
         {
@@ -312,14 +337,15 @@ namespace UnityMugen.Screens
                     lastPositionP1 = currentPositionP1;
                     //  verificar como fica com a conexão TCP
                     //for (int i = 0; i < randomsPosition.Length; i++)
+
+                    if (currentPositionP1.playerSelectType == PlayerSelectType.Random)
                     {
-                        if (randomsPosition.Contains(currentPositionP1))
-                        {
-                        tryAgain:
-                            currentPositionP1 = selects.ElementAt(UnityEngine.Random.Range(0, selects.Length - 1));
-                            if (randomsPosition.Contains(currentPositionP1))
-                                goto tryAgain;
-                        }
+                    tryAgain:
+                        var tempPosition = selects.ElementAt(UnityEngine.Random.Range(0, selects.Length - 1));
+                        if (tempPosition.playerSelectType == PlayerSelectType.Random)
+                            goto tryAgain;
+                        else
+                            currentPositionP1 = tempPosition;
                     }
 
                     if (currentPositionP1.profile == null)
@@ -362,12 +388,14 @@ namespace UnityMugen.Screens
                 {
                     lastPositionP2 = currentPositionP2;
 
-                    if (randomsPosition.Contains(currentPositionP2))
+                    if (currentPositionP2.playerSelectType == PlayerSelectType.Random)
                     {
                     tryAgain:
-                        currentPositionP2 = selects.ElementAt(UnityEngine.Random.Range(0, selects.Length - 1));
-                        if (randomsPosition.Contains(currentPositionP2))
+                        var tempPosition = selects.ElementAt(UnityEngine.Random.Range(0, selects.Length - 1));
+                        if (tempPosition.playerSelectType == PlayerSelectType.Random)
                             goto tryAgain;
+                        else
+                            currentPositionP2 = tempPosition;
                     }
 
                     if (currentPositionP2.profile == null)
@@ -491,7 +519,7 @@ namespace UnityMugen.Screens
 
                 initialization.Team1[0].paletteIndex = currentPositionP1.profile.palettesIndex[colorP1Select];
 
-                p1Animator.GetComponent<Animator>().SetTrigger("active");
+                p1Animator.GetComponent<Animator>().Play("Confirm");
             }
             else if (btPress.pressP1Y == 1)
             {
@@ -569,7 +597,7 @@ namespace UnityMugen.Screens
                 }
                 initialization.Team2[0].paletteIndex = currentPositionP2.profile.palettesIndex[colorP2Select];
 
-                p2Animator.GetComponent<Animator>().SetTrigger("active");
+                p2Animator.GetComponent<Animator>().Play("Confirm");
             }
             else if (btPress.pressP2Y == 1)
             {
@@ -596,27 +624,33 @@ namespace UnityMugen.Screens
 
         private void CharacterSelectP1()
         {
-            if (btPress.pressP1UP == 1)
+            bool confirmAction = false;
+            if (btPress.pressP1UP == 1 && currentPositionP1.posiUp != null)
             {
                 currentPositionP1 = currentPositionP1.posiUp;
+                confirmAction = true;
             }
-            else if (btPress.pressP1DOWN == 1)
+            else if (btPress.pressP1DOWN == 1 && currentPositionP1.posiDown != null)
             {
                 currentPositionP1 = currentPositionP1.posiDown;
+                confirmAction = true;
             }
-            else if (btPress.pressP1LEFT == 1)
+            else if (btPress.pressP1LEFT == 1 && currentPositionP1.posiLeft != null)
             {
                 currentPositionP1 = currentPositionP1.posiLeft;
+                confirmAction = true;
             }
-            else if (btPress.pressP1RIGHT == 1)
+            else if (btPress.pressP1RIGHT == 1 && currentPositionP1.posiRight != null)
             {
                 currentPositionP1 = currentPositionP1.posiRight;
+                confirmAction = true;
             }
 
-            if (btPress.pressP1UP == 1 ||
+            if ((btPress.pressP1UP == 1 ||
                 btPress.pressP1DOWN == 1 ||
                 btPress.pressP1LEFT == 1 ||
-                btPress.pressP1RIGHT == 1)
+                btPress.pressP1RIGHT == 1) &&
+                confirmAction)
             {
                 Launcher.soundSystem.PlayChannelPrimary(TypeSound.SELECT);
             }
@@ -632,27 +666,33 @@ namespace UnityMugen.Screens
         }
         private void CharacterSelectP2()
         {
-            if (btPress.pressP2UP == 1)
+            bool confirmAction = false;
+            if (btPress.pressP2UP == 1 && currentPositionP2.posiUp != null)
             {
                 currentPositionP2 = currentPositionP2.posiUp;
+                confirmAction = true;
             }
-            else if (btPress.pressP2DOWN == 1)
+            else if (btPress.pressP2DOWN == 1 && currentPositionP2.posiDown != null)
             {
                 currentPositionP2 = currentPositionP2.posiDown;
+                confirmAction = true;
             }
-            else if (btPress.pressP2LEFT == 1)
+            else if (btPress.pressP2LEFT == 1 && currentPositionP2.posiLeft != null)
             {
                 currentPositionP2 = currentPositionP2.posiLeft;
+                confirmAction = true;
             }
-            else if (btPress.pressP2RIGHT == 1)
+            else if (btPress.pressP2RIGHT == 1 && currentPositionP2.posiRight != null)
             {
                 currentPositionP2 = currentPositionP2.posiRight;
+                confirmAction = true;
             }
 
-            if (btPress.pressP2UP == 1 ||
+            if ((btPress.pressP2UP == 1 ||
                 btPress.pressP2DOWN == 1 ||
                 btPress.pressP2LEFT == 1 ||
-                btPress.pressP2RIGHT == 1)
+                btPress.pressP2RIGHT == 1) &&
+                confirmAction)
             {
                 Launcher.soundSystem.PlayChannelPrimary(TypeSound.SELECT);
             }

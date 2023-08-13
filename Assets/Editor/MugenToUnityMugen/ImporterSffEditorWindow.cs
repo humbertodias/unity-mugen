@@ -84,10 +84,8 @@ namespace UnityMugen.Editors
 
                         for (int i = 0; i < spriteDatas.Count; i++)
                         {
-
                             if (only.Count == 0 || only.Contains(spriteDatas.ElementAt(i).Key.Group))
                             {
-
                                 string path = PathSaveSprites;
                                 if (separatedByGroup)
                                 {
@@ -105,11 +103,12 @@ namespace UnityMugen.Editors
 
                                 var dirPath = path + "/" + nameChar + "_" + spriteDatas.ElementAt(i).Key.Group + "-" + spriteDatas.ElementAt(i).Key.Image + ".png";
 
-                                MiscTools.UpdateTexture2DSettings(dirPath);
+                                Sprite spr = spriteDatas.ElementAt(i).Value.sprite;
+                                Vector2 Pivot = spriteDatas.ElementAt(i).Value.sprite.pivot;
+                                MiscTools.UpdateTexture2DSettings(dirPath, new Vector2(Pivot.x / spr.texture.width, Pivot.y / spr.texture.height));
                             }
                         }
 
-                        AssetDatabase.Refresh();
                         this.ShowNotification(new GUIContent("Crete SpriteFEManager."));
                     }
                 }

@@ -18,7 +18,7 @@ public static class MiscTools
         return obj.ToString();
     }
 
-    public static void UpdateTexture2DSettings(string dirPath)
+    public static void UpdateTexture2DSettings(string dirPath, Vector2 pivot)
     {
         AssetImporter assetImporter = AssetImporter.GetAtPath(dirPath);
         TextureImporter importer = assetImporter as TextureImporter;
@@ -31,6 +31,7 @@ public static class MiscTools
         TextureImporterSettings settings = new TextureImporterSettings();
         importer.ReadTextureSettings(settings);
         settings.spriteAlignment = (int)SpriteAlignment.Custom;
+        settings.spritePivot = pivot;
         importer.SetTextureSettings(settings);
 
         TextureImporterPlatformSettings platformSettings = new TextureImporterPlatformSettings
@@ -40,16 +41,16 @@ public static class MiscTools
             resizeAlgorithm = TextureResizeAlgorithm.Mitchell,
             maxTextureSize = 2048,
             compressionQuality = 0
-    };
+        };
         importer.SetPlatformTextureSettings(platformSettings);
+        assetImporter.SaveAndReimport();
     }
 
     public static void Texture2DToPng(Texture2D texture2D, string nameFile, string pathSave)
     {
         if (!Directory.Exists(pathSave))
-        {
-            Debug.LogError("Diretorio não existente: "+ pathSave);
-        }
+            Debug.LogError("Directory not found: " + pathSave);
+
         byte[] bytes = texture2D.EncodeToPNG();
         System.IO.File.WriteAllBytes(pathSave + nameFile, bytes);
     }
