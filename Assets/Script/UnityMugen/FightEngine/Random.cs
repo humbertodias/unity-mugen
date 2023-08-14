@@ -43,6 +43,11 @@ namespace UnityMugen
             return m_random.Next(min, max);
         }
 
+        public float NewFloat(float min, float max)
+        {
+            return m_random.Next((int)(min *Constant.Scale2), (int)(max * Constant.Scale2)) * 0.01f;
+        }
+
         /// <summary>
         /// Return a randomly generated number.
         /// </summary>

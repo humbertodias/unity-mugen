@@ -54,15 +54,20 @@ namespace UnityMugen.Combat
             CurrentAcceleration = Data.Acceleration;
             //CurrentFlip = SpriteEffects.None;
             CurrentScale = Data.Scale;
+            
+            DrawingAngle = Data.Angle;//Novo
+
             DrawOrder = Data.DrawOnTop ? 11 : Data.SpritePriority;
             Transparency = Data.Transparency;
             DrawShadow = Data.Shadow;
             DrawReflection = Data.Reflection;
 
             var rng = Launcher.random;
-            Random = new Vector2();
-            Random.x += rng.NewInt(-(int)Data.Random.x, (int)Data.Random.x);
-            Random.y += rng.NewInt(-(int)Data.Random.y, (int)Data.Random.y);
+            float x = rng.NewFloat(-Data.Random.x, Data.Random.x);
+            float y = rng.NewFloat(-Data.Random.y, Data.Random.y);
+            Random = new Vector2(x, y);
+            
+            UnityEngine.Random.Range(-Data.Random.x, Data.Random.x);
 
             m_palfx = Data.OwnPalFx ? new PaletteFx() : Creator.PaletteFx;
 
@@ -107,7 +112,7 @@ namespace UnityMugen.Combat
                     bool facep2 = EvaluationHelper.AsBoolean(Creator, Creator.StateManager.CurrentState.faceEnemy, false);
 
                     facing = Misc.FlipFacing(Creator.CurrentFacing);
-                    // em analize ferificar o gohan, m_creator.P2Dist(Axis.X) < 0
+                    // em analize verificar o gohan, m_creator.P2Dist(Axis.X) < 0
                     //Gohan teste - Seed = 402259687
 
                     bool error = false;
@@ -440,8 +445,7 @@ namespace UnityMugen.Combat
         public bool IsValid { get; set; }
         public Facing CreationFacing { get; set; }
         public bool ForceRemove { get; set; }
-        
-        [NonSerialized] public Vector2 Random;
+        public Vector2 Random { get; set; }
 
         public override EntityUpdateOrder UpdateOrder => EntityUpdateOrder.Explod;
 

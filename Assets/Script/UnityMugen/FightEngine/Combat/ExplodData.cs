@@ -25,6 +25,7 @@ namespace UnityMugen.Combat
         public int SuperMoveTime { get; set; }
         public int PauseTime { get; set; }
         public Vector2 Scale { get; set; }
+        public float Angle { get; set; }//Novo
         public int SpritePriority { get; set; }
         public bool DrawOnTop { get; set; }
         public bool OwnPalFx { get; set; }

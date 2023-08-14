@@ -4249,7 +4249,7 @@ namespace UnityMugen.Evaluation.Triggers
             if (parsestate.CurrentSymbol != Symbol.Comma) return null;
             ++parsestate.TokenIndex;
 
-            var child2 = parsestate.BuildNode(true);
+            var child2 = parsestate.BuildNode(false);
             if (child2 == null) return null;
 
             parsestate.BaseNode.Children.Add(child1);

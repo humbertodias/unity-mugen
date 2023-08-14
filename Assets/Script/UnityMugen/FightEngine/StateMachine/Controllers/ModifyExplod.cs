@@ -29,7 +29,7 @@ namespace UnityMugen.StateMachine.Controllers
         private Expression m_scale;
         private Expression m_spritePriority;
         private Expression m_drawOnTop;
-        private Expression m_ownPalette;
+        private Expression m_ownPal;
         private Expression m_removeOnGetHit;
         private Expression m_explodIgnoreHitPause;
         private Blending? m_blending;
@@ -80,7 +80,7 @@ namespace UnityMugen.StateMachine.Controllers
                 m_spritePriority = textSection.GetAttribute<Expression>("sprpriority", null);
                 m_drawOnTop = textSection.GetAttribute<Expression>("ontop", null);
                 m_shadow = textSection.GetAttribute<Expression>("shadow", null);
-                m_ownPalette = textSection.GetAttribute<Expression>("ownpal", null);
+                m_ownPal = textSection.GetAttribute<Expression>("ownpal", null);
                 m_removeOnGetHit = textSection.GetAttribute<Expression>("removeongethit", null);
                 m_explodIgnoreHitPause = textSection.GetAttribute<Expression>("ignorehitpause", null);
 
@@ -146,7 +146,7 @@ namespace UnityMugen.StateMachine.Controllers
             data.Scale = EvaluationHelper.AsVector2(character, m_scale, null, 1);
             data.SpritePriority = EvaluationHelper.AsInt32(character, m_spritePriority, null);
             data.DrawOnTop = EvaluationHelper.AsBoolean(character, m_drawOnTop, null);
-            data.OwnPalFx = EvaluationHelper.AsBoolean(character, m_ownPalette, null);
+            data.OwnPalFx = EvaluationHelper.AsBoolean(character, m_ownPal, null);
             data.RemoveOnGetHit = EvaluationHelper.AsBoolean(character, m_removeOnGetHit, null);
             data.IgnoreHitPause = EvaluationHelper.AsBoolean(character, m_explodIgnoreHitPause, null);
 

@@ -202,7 +202,7 @@ namespace UnityMugen.Combat
             var currentelement = AnimationManager.CurrentElement;
             if (currentelement == null) return;
 
-            float angle = AngleDraw ? Misc.FaceScalar(CurrentFacing, DrawingAngle) : 0f;
+            float angle = AngleDraw ? Misc.FaceScalar(CurrentFacing, DrawingAngle) : DrawingAngle;
             angle += currentelement.Rotate;
             transform.localEulerAngles = new Vector3(0, 0, angle);
 

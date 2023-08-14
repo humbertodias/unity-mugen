@@ -23,6 +23,13 @@ namespace UnityMugen.StateMachine.Controllers
         private Expression m_superMoveTime;
         private Expression m_pauseMoveTime;
         private Expression m_scale;
+
+        private Expression m_angle;
+#warning Não aplicado ainda
+        private Expression m_yAngle;
+#warning Não aplicado ainda
+        private Expression m_xAngle;
+
         private Expression m_spritePriority;
         private Expression m_drawOnTop;
 
@@ -48,7 +55,7 @@ namespace UnityMugen.StateMachine.Controllers
         private PositionType? m_posType;
 
         [Obsolete("Deprecated parameters")]
-        private Expression m_randomDisplacement;
+        private Expression m_random;
 
         [Obsolete("Deprecated parameters")]
         private Expression m_superMove;
@@ -83,12 +90,17 @@ namespace UnityMugen.StateMachine.Controllers
                 m_velocity = expVel ?? expVelocity;
 
                 m_acceleration = textSection.GetAttribute<Expression>("accel", null);
-                m_randomDisplacement = textSection.GetAttribute<Expression>("random", null);
+                m_random = textSection.GetAttribute<Expression>("random", null);
                 m_removeTime = textSection.GetAttribute<Expression>("removetime", null);
                 m_superMove = textSection.GetAttribute<Expression>("supermove", null);
                 m_superMoveTime = textSection.GetAttribute<Expression>("supermovetime", null);
                 m_pauseMoveTime = textSection.GetAttribute<Expression>("pausemovetime", null);
                 m_scale = textSection.GetAttribute<Expression>("scale", null);
+
+                m_angle = textSection.GetAttribute<Expression>("angle", null);
+                m_yAngle = textSection.GetAttribute<Expression>("yangle", null);
+                m_xAngle = textSection.GetAttribute<Expression>("xangle", null);
+
                 m_spritePriority = textSection.GetAttribute<Expression>("sprpriority", null);
                 m_drawOnTop = textSection.GetAttribute<Expression>("ontop", null);
                 m_shadow = textSection.GetAttribute<Expression>("shadow", null);
@@ -139,12 +151,17 @@ namespace UnityMugen.StateMachine.Controllers
             var bindtime = EvaluationHelper.AsInt32(character, m_bindtime, 0);
             var velocity = EvaluationHelper.AsVector2(character, m_velocity, Vector2.zero) * Constant.Scale;
             var acceleration = EvaluationHelper.AsVector2(character, m_acceleration, Vector2.zero) * Constant.Scale;
-            var randomdisplacement = EvaluationHelper.AsVector2(character, m_randomDisplacement, Vector2.zero) * Constant.Scale;
+            var random = EvaluationHelper.AsVector2(character, m_random, Vector2.zero) * Constant.Scale;
             var removetime = EvaluationHelper.AsInt32(character, m_removeTime, -2);
             var supermove = EvaluationHelper.AsBoolean(character, m_superMove, false);
             var supermovetime = EvaluationHelper.AsInt32(character, m_superMoveTime, 0);
             var pausetime = EvaluationHelper.AsInt32(character, m_pauseMoveTime, 0);
             var scale = EvaluationHelper.AsVector2(character, m_scale, Vector2.one);
+
+            var angle = EvaluationHelper.AsSingle(character, m_angle, 0);
+            var yAngle = EvaluationHelper.AsSingle(character, m_yAngle, 0);
+            var xAngle = EvaluationHelper.AsSingle(character, m_xAngle, 0);
+
             var spritepriority = EvaluationHelper.AsInt32(character, m_spritePriority, 0);
             var ontop = EvaluationHelper.AsBoolean(character, m_drawOnTop, false);
             var ownpalette = EvaluationHelper.AsBoolean(character, m_ownPal, false);
@@ -165,11 +182,12 @@ namespace UnityMugen.StateMachine.Controllers
             data.Velocity = velocity;
             data.Acceleration = acceleration;
             data.BindTime = bindtime;
-            data.Random = randomdisplacement;
+            data.Random = random / 2;
             data.SuperMove = supermove;
             data.SuperMoveTime = supermovetime;
             data.PauseTime = pausetime;
             data.Scale = scale;
+            data.Angle = angle;
             data.SpritePriority = spritepriority;
             data.DrawOnTop = ontop;
             data.OwnPalFx = ownpalette;
