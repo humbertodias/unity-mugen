@@ -388,7 +388,7 @@ namespace UnityMugen.StateMachine.Controllers
             hitdef.PalFxMul = EvaluationHelper.AsVector3(character, m_palMul, new Vector3(255, 255, 255));
             hitdef.PalFxBaseColor = EvaluationHelper.AsInt32(character, m_palColor, 255) / 255.0f;
             hitdef.PalFxInvert = EvaluationHelper.AsBoolean(character, m_palInvert, false);
-            hitdef.PalFxSinAdd = EvaluationHelper.AsVector4(character, m_palSinAdd, new Vector4(0, 0, 0, 1));
+            hitdef.PalFxSinAdd = EvaluationHelper.AsVector4(character, m_palSinAdd, new Vector4(0, 0, 0, 1), 1);
 
             hitdef.EnvShakeTime = EvaluationHelper.AsInt32(character, m_shakeTime, 0);
             hitdef.EnvShakeFrequency = Misc.Clamp(EvaluationHelper.AsSingle(character, m_shakeFreq, 60), 0, 180);

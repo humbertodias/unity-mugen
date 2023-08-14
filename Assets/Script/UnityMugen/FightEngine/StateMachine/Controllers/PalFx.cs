@@ -41,7 +41,7 @@ namespace UnityMugen.StateMachine.Controllers
             var time = EvaluationHelper.AsInt32(character, m_time, -2);
             var paladd = EvaluationHelper.AsVector3(character, m_palAdd, new Vector3(0, 0, 0));
             var palmul = EvaluationHelper.AsVector3(character, m_palMul, new Vector3(255, 255, 255));
-            var sinadd = EvaluationHelper.AsVector4(character, m_sineAdd, new Vector4(0, 0, 0, 1));
+            var sinadd = EvaluationHelper.AsVector4(character, m_sineAdd, new Vector4(0, 0, 0, 1), 1);
             var invert = EvaluationHelper.AsBoolean(character, m_palInvert, false);
             var basecolor = EvaluationHelper.AsInt32(character, m_palColor, 255);
 

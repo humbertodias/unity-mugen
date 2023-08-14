@@ -179,7 +179,7 @@ namespace UnityMugen
             return failover;
         }
 
-        public static Vector4 AsVector4(Character character, IExpression expression, Vector4 failover)
+        public static Vector4 AsVector4(Character character, IExpression expression, Vector4 failover, int last = 0)
         {
             if (expression == null || expression.IsValid == false) return failover;
 
@@ -196,7 +196,7 @@ namespace UnityMugen
                             return new Vector4(result[0].FloatValue, result[1].FloatValue, result[2].FloatValue, result[3].FloatValue);
                         }
 
-                        return new Vector4(result[0].FloatValue, result[1].FloatValue, result[2].FloatValue, 0);
+                        return new Vector4(result[0].FloatValue, result[1].FloatValue, result[2].FloatValue, last);
                     }
 
                     return new Vector4(result[0].FloatValue, result[1].FloatValue, 0, 0);
