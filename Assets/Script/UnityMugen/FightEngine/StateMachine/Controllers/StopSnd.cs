@@ -7,11 +7,11 @@ namespace UnityMugen.StateMachine.Controllers
 {
 
     [StateControllerName("StopSnd")]
-    public class StopSound : StateController
+    public class StopSnd : StateController
     {
         private Expression m_channel;
 
-        public StopSound(StateSystem statesystem, string label, TextSection textsection)
+        public StopSnd(StateSystem statesystem, string label, TextSection textsection)
                 : base(statesystem, label, textsection)
         {
             m_channel = textSection.GetAttribute<Expression>("channel", null);

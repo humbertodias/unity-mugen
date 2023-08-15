@@ -8,7 +8,7 @@ namespace UnityMugen.StateMachine.Controllers
 {
 #warning olhar novamente, testar esta class usando ela na pratica
     [StateControllerName("GraphicUI")]
-    public class GraphicUIOld : StateController
+    public class GraphicUI : StateController
     {
         public Expression m_update;
         public Expression m_id;
@@ -32,7 +32,7 @@ namespace UnityMugen.StateMachine.Controllers
         public Expression m_alpha;
         public Expression m_color;
 
-        public GraphicUIOld(StateSystem statesystem, string label, TextSection textsection)
+        public GraphicUI(StateSystem statesystem, string label, TextSection textsection)
             : base(statesystem, label, textsection) { }
 
         public override void Load()
