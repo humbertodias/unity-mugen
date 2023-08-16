@@ -281,7 +281,7 @@ namespace UnityMugen.StateMachine.Controllers
             hitdef.GuardHitTime = EvaluationHelper.AsInt32(character, m_guardHitTime, hitdef.GroundHitTime);
             hitdef.AirHitTime = EvaluationHelper.AsInt32(character, m_airHitTime, 20);
             hitdef.GroundSlideTime = EvaluationHelper.AsInt32(character, m_groundSlideTime, 0);
-            hitdef.GuardSlideTime = EvaluationHelper.AsInt32(character, m_groundSlideTime, hitdef.GuardHitTime);
+            hitdef.GuardSlideTime = EvaluationHelper.AsInt32(character, m_guardSlideTime, hitdef.GuardHitTime);
             hitdef.GuardControlTime = EvaluationHelper.AsInt32(character, m_guardCtrlTime, hitdef.GuardSlideTime);
             hitdef.AirGuardControlTime = EvaluationHelper.AsInt32(character, m_airGuardCtrlTime, hitdef.GuardControlTime);
 
