@@ -1,7 +1,6 @@
 using UnityMugen.Combat;
-using Debug = UnityEngine.Debug;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
+using Debug = UnityEngine.Debug;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -12,28 +11,28 @@ namespace UnityMugen.StateMachine.Controllers
         private PlayerButton m_value;
         private Expression m_clearOld;
 
-        public CommandSet(StateSystem statesystem, string label, TextSection textsection)
-            : base(statesystem, label, textsection)
+        public CommandSet(string label) : base(label)
         {
-            m_value = textSection.GetAttribute("value", PlayerButton.None);
+            m_value = PlayerButton.None;
         }
 
 #warning olhar novamente
-        public override void Load()
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            if (isLoaded == false)
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
             {
-                base.Load();
-
-                
-                m_clearOld = textSection.GetAttribute<Expression>("clear", null);
+                case "value":
+                    m_value = GetAttribute(expression, PlayerButton.None);
+                    break;
+                case "clear":
+                    m_clearOld = GetAttribute<Expression>(expression, null);
+                    break;
             }
         }
 
         public override void Run(Character character)
         {
-            Load();
-
             if (m_value == PlayerButton.None)
             {
                 Debug.Log("CommandSet : value Required");

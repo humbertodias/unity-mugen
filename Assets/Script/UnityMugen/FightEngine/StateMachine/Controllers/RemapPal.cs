@@ -2,7 +2,6 @@
 using UnityMugen.Combat;
 using UnityMugen.Drawing;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -13,24 +12,24 @@ namespace UnityMugen.StateMachine.Controllers
         private Expression m_source;
         private Expression m_dest;
 
-        public RemapPal(StateSystem statesystem, string label, TextSection textsection)
-                : base(statesystem, label, textsection) { }
+        public RemapPal(string label) : base(label) { }
 
-        public override void Load()
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            if (isLoaded == false)
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
             {
-                base.Load();
-
-                m_source = textSection.GetAttribute<Expression>("source", null);
-                m_dest = textSection.GetAttribute<Expression>("dest", null);
+                case "source":
+                    m_source = GetAttribute<Expression>(expression, null);
+                    break;
+                case "dest":
+                    m_dest = GetAttribute<Expression>(expression, null);
+                    break;
             }
         }
 
         public override void Run(Character character)
         {
-            Load();
-
             var source = EvaluationHelper.AsVector2(character, m_source, new Vector2(-1, 0));
             var dest = EvaluationHelper.AsVector2(character, m_dest, new Vector2(-1, 0));
 
@@ -79,7 +78,6 @@ namespace UnityMugen.StateMachine.Controllers
             }
 
             character.PaletteList.PalTex[sourceIndex] = character.PaletteList.PalTexBackup[destIndex];
-
         }
     }
 }

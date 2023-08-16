@@ -1,6 +1,5 @@
 ﻿using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -13,25 +12,27 @@ namespace UnityMugen.StateMachine.Controllers
         private Expression m_velx;
         private Expression m_vely;
 
-        public HitFallSet(StateSystem statesystem, string label, TextSection textsection)
-                    : base(statesystem, label, textsection) { }
+        public HitFallSet(string label) : base(label) { }
 
-        public override void Load()
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            if (isLoaded == false)
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
             {
-                base.Load();
-
-                m_fallSet = textSection.GetAttribute<Expression>("value", null);
-                m_velx = textSection.GetAttribute<Expression>("xvel", null);
-                m_vely = textSection.GetAttribute<Expression>("yvel", null);
+                case "value":
+                    m_fallSet = GetAttribute<Expression>(expression, null);
+                    break;
+                case "xvel":
+                    m_velx = GetAttribute<Expression>(expression, null);
+                    break;
+                case "yvel":
+                    m_vely = GetAttribute<Expression>(expression, null);
+                    break;
             }
         }
 
         public override void Run(Character character)
         {
-            Load();
-
             var fallset = EvaluationHelper.AsInt32(character, m_fallSet, -1);
             var velx = EvaluationHelper.AsSingle(character, m_velx, null) * Constant.Scale;
             var vely = EvaluationHelper.AsSingle(character, m_vely, null) * Constant.Scale;

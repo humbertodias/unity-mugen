@@ -1,6 +1,5 @@
 ﻿using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -13,28 +12,30 @@ namespace UnityMugen.StateMachine.Controllers
         private Expression m_kill;
         private Expression m_abs;
 
-        public TargetLifeAdd(StateSystem statesystem, string label, TextSection textsection)
-                : base(statesystem, label, textsection)
-        {
-            m_life = textSection.GetAttribute<Expression>("value", null);
-        }
+        public TargetLifeAdd(string label) : base(label) { }
 
-        public override void Load()
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            if (isLoaded == false)
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
             {
-                base.Load();
-
-                m_targetId = textSection.GetAttribute<Expression>("ID", null);
-                m_kill = textSection.GetAttribute<Expression>("kill", null);
-                m_abs = textSection.GetAttribute<Expression>("absolute", null);
+                case "value":
+                    m_life = GetAttribute<Expression>(expression, null);
+                    break;
+                case "id":
+                    m_targetId = GetAttribute<Expression>(expression, null);
+                    break;
+                case "kill":
+                    m_kill = GetAttribute<Expression>(expression, null);
+                    break;
+                case "absolute":
+                    m_abs = GetAttribute<Expression>(expression, null);
+                    break;
             }
         }
 
         public override void Run(Character character)
         {
-            Load();
-
             var amount = EvaluationHelper.AsInt32(character, m_life, null);
             var targetId = EvaluationHelper.AsInt32(character, m_targetId, -1);
             var cankill = EvaluationHelper.AsBoolean(character, m_kill, true);

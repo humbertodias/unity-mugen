@@ -1,7 +1,5 @@
 ﻿using System;
 using UnityMugen.Combat;
-using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -13,27 +11,32 @@ namespace UnityMugen.StateMachine.Controllers
         private Assertion m_assert2;
         private Assertion m_assert3;
 
-        public AssertSpecial(StateSystem statesystem, string label, TextSection textsection)
-            : base(statesystem, label, textsection)
+        public AssertSpecial(string label) : base(label)
         {
+            m_assert1 = Assertion.None;
+            m_assert2 = Assertion.None;
+            m_assert3 = Assertion.None;
         }
 
-        public override void Load()
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            if (isLoaded == false)
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
             {
-                base.Load();
-
-                m_assert1 = textSection.GetAttribute("flag", Assertion.None);
-                m_assert2 = textSection.GetAttribute("flag2", Assertion.None);
-                m_assert3 = textSection.GetAttribute("flag3", Assertion.None);
+                case "flag":
+                    m_assert1 = GetAttribute(expression, Assertion.None);
+                    break;
+                case "flag2":
+                    m_assert2 = GetAttribute(expression, Assertion.None);
+                    break;
+                case "flag3":
+                    m_assert3 = GetAttribute(expression, Assertion.None);
+                    break;
             }
         }
 
         public override void Run(Character character)
         {
-            Load();
-
             if (HasAssert(Assertion.NoAutoturn))
             {
                 character.Assertions.NoAutoTurn = true;

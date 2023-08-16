@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -12,26 +11,24 @@ namespace UnityMugen.StateMachine.Controllers
         private Expression m_animationNumber;
         private Expression m_elementNumber;
 
-        public ChangeAnim2(StateSystem statesystem, string label, TextSection textsection)
-            : base(statesystem, label, textsection)
-        {
-            m_animationNumber = textSection.GetAttribute<Expression>("value", null);
-        }
+        public ChangeAnim2(string label) : base(label) { }
 
-        public override void Load()
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            if (isLoaded == false)
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
             {
-                base.Load();
-
-                m_elementNumber = textSection.GetAttribute<Expression>("elem", null);
+                case "value":
+                    m_animationNumber = GetAttribute<Expression>(expression, null);
+                    break;
+                case "elem":
+                    m_elementNumber = GetAttribute<Expression>(expression, null);
+                    break;
             }
         }
 
         public override void Run(Character character)
         {
-            Load();
-
             var animationnumber = EvaluationHelper.AsInt32(character, m_animationNumber, null);
             var elementnumber = EvaluationHelper.AsInt32(character, m_elementNumber, 0);
 
@@ -59,6 +56,5 @@ namespace UnityMugen.StateMachine.Controllers
 
             return true;
         }
-
     }
 }

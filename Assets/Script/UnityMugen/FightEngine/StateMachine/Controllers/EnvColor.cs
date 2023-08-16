@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -13,28 +12,28 @@ namespace UnityMugen.StateMachine.Controllers
         private Expression m_time;
         private Expression m_under;
 
-        public EnvColor(StateSystem statesystem, string label, TextSection textsection)
-            : base(statesystem, label, textsection) { }
+        public EnvColor(string label) : base(label) { }
 
-        public override void Load()
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            if (isLoaded == false)
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
             {
-                base.Load();
-
-                var expValue = textSection.GetAttribute<Expression>("value", null);
-                var expColor = textSection.GetAttribute<Expression>("color", null);
-
-                m_color = expValue ?? expColor;
-                m_time = textSection.GetAttribute<Expression>("time", null);
-                m_under = textSection.GetAttribute<Expression>("under", null);
+                case "value":
+                case "color":
+                    m_color = GetAttribute<Expression>(expression, null);
+                    break;
+                case "time":
+                    m_time = GetAttribute<Expression>(expression, null);
+                    break;
+                case "under":
+                    m_under = GetAttribute<Expression>(expression, null);
+                    break;
             }
         }
 
         public override void Run(Character character)
         {
-            Load();
-
 #warning aqui é 1 ou 255
             var color = EvaluationHelper.AsVector3(character, m_color, Vector3.one);
             var time = EvaluationHelper.AsInt32(character, m_time, 1);

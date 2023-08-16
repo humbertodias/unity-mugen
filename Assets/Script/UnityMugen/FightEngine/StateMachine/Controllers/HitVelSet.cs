@@ -2,7 +2,6 @@
 using UnityEngine;
 using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -13,24 +12,24 @@ namespace UnityMugen.StateMachine.Controllers
         private Expression m_velX;
         private Expression m_velY;
 
-        public HitVelSet(StateSystem statesystem, string label, TextSection textsection)
-                : base(statesystem, label, textsection) { }
+        public HitVelSet(string label) : base(label) { }
 
-        public override void Load()
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            if (isLoaded == false)
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
             {
-                base.Load();
-
-                m_velX = textSection.GetAttribute<Expression>("x", null);
-                m_velY = textSection.GetAttribute<Expression>("y", null);
+                case "x":
+                    m_velX = GetAttribute<Expression>(expression, null);
+                    break;
+                case "y":
+                    m_velY = GetAttribute<Expression>(expression, null);
+                    break;
             }
         }
 
         public override void Run(Character character)
         {
-            Load();
-
             var velx = EvaluationHelper.AsBoolean(character, m_velX, true);
             var vely = EvaluationHelper.AsBoolean(character, m_velY, true);
 
@@ -45,7 +44,6 @@ namespace UnityMugen.StateMachine.Controllers
             if (vely == false) vel.y = character.CurrentVelocity.y;
 
             character.CurrentVelocity = vel;
-
         }
     }
 }

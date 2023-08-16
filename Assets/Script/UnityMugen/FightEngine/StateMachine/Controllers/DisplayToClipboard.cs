@@ -2,7 +2,6 @@
 using UnityEngine;
 using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -10,29 +9,27 @@ namespace UnityMugen.StateMachine.Controllers
     [StateControllerName("DisplayToClipboard")]
     public class DisplayToClipboard : StateController
     {
-        private string m_formatString;
-        private Expression m_params;
+        protected string m_formatString;
+        protected Expression m_params;
 
-        public DisplayToClipboard(StateSystem statesystem, string label, TextSection textsection)
-            : base(statesystem, label, textsection)
-        {
-            m_formatString = textSection.GetAttribute<string>("text", null);
-        }
+        public DisplayToClipboard(string label) : base(label) { }
 
-        public override void Load()
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            if (isLoaded == false)
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
             {
-                base.Load();
-
-                m_params = textSection.GetAttribute<Expression>("params", null);
+                case "text":
+                    m_formatString = GetAttribute<string>(expression, null);
+                    break;
+                case "params":
+                    m_params = GetAttribute<Expression>(expression, null);
+                    break;
             }
         }
 
         public override void Run(Character character)
         {
-            Load();
-
             if (m_params == null && m_formatString == null)
             {
                 Debug.Log("DisplayToClipboard : value Required");

@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -13,25 +12,27 @@ namespace UnityMugen.StateMachine.Controllers
         private Expression m_id;
         private Expression m_pos;
 
-        public TargetBind(StateSystem statesystem, string label, TextSection textsection)
-                : base(statesystem, label, textsection) { }
+        public TargetBind(string label) : base(label) { }
 
-        public override void Load()
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            if (isLoaded == false)
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
             {
-                base.Load();
-
-                m_time = textSection.GetAttribute<Expression>("time", null);
-                m_id = textSection.GetAttribute<Expression>("id", null);
-                m_pos = textSection.GetAttribute<Expression>("pos", null);
+                case "time":
+                    m_time = GetAttribute<Expression>(expression, null);
+                    break;
+                case "id":
+                    m_id = GetAttribute<Expression>(expression, null);
+                    break;
+                case "pos":
+                    m_pos = GetAttribute<Expression>(expression, null);
+                    break;
             }
         }
 
         public override void Run(Character character)
         {
-            Load();
-
             var time = EvaluationHelper.AsInt32(character, m_time, 1);
             var targetId = EvaluationHelper.AsInt32(character, m_id, -1);
             var position = EvaluationHelper.AsVector2(character, m_pos, Vector2.zero) * Constant.Scale;

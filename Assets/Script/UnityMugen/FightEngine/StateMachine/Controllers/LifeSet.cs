@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -11,16 +10,21 @@ namespace UnityMugen.StateMachine.Controllers
     {
         private Expression m_life;
 
-        public LifeSet(StateSystem statesystem, string label, TextSection textsection)
-                : base(statesystem, label, textsection)
+        public LifeSet(string label) : base(label) { }
+
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            m_life = textSection.GetAttribute<Expression>("value", null);
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
+            {
+                case "value":
+                    m_life = GetAttribute<Expression>(expression, null);
+                    break;
+            }
         }
 
         public override void Run(Character character)
         {
-            base.Load();
-
             var amount = EvaluationHelper.AsInt32(character, m_life, null);
             if (amount == null)
             {

@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 using UnityMugen.Video;
 
 namespace UnityMugen.StateMachine.Controllers
@@ -24,8 +23,57 @@ namespace UnityMugen.StateMachine.Controllers
         private Blending? m_trans;
         private Expression m_alpha;
 
-        public AfterImage(StateSystem statesystem, string label, TextSection textsection) :
-            base(statesystem, label, textsection) { }
+        public AfterImage(string label) : base(label)
+        {
+            m_trans = Misc.ToBlending(BlendType.None);
+        }
+
+        public override void SetAttributes(string idAttribute, string expression)
+        {
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
+            {
+                case "time":
+                    m_time = GetAttribute<Expression>(expression, null);
+                    break;
+                case "length":
+                    m_numberOfFrames = GetAttribute<Expression>(expression, null);
+                    break;
+                case "palcolor":
+                    m_paletteColor = GetAttribute<Expression>(expression, null);
+                    break;
+                case "palinvertall":
+                    m_paletteInversion = GetAttribute<Expression>(expression, null);
+                    break;
+                case "palbright":
+                    m_paletteBrightness = GetAttribute<Expression>(expression, null);
+                    break;
+                case "palcontrast":
+                    m_paletteContrast = GetAttribute<Expression>(expression, null);
+                    break;
+                case "palpostbright":
+                    m_palettePostBrightness = GetAttribute<Expression>(expression, null);
+                    break;
+                case "paladd":
+                    m_paletteAdd = GetAttribute<Expression>(expression, null);
+                    break;
+                case "palmul":
+                    m_paletteMutliply = GetAttribute<Expression>(expression, null);
+                    break;
+                case "timegap":
+                    m_timeGap = GetAttribute<Expression>(expression, null);
+                    break;
+                case "framegap":
+                    m_frameGap = GetAttribute<Expression>(expression, null);
+                    break;
+                case "trans":
+                    m_trans = GetAttribute<Blending?>(expression, Misc.ToBlending(BlendType.None));
+                    break;
+                case "alpha":
+                    m_alpha = GetAttribute<Expression>(expression, null);
+                    break;
+            }
+        }
 
         public AfterImage(AfterImageData afterImage)
         {
@@ -42,36 +90,10 @@ namespace UnityMugen.StateMachine.Controllers
             m_frameGap = afterImage.m_frameGap;
             m_trans = afterImage.m_trans;
             m_alpha = afterImage.m_alpha;
-            isLoaded = true;
         }
-
-        public override void Load()
-        {
-            if (isLoaded == false)
-            {
-                base.Load();
-
-                m_time = textSection.GetAttribute<Expression>("time", null);
-                m_numberOfFrames = textSection.GetAttribute<Expression>("length", null);
-                m_paletteColor = textSection.GetAttribute<Expression>("palcolor", null);
-                m_paletteInversion = textSection.GetAttribute<Expression>("palinvertall", null);
-                m_paletteBrightness = textSection.GetAttribute<Expression>("palbright", null);
-                m_paletteContrast = textSection.GetAttribute<Expression>("palcontrast", null);
-                m_palettePostBrightness = textSection.GetAttribute<Expression>("palpostbright", null);
-                m_paletteAdd = textSection.GetAttribute<Expression>("paladd", null);
-                m_paletteMutliply = textSection.GetAttribute<Expression>("palmul", null);
-                m_timeGap = textSection.GetAttribute<Expression>("TimeGap", null);
-                m_frameGap = textSection.GetAttribute<Expression>("FrameGap", null);
-                m_trans = textSection.GetAttribute<Blending?>("trans", Misc.ToBlending(BlendType.None));
-                m_alpha = textSection.GetAttribute<Expression>("alpha", null);
-            }
-        }
-
 
         public override void Run(Character character)
         {
-            Load();
-
             var time = EvaluationHelper.AsInt32(character, m_time, 1);
             var numberofframes = EvaluationHelper.AsInt32(character, m_numberOfFrames, 20);
             var basecolor = EvaluationHelper.AsInt32(character, m_paletteColor, 255);

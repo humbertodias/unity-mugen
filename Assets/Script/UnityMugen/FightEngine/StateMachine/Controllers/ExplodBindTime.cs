@@ -1,6 +1,5 @@
 ﻿using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -11,26 +10,25 @@ namespace UnityMugen.StateMachine.Controllers
         private Expression m_time;
         private Expression m_id;
 
-        public ExplodBindTime(StateSystem statesystem, string label, TextSection textsection)
-            : base(statesystem, label, textsection) { }
+        public ExplodBindTime(string label) : base(label) { }
 
-        public override void Load()
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            if (isLoaded == false)
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
             {
-                base.Load();
-
-                m_id = textSection.GetAttribute<Expression>("id", null);
-                var expTime = textSection.GetAttribute<Expression>("time", null);
-                var expValue = textSection.GetAttribute<Expression>("value", null);
-                m_time = expTime ?? expValue;
+                case "id":
+                    m_id = GetAttribute<Expression>(expression, null);
+                    break;
+                case "time":
+                case "value":
+                    m_time = GetAttribute<Expression>(expression, null);
+                    break;
             }
         }
 
         public override void Run(Character character)
         {
-            Load();
-
             var explodId = EvaluationHelper.AsInt32(character, m_id, int.MinValue);
             var time = EvaluationHelper.AsInt32(character, m_time, 1);
 

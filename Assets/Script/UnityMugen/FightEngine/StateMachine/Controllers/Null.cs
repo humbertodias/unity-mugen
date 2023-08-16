@@ -1,6 +1,4 @@
 ﻿using UnityMugen.Combat;
-using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -11,14 +9,8 @@ namespace UnityMugen.StateMachine.Controllers
 
         // Continuar usando isso pois existem muitos codigos que usam c.SetVar (equivalente a :=) nos trigger,
         // Mesmo estando em [State Null] esses codigos podem ser acessados.
-        public Null(StateSystem statesystem, string label, TextSection textsection)
-                : base(statesystem, label, textsection)
-        {
-        }
+        public Null(string label) : base(label) { }
 
-        public override void Run(Character character)
-        {
-            base.Load();
-        }
+        public override void Run(Character character) { }
     }
 }

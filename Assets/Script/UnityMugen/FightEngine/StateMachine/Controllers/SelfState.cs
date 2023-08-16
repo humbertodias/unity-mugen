@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -13,20 +12,22 @@ namespace UnityMugen.StateMachine.Controllers
         private Expression m_control;
         private Expression m_animationNumber;
 
-        public SelfState(StateSystem statesystem, string label, TextSection textsection)
-                : base(statesystem, label, textsection)
-        {
-            m_stateNumber = textSection.GetAttribute<Expression>("value", null);
-        }
+        public SelfState(string label) : base(label) { }
 
-        public override void Load()
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            if (isLoaded == false)
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
             {
-                base.Load();
-
-                m_control = textSection.GetAttribute<Expression>("ctrl", null);
-                m_animationNumber = textSection.GetAttribute<Expression>("anim", null);
+                case "value":
+                    m_stateNumber = GetAttribute<Expression>(expression, null);
+                    break;
+                case "ctrl":
+                    m_control = GetAttribute<Expression>(expression, null);
+                    break;
+                case "anim":
+                    m_animationNumber = GetAttribute<Expression>(expression, null);
+                    break;
             }
         }
 
@@ -38,8 +39,6 @@ namespace UnityMugen.StateMachine.Controllers
                 Debug.Log("SelfState : value Required");
                 return;
             }
-
-            Load();
 
             var playercontrol = EvaluationHelper.AsBoolean(character, m_control, null);
             var animationnumber = EvaluationHelper.AsInt32(character, m_animationNumber, null);

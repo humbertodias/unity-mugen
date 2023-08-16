@@ -9,39 +9,54 @@ namespace UnityMugen.StateMachine
 
     public abstract class StateController
     {
-        public bool isLoaded;
-
         public string label;
         public bool ignorehitpause = false;
 
-        public StateSystem stateSystem;
-        public TextSection textSection;
         public Expression persistence;
         public TriggerMap triggerMap;
 
         protected StateController() { }
 
-        protected StateController(StateSystem stateSystem, string label, TextSection textSection)
+        protected StateController(string label)
         {
-            if (stateSystem == null) throw new ArgumentNullException(nameof(stateSystem));
             if (label == null) throw new ArgumentNullException(nameof(label));
-            if (textSection == null) throw new ArgumentNullException(nameof(textSection));
-
-            this.stateSystem = stateSystem;
-            this.textSection = textSection;
-
-            triggerMap = BuildTriggers(textSection);
-
-            persistence = textSection.GetAttribute<Expression>("persistent", null);
-            ignorehitpause = textSection.GetAttribute("ignorehitpause", false);
-
             this.label = label.Replace('"', '\'');
         }
 
-        public virtual void Load()
+        public virtual void Complete() { }
+
+        public virtual void SetAttributes(string idAttribute, string expression)
         {
-            if (isLoaded == false)
-                isLoaded = true;
+            switch (idAttribute)
+            {
+                case "persistent":
+                    persistence = GetAttribute<Expression>(expression, null);
+                    break;
+                case "ignorehitpause":
+                    ignorehitpause = GetAttribute(expression, false);
+                    break;
+            }
+        }
+
+
+        public T GetAttribute<T>(string expression, T failover)
+        {
+            T returnvalue;
+            if (expression == null) return failover;
+
+            if (LauncherEngine.Inst != null && LauncherEngine.Inst.stringConverter.TryConvert(expression, out returnvalue))
+            {
+                return returnvalue;
+            }
+            else if (new StringConverter().TryConvert(expression, out returnvalue))
+            {
+                return returnvalue;
+            }
+            else
+            {
+                UnityEngine.Debug.LogWarning("Cannot convert " + expression);
+            }
+            return failover;
         }
 
         public virtual bool IsValid()
@@ -56,18 +71,14 @@ namespace UnityMugen.StateMachine
 
         public abstract void Run(Character character);
 
-        private TriggerMap BuildTriggers(TextSection textsection)
+        public virtual TriggerMap BuildTriggers(List<KeyValuePair<string, string>> ParsedLines)
         {
-            if (textsection == null) throw new ArgumentNullException(nameof(textsection));
-
             var triggers = new SortedDictionary<int, List<Expression>>();
 
             var evalsystem = LauncherEngine.Inst.evaluationSystem;
 
-            foreach (var parsedline in textsection.ParsedLines)
+            foreach (var parsedline in ParsedLines)
             {
-                if (string.Compare(parsedline.Key, 0, "trigger", 0, 7, StringComparison.OrdinalIgnoreCase) != 0) continue;
-
                 int triggernumber;
                 if (string.Compare(parsedline.Key, 7, "all", 0, 3, StringComparison.OrdinalIgnoreCase) == 0) triggernumber = 0;
                 else if (int.TryParse(parsedline.Key.Substring(7), out triggernumber) == false) continue;
@@ -77,7 +88,7 @@ namespace UnityMugen.StateMachine
                 if (triggers.ContainsKey(triggernumber) == false) triggers.Add(triggernumber, new List<Expression>());
                 triggers[triggernumber].Add(trigger);
             }
-            return new TriggerMap(textsection.Title, triggers);
+            return new TriggerMap(label, triggers);
         }
 
         public override string ToString()

@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -11,16 +10,21 @@ namespace UnityMugen.StateMachine.Controllers
     {
         private Expression m_power;
 
-        public PowerSet(StateSystem statesystem, string label, TextSection textsection)
-                : base(statesystem, label, textsection)
+        public PowerSet(string label) : base(label) { }
+
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            m_power = textsection.GetAttribute<Expression>("value", null);
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
+            {
+                case "value":
+                    m_power = GetAttribute<Expression>(expression, null);
+                    break;
+            }
         }
 
         public override void Run(Character character)
         {
-            base.Load();
-
             var power = EvaluationHelper.AsInt32(character, m_power, null);
             if (power == null)
             {

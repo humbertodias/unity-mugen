@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -15,8 +14,7 @@ namespace UnityMugen.StateMachine.Controllers
         private BindToTargetPostion m_bindPos;
         private Expression m_position;
 
-        public BindToTarget(StateSystem statesystem, string label, TextSection textsection)
-            : base(statesystem, label, textsection) { }
+        public BindToTarget(string label) : base(label) { }
 
         private void ParsePositionString(string input, out Expression expression, out BindToTargetPostion postype)
         {
@@ -46,22 +44,25 @@ namespace UnityMugen.StateMachine.Controllers
             }
         }
 
-        public override void Load()
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            if (isLoaded == false)
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
             {
-                base.Load();
-
-                m_time = textSection.GetAttribute<Expression>("time", null);
-                m_targetId = textSection.GetAttribute<Expression>("id", null);
-                m_pos = textSection.GetAttribute<string>("pos", null);
+                case "time":
+                    m_time = GetAttribute<Expression>(expression, null);
+                    break;
+                case "id":
+                    m_targetId = GetAttribute<Expression>(expression, null);
+                    break;
+                case "pos":
+                    m_pos = GetAttribute<string>(expression, null);
+                    break;
             }
         }
 
         public override void Run(Character character)
         {
-            Load();
-
             ParsePositionString(m_pos, out Expression m_position, out BindToTargetPostion m_bindpos);
 
             var time = EvaluationHelper.AsInt32(character, m_time, 1);

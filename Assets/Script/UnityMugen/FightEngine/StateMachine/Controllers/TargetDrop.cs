@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -12,24 +11,24 @@ namespace UnityMugen.StateMachine.Controllers
         private Expression m_id;
         private Expression m_keepOne;
 
-        public TargetDrop(StateSystem statesystem, string label, TextSection textsection)
-                : base(statesystem, label, textsection) { }
+        public TargetDrop(string label) : base(label) { }
 
-        public override void Load()
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            if (isLoaded == false)
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
             {
-                base.Load();
-
-                m_id = textSection.GetAttribute<Expression>("excludeID", null);
-                m_keepOne = textSection.GetAttribute<Expression>("keepone", null);
+                case "excludeid":
+                    m_id = GetAttribute<Expression>(expression, null);
+                    break;
+                case "keepone":
+                    m_keepOne = GetAttribute<Expression>(expression, null);
+                    break;
             }
         }
 
         public override void Run(Character character)
         {
-            Load();
-
             var excludeId = EvaluationHelper.AsInt32(character, m_id, -1);
             var keepone = EvaluationHelper.AsBoolean(character, m_keepOne, true);
 
@@ -44,7 +43,6 @@ namespace UnityMugen.StateMachine.Controllers
             if (removelist.Count > 0 && keepone) removelist.RemoveAt(0);
 
             foreach (var target in removelist) character.OffensiveInfo.TargetList.Remove(target);
-
         }
     }
 }

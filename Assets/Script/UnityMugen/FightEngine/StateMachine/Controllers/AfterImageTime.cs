@@ -1,6 +1,5 @@
 ﻿using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -10,25 +9,22 @@ namespace UnityMugen.StateMachine.Controllers
     {
         private Expression m_time;
 
-        public AfterImageTime(StateSystem statesystem, string label, TextSection textsection)
-            : base(statesystem, label, textsection) { }
+        public AfterImageTime(string label) : base(label) { }
 
-        public override void Load()
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            if (isLoaded == false)
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
             {
-                base.Load();
-
-                var expTime = textSection.GetAttribute<Expression>("time", null);
-                var expValue = textSection.GetAttribute<Expression>("value", null);
-                m_time = expTime ?? expValue;
+                case "time":
+                case "value":
+                    m_time = GetAttribute<Expression>(expression, null);
+                    break;
             }
         }
 
         public override void Run(Character character)
         {
-            Load();
-
             var time = EvaluationHelper.AsInt32(character, m_time, null);
 
             if (time != null)

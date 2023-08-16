@@ -1,7 +1,6 @@
 ﻿using System;
 using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -14,24 +13,28 @@ namespace UnityMugen.StateMachine.Controllers
         private Expression m_pos2;
         private Expression m_spacing;
 
-        public MakeDust(StateSystem statesystem, string label, TextSection textsection)
-                : base(statesystem, label, textsection) { }
+        public MakeDust(string label) : base(label) { }
 
-        public override void Load()
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            if (isLoaded == false)
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
             {
-                base.Load();
-
-                m_pos = textSection.GetAttribute<Expression>("pos", null);
-                m_pos2 = textSection.GetAttribute<Expression>("pos2", null);
-                m_spacing = textSection.GetAttribute<Expression>("spacing", null);
+                case "pos":
+                    m_pos = GetAttribute<Expression>(expression, null);
+                    break;
+                case "pos2":
+                    m_pos2 = GetAttribute<Expression>(expression, null);
+                    break;
+                case "spacing":
+                    m_spacing = GetAttribute<Expression>(expression, null);
+                    break;
             }
         }
 
         public override void Run(Character character)
         {
-            Load();
+
         }
 
     }

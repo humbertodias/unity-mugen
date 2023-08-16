@@ -1,6 +1,5 @@
 ﻿using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -11,24 +10,24 @@ namespace UnityMugen.StateMachine.Controllers
         private Expression m_angle;
         private Expression m_scale;
 
-        public AngleDraw(StateSystem statesystem, string label, TextSection textsection)
-            : base(statesystem, label, textsection) { }
+        public AngleDraw(string label) : base(label) { }
 
-        public override void Load()
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            if (isLoaded == false)
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
             {
-                base.Load();
-
-                m_angle = textSection.GetAttribute<Expression>("value", null);
-                m_scale = textSection.GetAttribute<Expression>("scale", null);
+                case "value":
+                    m_angle = GetAttribute<Expression>(expression, null);
+                    break;
+                case "scale":
+                    m_scale = GetAttribute<Expression>(expression, null);
+                    break;
             }
         }
 
         public override void Run(Character character)
         {
-            Load();
-
             var angle = EvaluationHelper.AsSingle(character, m_angle, character.DrawingAngle);
 
             character.DrawingAngle = angle;

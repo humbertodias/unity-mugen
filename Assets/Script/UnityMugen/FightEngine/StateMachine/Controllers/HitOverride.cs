@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -15,29 +14,33 @@ namespace UnityMugen.StateMachine.Controllers
         private Expression m_time;
         private Expression m_forceAir;
 
-        public HitOverride(StateSystem statesystem, string label, TextSection textsection)
-                : base(statesystem, label, textsection)
-        {
-            m_hitAttr = textSection.GetAttribute<HitAttribute>("attr", null);
-        }
+        public HitOverride(string label) : base(label) { }
 
-        public override void Load()
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            if (isLoaded == false)
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
             {
-                base.Load();
-
-                m_slot = textSection.GetAttribute<Expression>("slot", null);
-                m_stateNumber = textSection.GetAttribute<Expression>("stateno", null);
-                m_time = textSection.GetAttribute<Expression>("time", null);
-                m_forceAir = textSection.GetAttribute<Expression>("forceair", null);
+                case "attr":
+                    m_hitAttr = GetAttribute<HitAttribute>(expression, null);
+                    break;
+                case "slot":
+                    m_slot = GetAttribute<Expression>(expression, null);
+                    break;
+                case "stateno":
+                    m_stateNumber = GetAttribute<Expression>(expression, null);
+                    break;
+                case "time":
+                    m_time = GetAttribute<Expression>(expression, null);
+                    break;
+                case "forceair":
+                    m_forceAir = GetAttribute<Expression>(expression, null);
+                    break;
             }
         }
 
         public override void Run(Character character)
         {
-            Load();
-
             var slotnumber = EvaluationHelper.AsInt32(character, m_slot, 0);
             var statenumber = EvaluationHelper.AsInt32(character, m_stateNumber, int.MinValue);
             var time = EvaluationHelper.AsInt32(character, m_time, 1);
