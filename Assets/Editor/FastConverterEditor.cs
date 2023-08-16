@@ -15,10 +15,6 @@ using File = UnityMugen.IO.File;
 /// </summary>
 public class FastConverter : EditorWindow
 {
-
-    bool debugActive;
-    bool currentPathProject;
-
     [SerializeField] string _filepath;
     [TextArea(10, 15)] public string stringConverter;
     [TextArea(15, 20)] public string resultConvert;
@@ -54,9 +50,6 @@ public class FastConverter : EditorWindow
                 UpdateScript();
             }
         }
-
-        debugActive = GUILayout.Toggle(debugActive, "Debug Active");
-        currentPathProject = GUILayout.Toggle(currentPathProject, "Current Path Project");
 
         EditorGUILayout.LabelField("Se [Debug Active] estiver selecionado, ");
         EditorGUILayout.LabelField("não sera gerado codigo .cs.");
@@ -164,7 +157,7 @@ public class FastConverter : EditorWindow
 
         foreach (var data in lista)
         {
-            sb.AppendLine($"            case \"{data.Item1}\":");
+            sb.AppendLine($"            case \"{data.Item1.ToLower()}\":");
             if (data.Item5 == true)
                 sb.AppendLine($"                {data.Item2} = GetAttribute<{data.Item4}>(expression, {data.Item3});");
             else
