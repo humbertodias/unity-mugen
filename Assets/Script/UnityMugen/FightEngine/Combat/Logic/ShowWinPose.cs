@@ -3,7 +3,7 @@ using UnityMugen.StateMachine;
 
 namespace UnityMugen.Combat.Logic
 {
-    internal class ShowWinPose : Base
+    public class ShowWinPose : Base
     {
         public bool isOver = false;
 

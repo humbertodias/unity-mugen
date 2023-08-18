@@ -11,7 +11,7 @@ using UnityMugen.Commands;
 public class FullDebugEditorWindow : EditorWindow
 {
 
-    public static FullDebugEditorWindow editorWindow;
+    public static FullDebugEditorWindow s_window;
 
     LauncherEngine Launcher => LauncherEngine.Inst;
     FightEngine Engine => BattleActive();
@@ -22,7 +22,10 @@ public class FullDebugEditorWindow : EditorWindow
     bool m_intVars, m_floatVars, m_sysIntVars, m_sysFloatVars;
     bool m_bind, m_animation, m_assertion, m_cmdBufferTime;
 
-    GUILayoutOption[] m_optionsVars = new GUILayoutOption[] { GUILayout.Width(150), GUILayout.MinWidth(100)/*,GUILayout.ExpandWidth(true)*/};
+    string[] enum_Facing, enum_Flip;
+    string[] enum_StateType, enum_Physics, enum_MoveType, enum_PlayerControl;
+
+    GUILayoutOption[] m_optionsVars = new GUILayoutOption[] { GUILayout.Width(150), GUILayout.MinWidth(100) };
 
     Dictionary<long, bool> m_foldoutEntities = new Dictionary<long, bool>();
     Dictionary<long, bool> m_foldoutAnimations = new Dictionary<long, bool>();
@@ -56,11 +59,21 @@ public class FullDebugEditorWindow : EditorWindow
     [MenuItem("UnityMugen/Full Debug")]
     static void Init()
     {
-        editorWindow = EditorWindow.GetWindow<FullDebugEditorWindow>(false, "Full Debug", true);
-        editorWindow.minSize = new Vector2(574, 533);
-        editorWindow.Show();
+        s_window = EditorWindow.GetWindow<FullDebugEditorWindow>(false, "Full Debug", true);
+        s_window.minSize = new Vector2(574, 533);
+        s_window.Show();
+        s_window.Inicialize();
     }
 
+    void Inicialize()
+    {
+        enum_Facing = new string[] { "Left", "Right" };
+        enum_Flip = new string[] { "None", "FlipHorizontally", "FlipVertically", "Both" };
+        enum_StateType = new string[] { "None", "Unchanged", "Standing", "Crouching", "Airborne", "Liedown" };
+        enum_Physics = new string[] { "None", "Unchanged", "Standing", "Crouching", "Airborne" };
+        enum_MoveType = new string[] { "None", "Idle", "Attack", "BeingHit", "Unchanged" };
+        enum_PlayerControl = new string[] { "Unchanged", "InControl", "NoControl" };
+    }
 
     FightEngine BattleActive()
     {
@@ -147,9 +160,6 @@ public class FullDebugEditorWindow : EditorWindow
             EditorGUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
             EditorGUILayout.BeginVertical();
-            //EditorGUIUtility.labelWidth = 70;
-            //EditorGUILayout.LabelField("NO FIGHTING", StateFieldLabelColorRed);
-            //EditorGUILayout.LabelField("Start a fight to debug.");
             ShowNotification(new GUIContent("Start a fight to debug."));
             EditorGUILayout.EndVertical();
             GUILayout.FlexibleSpace();
@@ -162,7 +172,7 @@ public class FullDebugEditorWindow : EditorWindow
 
         GUILayout.FlexibleSpace();
         EditorGUIUtility.labelWidth = 60;
-        EditorGUILayout.LabelField("Version: 0.0.1", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField("Version: 0.0.2", EditorStyles.boldLabel);
         EditorGUILayout.EndHorizontal();
 
         serializedObject.ApplyModifiedProperties();
@@ -415,7 +425,7 @@ public class FullDebugEditorWindow : EditorWindow
         EditorGUILayout.BeginHorizontal();
         {
             EditorGUILayout.LabelField("CurrentFacing: ");
-            EditorGUILayout.LabelField(entity.CurrentFacing.ToString());
+            entity.CurrentFacing = (Facing)EditorGUILayout.Popup("", (int)entity.CurrentFacing, enum_Facing);
             EditorGUILayout.LabelField("Type");
         }
         EditorGUILayout.EndHorizontal();
@@ -423,12 +433,14 @@ public class FullDebugEditorWindow : EditorWindow
         EditorGUILayout.BeginHorizontal();
         {
             EditorGUILayout.LabelField("CurrentFlip: ");
-            EditorGUILayout.LabelField(entity.CurrentFlip.ToString());
+            entity.CurrentFlip = (SpriteEffects)EditorGUILayout.Popup("", (int)entity.CurrentFlip, enum_Flip);
             EditorGUILayout.LabelField("Type");
         }
         EditorGUILayout.EndHorizontal();
 
     }
+    
+    
 
     void CharacterData(Character character)
     {
@@ -451,7 +463,7 @@ public class FullDebugEditorWindow : EditorWindow
         EditorGUILayout.BeginHorizontal();
         {
             EditorGUILayout.LabelField("StateType: ");
-            EditorGUILayout.LabelField(character.StateType.ToString());
+            character.StateType = (StateType)EditorGUILayout.Popup("", (int)character.StateType, enum_StateType);
             EditorGUILayout.LabelField("Type");
         }
         EditorGUILayout.EndHorizontal();
@@ -459,7 +471,7 @@ public class FullDebugEditorWindow : EditorWindow
         EditorGUILayout.BeginHorizontal();
         {
             EditorGUILayout.LabelField("Physics: ");
-            EditorGUILayout.LabelField(character.Physics.ToString());
+            character.Physics = (Physic)EditorGUILayout.Popup((int)character.Physics, enum_Physics);
             EditorGUILayout.LabelField("Type");
         }
         EditorGUILayout.EndHorizontal();
@@ -467,7 +479,7 @@ public class FullDebugEditorWindow : EditorWindow
         EditorGUILayout.BeginHorizontal();
         {
             EditorGUILayout.LabelField("MoveType: ");
-            EditorGUILayout.LabelField(character.MoveType.ToString());
+            character.MoveType = (MoveType)EditorGUILayout.Popup((int)character.MoveType, enum_MoveType);
             EditorGUILayout.LabelField("Type");
         }
         EditorGUILayout.EndHorizontal();
@@ -475,7 +487,7 @@ public class FullDebugEditorWindow : EditorWindow
         EditorGUILayout.BeginHorizontal();
         {
             EditorGUILayout.LabelField("PlayerControl: ");
-            EditorGUILayout.LabelField(character.PlayerControl.ToString());
+            character.PlayerControl = (PlayerControl)EditorGUILayout.Popup((int)character.PlayerControl, enum_PlayerControl);
             EditorGUILayout.LabelField("Type");
         }
         EditorGUILayout.EndHorizontal();
@@ -491,24 +503,24 @@ public class FullDebugEditorWindow : EditorWindow
         EditorGUILayout.BeginHorizontal();
         {
             EditorGUILayout.LabelField("camera.follow.x: ");
-            EditorGUILayout.LabelField(character.CameraFollowX.ToString());
-            EditorGUILayout.LabelField("bool");
+            character.CameraFollowX = EditorGUILayout.Toggle(character.CameraFollowX);
+            EditorGUILayout.LabelField("    bool");
         }
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
         {
             EditorGUILayout.LabelField("camera.follow.y: ");
-            EditorGUILayout.LabelField(character.CameraFollowY.ToString());
-            EditorGUILayout.LabelField("bool");
+            character.CameraFollowY = EditorGUILayout.Toggle(character.CameraFollowY);
+            EditorGUILayout.LabelField("    bool");
         }
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
         {
             EditorGUILayout.LabelField("push.checking: ");
-            EditorGUILayout.LabelField(character.PushFlag.ToString());
-            EditorGUILayout.LabelField("bool");
+            character.PushFlag = EditorGUILayout.Toggle(character.PushFlag);
+            EditorGUILayout.LabelField("    bool");
         }
         EditorGUILayout.EndHorizontal();
 
@@ -718,62 +730,62 @@ public class FullDebugEditorWindow : EditorWindow
     {
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("NoKOSound:");
-        EditorGUILayout.LabelField(assertions.NoKOSound.ToString());
-        EditorGUILayout.LabelField("bool");
+        assertions.NoKOSound = EditorGUILayout.Toggle(assertions.NoKOSound);
+        EditorGUILayout.LabelField("    bool");
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("NoKOSlow:");
-        EditorGUILayout.LabelField(assertions.NoKOSlow.ToString());
-        EditorGUILayout.LabelField("bool");
+        assertions.NoKOSlow = EditorGUILayout.Toggle(assertions.NoKOSlow);
+        EditorGUILayout.LabelField("    bool");
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("GlobalNoShadow:");
-        EditorGUILayout.LabelField(assertions.GlobalNoShadow.ToString());
-        EditorGUILayout.LabelField("bool");
+        assertions.GlobalNoShadow = EditorGUILayout.Toggle(assertions.GlobalNoShadow);
+        EditorGUILayout.LabelField("    bool");
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("NoMusic:");
-        EditorGUILayout.LabelField(assertions.NoMusic.ToString());
-        EditorGUILayout.LabelField("bool");
+        assertions.NoMusic = EditorGUILayout.Toggle(assertions.NoMusic);
+        EditorGUILayout.LabelField("    bool");
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("TimerFreeze:");
-        EditorGUILayout.LabelField(assertions.TimerFreeze.ToString());
-        EditorGUILayout.LabelField("bool");
+        assertions.TimerFreeze = EditorGUILayout.Toggle(assertions.TimerFreeze);
+        EditorGUILayout.LabelField("    bool");
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Intro:");
-        EditorGUILayout.LabelField(assertions.Intro.ToString());
-        EditorGUILayout.LabelField("bool");
+        assertions.Intro = EditorGUILayout.Toggle(assertions.Intro);
+        EditorGUILayout.LabelField("    bool");
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("NoBarDisplay:");
-        EditorGUILayout.LabelField(assertions.NoBarDisplay.ToString());
-        EditorGUILayout.LabelField("bool");
+        assertions.NoBarDisplay = EditorGUILayout.Toggle(assertions.NoBarDisplay);
+        EditorGUILayout.LabelField("    bool");
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("WinPose:");
-        EditorGUILayout.LabelField(assertions.WinPose.ToString());
-        EditorGUILayout.LabelField("bool");
+        assertions.WinPose = EditorGUILayout.Toggle(assertions.WinPose);
+        EditorGUILayout.LabelField("    bool");
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("NoFrontLayer:");
-        EditorGUILayout.LabelField(assertions.NoFrontLayer.ToString());
-        EditorGUILayout.LabelField("bool");
+        assertions.NoFrontLayer = EditorGUILayout.Toggle(assertions.NoFrontLayer);
+        EditorGUILayout.LabelField("    bool");
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Invisible:");
-        EditorGUILayout.LabelField(assertions.NoBackLayer.ToString());
-        EditorGUILayout.LabelField("bool");
+        assertions.NoBackLayer = EditorGUILayout.Toggle(assertions.NoBackLayer);
+        EditorGUILayout.LabelField("    bool");
         EditorGUILayout.EndHorizontal();
     }
 
@@ -859,14 +871,14 @@ public class FullDebugEditorWindow : EditorWindow
     {
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Hitpause:");
-        EditorGUILayout.LabelField(pause.Hitpause.ToString());
-        EditorGUILayout.LabelField("bool");
+        pause.Hitpause = EditorGUILayout.Toggle(pause.Hitpause);
+        EditorGUILayout.LabelField("    bool");
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Pausebackgrounds:");
-        EditorGUILayout.LabelField(pause.Pausebackgrounds.ToString());
-        EditorGUILayout.LabelField("bool");
+        pause.Pausebackgrounds = EditorGUILayout.Toggle(pause.Pausebackgrounds);
+        EditorGUILayout.LabelField("    bool");
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
@@ -877,7 +889,7 @@ public class FullDebugEditorWindow : EditorWindow
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Commandbuffertime:");
-        EditorGUILayout.LabelField(pause.Commandbuffertime.ToString());
+        pause.Commandbuffertime = EditorGUILayout.IntField(pause.Commandbuffertime);
         EditorGUILayout.LabelField("int");
         EditorGUILayout.EndHorizontal();
     }

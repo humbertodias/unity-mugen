@@ -15,37 +15,37 @@ namespace UnityMugen.Combat
             m_creator = null;
             m_totaltime = 0;
             m_elapsedtime = -1;
-            m_commandbuffertime = 0;
+            Commandbuffertime = 0;
             m_movetime = 0;
-            m_hitpause = false;
-            m_pausebackgrounds = true;
+            Hitpause = false;
+            Pausebackgrounds = true;
             m_pausedentities = new List<Entity>();
         }
 
         public Pause(Pause pause)
         {
-            m_commandbuffertime = pause.Commandbuffertime;
+            Commandbuffertime = pause.Commandbuffertime;
             m_issuperpause = pause.IsSuperPause;
             m_creator = pause.Creator;
             m_movetime = pause.MoveTime;
             m_elapsedtime = pause.ElapsedTime;
             m_totaltime = pause.Totaltime;
-            m_hitpause = pause.Hitpause;
-            m_pausebackgrounds = pause.Pausebackgrounds;
+            Hitpause = pause.Hitpause;
+            Pausebackgrounds = pause.Pausebackgrounds;
             m_pausedentities = pause.m_pausedentities;
         }
 
 
         public void BackMemory(Pause pause)
         {
-            m_commandbuffertime = pause.Commandbuffertime;
+            Commandbuffertime = pause.Commandbuffertime;
             m_issuperpause = pause.IsSuperPause;
             m_creator = pause.Creator;
             m_movetime = pause.MoveTime;
             m_elapsedtime = pause.ElapsedTime;
             m_totaltime = pause.Totaltime;
-            m_hitpause = pause.Hitpause;
-            m_pausebackgrounds = pause.Pausebackgrounds;
+            Hitpause = pause.Hitpause;
+            Pausebackgrounds = pause.Pausebackgrounds;
         }
 
         public void ResetFE()
@@ -53,10 +53,10 @@ namespace UnityMugen.Combat
             m_creator = null;
             m_totaltime = 0;
             m_elapsedtime = -1;
-            m_commandbuffertime = 0;
+            Commandbuffertime = 0;
             m_movetime = 0;
-            m_hitpause = false;
-            m_pausebackgrounds = true;
+            Hitpause = false;
+            Pausebackgrounds = true;
             m_pausedentities.Clear();
         }
 
@@ -86,10 +86,10 @@ namespace UnityMugen.Combat
             m_creator = creator;
             m_totaltime = time;
             m_elapsedtime = 0;
-            m_commandbuffertime = buffertime;
+            Commandbuffertime = buffertime;
             m_movetime = movetime;
-            m_hitpause = hitpause;
-            m_pausebackgrounds = pausebackgrounds;
+            Hitpause = hitpause;
+            Pausebackgrounds = pausebackgrounds;
 
             //foreach (var entity in Engine.Entities)
             //    m_pausedentities.Add(entity);
@@ -111,19 +111,19 @@ namespace UnityMugen.Combat
 
             if (IsActive == false) return false;
 
-            return m_pausebackgrounds;
+            return Pausebackgrounds;
         }
 
         public bool IsActive => m_elapsedtime >= 0 && m_elapsedtime <= m_totaltime;
 
-        public int Commandbuffertime => m_commandbuffertime;
+        public int Commandbuffertime { get; set; }
         public bool IsSuperPause => m_issuperpause;
         public Character Creator => m_creator;
         public int MoveTime => m_movetime;
         public int ElapsedTime => m_elapsedtime;
         public int Totaltime => m_totaltime;
-        public bool Hitpause => m_hitpause;
-        public bool Pausebackgrounds => m_pausebackgrounds;
+        public bool Hitpause { get; set; }
+        public bool Pausebackgrounds;
         
         #region Fields
 
@@ -140,16 +140,7 @@ namespace UnityMugen.Combat
         private int m_elapsedtime;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private int m_commandbuffertime;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private int m_movetime;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private bool m_hitpause;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private bool m_pausebackgrounds;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private List<Entity> m_pausedentities;
