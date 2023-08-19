@@ -86,8 +86,16 @@ namespace UnityMugen.Evaluation
             compilerstate.Generator.MarkLabel(compilerstate.ErrorLabel);
             LoadLocalVariable(compilerstate, compilerstate.Generator.DeclareLocal(typeof(Number)));
             compilerstate.Generator.Emit(OpCodes.Ret);
-
-            var callback = (EvaluationCallback)method.CreateDelegate(typeof(EvaluationCallback));
+            EvaluationCallback callback = null;
+            try
+            {
+                callback = (EvaluationCallback)method.CreateDelegate(typeof(EvaluationCallback));
+            }
+            catch(Exception e)
+            {
+#warning hack melhorar este codigo.
+                return null;
+            }
             return callback;
         }
 
@@ -322,7 +330,8 @@ namespace UnityMugen.Evaluation
 
             if (node.Children.Count != 2) throw new Exception();
 
-            if (data.Operator == Operator.Assignment) return EmitAssignmentOperator(state, node);
+            if (data.Operator == Operator.Assignment) 
+                return EmitAssignmentOperator(state, node);
 
             var lhs = Emit(state, node.Children[0]);
             var rhs = Emit(state, node.Children[1]);
@@ -351,6 +360,10 @@ namespace UnityMugen.Evaluation
                 case Operator.Lesser:
                 case Operator.LesserEquals:
                     return EmitComparsionOperator(state, data.Operator, lhs, rhs);
+
+
+                case Operator.BinaryAnd:
+                case Operator.BinaryOr:
 
                 case Operator.LogicalAnd:
                 case Operator.LogicalOr:
@@ -387,22 +400,22 @@ namespace UnityMugen.Evaluation
 
             if (vardata.Type == typeof(Var))
             {
-                return EmitMethod(state, typeof(SpecialFunctions).GetMethod("Assignment_Var"), args);
+                return EmitMethod(state, typeof(SpecialFunctions).GetMethod(nameof(SpecialFunctions.Assignment_Var)), args);
             }
 
             if (vardata.Type == typeof(FVar))
             {
-                return EmitMethod(state, typeof(SpecialFunctions).GetMethod("Assignment_FVar"), args);
+                return EmitMethod(state, typeof(SpecialFunctions).GetMethod(nameof(SpecialFunctions.Assignment_FVar)), args);
             }
 
             if (vardata.Type == typeof(SysVar))
             {
-                return EmitMethod(state, typeof(SpecialFunctions).GetMethod("Assignment_SysVar"), args);
+                return EmitMethod(state, typeof(SpecialFunctions).GetMethod(nameof(SpecialFunctions.Assignment_SysVar)), args);
             }
 
             if (vardata.Type == typeof(SysFVar))
             {
-                return EmitMethod(state, typeof(SpecialFunctions).GetMethod("Assignment_SysFVar"), args);
+                return EmitMethod(state, typeof(SpecialFunctions).GetMethod(nameof(SpecialFunctions.Assignment_SysFVar)), args);
             }
 
             throw new Exception();
@@ -421,11 +434,13 @@ namespace UnityMugen.Evaluation
 
             switch (@operator)
             {
+                case Operator.BinaryAnd:
                 case Operator.LogicalAnd:
                     state.Generator.Emit(OpCodes.And);
                     StoreLocalVariable(state, result);
                     break;
 
+                case Operator.BinaryOr:
                 case Operator.LogicalOr:
                     state.Generator.Emit(OpCodes.Or);
                     StoreLocalVariable(state, result);

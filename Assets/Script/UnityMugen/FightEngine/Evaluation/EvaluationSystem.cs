@@ -14,8 +14,8 @@ namespace UnityMugen.Evaluation
             m_expressioncache = new KeyedCollection<string, Expression>(x => x.ToString(), StringComparer.OrdinalIgnoreCase);
             m_tokenizer = new Tokenizer();
             m_treebuilder = new TreeBuilder(this);
-            m_compiler = new ExpressionCompiler();
-
+            m_compiler2 = new ExpressionCompiler();
+            m_compiler = new ILCompiler();
             //Expression exp = null;
             //exp = CreateExpression("0.0 = [-10, 10]");
             //exp = CreateExpression("AnimElem = 2 > 0");
@@ -90,10 +90,12 @@ namespace UnityMugen.Evaluation
             return new PrefixedExpression(expression, common);
         }
 
+        string teste;
         private Expression BuildExpression(string input)
         {
 
             if (input == null) throw new ArgumentNullException(nameof(input));
+
 
             //Quoted strings must be case sensitive & cache is not case sensitive
             if (input.IndexOf('"') == -1 && m_expressioncache.Contains(input)) return m_expressioncache[input];
@@ -101,10 +103,20 @@ namespace UnityMugen.Evaluation
             var tokens = m_tokenizer.Tokenize(input);
             var nodes = m_treebuilder.BuildTree(tokens);
 
+
+            //if (teste != null)
+            //    return m_expressioncache[teste];
+
+            teste = input;
+
             var functions = new List<EvaluationCallback>();
             foreach (var node in nodes)
-                functions.Add(m_compiler.Create(node));
-
+            {
+                var com = m_compiler.Create(node);
+                if(com == null)
+                    com = m_compiler2.Create(node);
+                functions.Add(com);
+            }
             var expression = new Expression(input, functions);  // Tiago Souza
 
             if (input.IndexOf('"') == -1) m_expressioncache.Add(expression);
@@ -122,6 +134,9 @@ namespace UnityMugen.Evaluation
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ICompiler m_compiler;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ICompiler m_compiler2;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private KeyedCollection<string, Expression> m_expressioncache;
