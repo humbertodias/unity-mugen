@@ -2,7 +2,6 @@
 using UnityEngine;
 using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -42,45 +41,91 @@ namespace UnityMugen.StateMachine.Controllers
         private Expression m_midPos;
         private Expression m_shadowOffSet;
 
-        public Helper(StateSystem statesystem, string label, TextSection textsection)
-            : base(statesystem, label, textsection) { }
-
-        public override void Load()
+        public Helper(string label) : base(label)
         {
-            if (isLoaded == false)
-            {
-                base.Load();
+            m_helperType = HelperType.Normal;
+            m_posType = PositionType.P1;
+        }
 
-                m_helperType = textSection.GetAttribute("helpertype", HelperType.Normal);
-                m_name = textSection.GetAttribute<string>("name", null);
-                m_id = textSection.GetAttribute<Expression>("id", null);
-                m_position = textSection.GetAttribute<Expression>("pos", null);
-                m_posType = textSection.GetAttribute("postype", PositionType.P1);
-                m_facing = textSection.GetAttribute<Expression>("facing", null);
-                m_stateNumber = textSection.GetAttribute<Expression>("stateno", null);
-                m_keyCtrl = textSection.GetAttribute<Expression>("keyctrl", null);
-                m_ownPal = textSection.GetAttribute<Expression>("ownpal", null);
-                m_remapPal = textSection.GetAttribute<Expression>("remappal", null);
-                m_superMoveTime = textSection.GetAttribute<Expression>("SuperMoveTime", null);
-                m_pauseMoveTime = textSection.GetAttribute<Expression>("PauseMoveTime", null);
-                m_xScale = textSection.GetAttribute<Expression>("size.xscale", null);
-                m_yScale = textSection.GetAttribute<Expression>("size.yscale", null);
-                m_groundBack = textSection.GetAttribute<Expression>("size.ground.back", null);
-                m_groundFront = textSection.GetAttribute<Expression>("size.ground.front", null);
-                m_airBack = textSection.GetAttribute<Expression>("size.air.back", null);
-                m_airFront = textSection.GetAttribute<Expression>("size.air.front", null);
-                m_height = textSection.GetAttribute<Expression>("size.height", null);
-                m_projectScaling = textSection.GetAttribute<Expression>("size.proj.doscale", null);
-                m_headPos = textSection.GetAttribute<Expression>("size.head.pos", null);
-                m_midPos = textSection.GetAttribute<Expression>("size.mid.pos", null);
-                m_shadowOffSet = textSection.GetAttribute<Expression>("size.shadowoffset", null);
+        public override void SetAttributes(string idAttribute, string expression)
+        {
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
+            {
+                case "helpertype":
+                    m_helperType = GetAttribute(expression, HelperType.Normal);
+                    break;
+                case "name":
+                    m_name = GetAttribute<string>(expression, null);
+                    break;
+                case "id":
+                    m_id = GetAttribute<Expression>(expression, null);
+                    break;
+                case "pos":
+                    m_position = GetAttribute<Expression>(expression, null);
+                    break;
+                case "postype":
+                    m_posType = GetAttribute(expression, PositionType.P1);
+                    break;
+                case "facing":
+                    m_facing = GetAttribute<Expression>(expression, null);
+                    break;
+                case "stateno":
+                    m_stateNumber = GetAttribute<Expression>(expression, null);
+                    break;
+                case "keyctrl":
+                    m_keyCtrl = GetAttribute<Expression>(expression, null);
+                    break;
+                case "ownpal":
+                    m_ownPal = GetAttribute<Expression>(expression, null);
+                    break;
+                case "remappal":
+                    m_remapPal = GetAttribute<Expression>(expression, null);
+                    break;
+                case "supermovetime":
+                    m_superMoveTime = GetAttribute<Expression>(expression, null);
+                    break;
+                case "pausemovetime":
+                    m_pauseMoveTime = GetAttribute<Expression>(expression, null);
+                    break;
+                case "size.xscale":
+                    m_xScale = GetAttribute<Expression>(expression, null);
+                    break;
+                case "size.yscale":
+                    m_yScale = GetAttribute<Expression>(expression, null);
+                    break;
+                case "size.ground.back":
+                    m_groundBack = GetAttribute<Expression>(expression, null);
+                    break;
+                case "size.ground.front":
+                    m_groundFront = GetAttribute<Expression>(expression, null);
+                    break;
+                case "size.air.back":
+                    m_airBack = GetAttribute<Expression>(expression, null);
+                    break;
+                case "size.air.front":
+                    m_airFront = GetAttribute<Expression>(expression, null);
+                    break;
+                case "size.height":
+                    m_height = GetAttribute<Expression>(expression, null);
+                    break;
+                case "size.proj.doscale":
+                    m_projectScaling = GetAttribute<Expression>(expression, null);
+                    break;
+                case "size.head.pos":
+                    m_headPos = GetAttribute<Expression>(expression, null);
+                    break;
+                case "size.mid.pos":
+                    m_midPos = GetAttribute<Expression>(expression, null);
+                    break;
+                case "size.shadowoffset":
+                    m_shadowOffSet = GetAttribute<Expression>(expression, null);
+                    break;
             }
         }
 
         public override void Run(Character character)
         {
-            Load();
-
             var helperName = m_name ?? character.BasePlayer.profile.displayName + "'s Helper";
             var helperId = EvaluationHelper.AsInt32(character, m_id, 0);
             var positionOffset = (Vector2)EvaluationHelper.AsVector2(character, m_position, Vector2.zero) * Constant.Scale;

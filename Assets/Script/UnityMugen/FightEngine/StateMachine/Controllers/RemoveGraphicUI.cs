@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -12,10 +11,17 @@ namespace UnityMugen.StateMachine.Controllers
 
         private Expression m_id;
 
-        public RemoveGraphicUI(StateSystem statesystem, string label, TextSection textsection)
-            : base(statesystem, label, textsection)
+        public RemoveGraphicUI(string label) : base(label) { }
+
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            m_id = textSection.GetAttribute<Expression>("id", null);
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
+            {
+                case "id":
+                    m_id = GetAttribute<Expression>(expression, null);
+                    break;
+            }
         }
 
         public override void Run(Character character)

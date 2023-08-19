@@ -555,9 +555,9 @@ namespace UnityMugen
         {
             var sc = StringComparer.OrdinalIgnoreCase;
 
-            if (s.Length == 5 && m_sc.Equals(s, "Dodge")) return PriorityType.Dodge;
-            if (s.Length == 3 && m_sc.Equals(s, "Hit")) return PriorityType.Hit;
-            if (s.Length == 4 && m_sc.Equals(s, "Miss")) return PriorityType.Miss;
+            if (char.ToUpper(s[0]) == 'D') return PriorityType.Dodge;
+            if (char.ToUpper(s[0]) == 'H') return PriorityType.Hit;
+            if (char.ToUpper(s[0]) == 'M') return PriorityType.Miss;
 
             return Failure;
         }

@@ -1,6 +1,4 @@
 ﻿using UnityMugen.Combat;
-using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -13,25 +11,32 @@ namespace UnityMugen.StateMachine.Controllers
         private MoveType m_moveType;
         private Physic m_physics;
 
-        public StateTypeSet(StateSystem statesystem, string label, TextSection textsection)
-                : base(statesystem, label, textsection) { }
-
-        public override void Load()
+        public StateTypeSet(string label) : base(label)
         {
-            if (isLoaded == false)
-            {
-                base.Load();
+            m_stateType = StateType.Unchanged;
+            m_moveType = MoveType.Unchanged;
+            m_physics = UnityMugen.Physic.Unchanged;
+        }
 
-                m_stateType = textSection.GetAttribute("statetype", StateType.Unchanged);
-                m_moveType = textSection.GetAttribute("movetype", MoveType.Unchanged);
-                m_physics = textSection.GetAttribute("Physics", UnityMugen.Physic.Unchanged);
+        public override void SetAttributes(string idAttribute, string expression)
+        {
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
+            {
+                case "statetype":
+                    m_stateType = GetAttribute(expression, StateType.Unchanged);
+                    break;
+                case "movetype":
+                    m_moveType = GetAttribute(expression, MoveType.Unchanged);
+                    break;
+                case "physics":
+                    m_physics = GetAttribute(expression, UnityMugen.Physic.Unchanged);
+                    break;
             }
         }
 
         public override void Run(Character character)
         {
-            Load();
-
             if (m_stateType != StateType.Unchanged && m_stateType != StateType.None) character.StateType = m_stateType;
             if (m_moveType != MoveType.Unchanged && m_moveType != MoveType.None) character.MoveType = m_moveType;
             if (m_physics != Physic.Unchanged) character.Physics = m_physics;

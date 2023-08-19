@@ -1,6 +1,5 @@
 ﻿using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -11,26 +10,24 @@ namespace UnityMugen.StateMachine.Controllers
         private Expression m_stateNumber;
         private Expression m_targetId;
 
-        public TargetState(StateSystem statesystem, string label, TextSection textsection)
-                : base(statesystem, label, textsection)
-        {
-            m_stateNumber = textSection.GetAttribute<Expression>("value", null);
-        }
+        public TargetState(string label) : base(label) { }
 
-        public override void Load()
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            if (isLoaded == false)
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
             {
-                base.Load();
-
-                m_targetId = textSection.GetAttribute<Expression>("ID", null);
+                case "value":
+                    m_stateNumber = GetAttribute<Expression>(expression, null);
+                    break;
+                case "id":
+                    m_targetId = GetAttribute<Expression>(expression, null);
+                    break;
             }
         }
 
         public override void Run(Character character)
         {
-            Load();
-
             var statenumber = EvaluationHelper.AsInt32(character, m_stateNumber, null);
             var targetId = EvaluationHelper.AsInt32(character, m_targetId, -1);
 

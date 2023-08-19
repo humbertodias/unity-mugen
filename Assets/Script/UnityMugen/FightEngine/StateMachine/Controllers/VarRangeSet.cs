@@ -1,6 +1,5 @@
 ﻿using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -12,28 +11,30 @@ namespace UnityMugen.StateMachine.Controllers
         private Expression m_startRange;
         private Expression m_endRange;
 
-        public VarRangeSet(StateSystem statesystem, string label, TextSection textsection)
-                : base(statesystem, label, textsection)
-        {
-            m_intNumber = textSection.GetAttribute<Expression>("value", null);
-            m_floatNumber = textSection.GetAttribute<Expression>("fvalue", null);
-        }
+        public VarRangeSet(string label) : base(label) { }
 
-        public override void Load()
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            if (isLoaded == false)
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
             {
-                base.Load();
-
-                m_startRange = textSection.GetAttribute<Expression>("first", null);
-                m_endRange = textSection.GetAttribute<Expression>("last", null);
+                case "value":
+                    m_intNumber = GetAttribute<Expression>(expression, null);
+                    break;
+                case "fvalue":
+                    m_floatNumber = GetAttribute<Expression>(expression, null);
+                    break;
+                case "first":
+                    m_startRange = GetAttribute<Expression>(expression, null);
+                    break;
+                case "last":
+                    m_endRange = GetAttribute<Expression>(expression, null);
+                    break;
             }
         }
 
         public override void Run(Character character)
         {
-            Load();
-
             var start = EvaluationHelper.AsInt32(character, m_startRange, null);
             var end = EvaluationHelper.AsInt32(character, m_endRange, null);
 

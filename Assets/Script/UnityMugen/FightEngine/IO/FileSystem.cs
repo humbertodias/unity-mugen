@@ -292,6 +292,7 @@ namespace UnityMugen.IO
             string sectiontitle = null;
             List<string> sectionlines = null;
             List<KeyValuePair<string, string>> sectionparsedlines = null;
+            HashSet<string> existKey = null;
 
             for (var line = file.ReadLine(); line != null; line = file.ReadLine())
             {
@@ -310,6 +311,7 @@ namespace UnityMugen.IO
                     sectiontitle = titlematch.Groups[1].Value;
                     sectionlines = new List<string>();
                     sectionparsedlines = new List<KeyValuePair<string, string>>();
+                    existKey = new HashSet<string>();
                 }
                 else if (sectiontitle != null)
                 {
@@ -318,12 +320,18 @@ namespace UnityMugen.IO
                     var parsedmatch = m_parsedlineregex.Match(line);
                     if (parsedmatch.Success)
                     {
-                        var key = parsedmatch.Groups[1].Value;
+                        var key = parsedmatch.Groups[1].Value.ToLower();
                         var value = parsedmatch.Groups[2].Value;
 
                         if (value.Length >= 2 && value[0] == '"' && value[value.Length - 1] == '"') value = value.Substring(1, value.Length - 2);
 
-                        sectionparsedlines.Add(new KeyValuePair<string, string>(key, value));
+                        if (!existKey.Contains(key))
+                        {
+                            if(!(key.Length >= 7 && key.Substring(0, 7) == "trigger"))
+                                existKey.Add(key);
+    
+                            sectionparsedlines.Add(new KeyValuePair<string, string>(key, value));
+                        }
                     }
                     else
                     {

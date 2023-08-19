@@ -2,7 +2,6 @@
 using UnityEngine;
 using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 using UnityMugen.Video;
 
 namespace UnityMugen.StateMachine.Controllers
@@ -47,51 +46,85 @@ namespace UnityMugen.StateMachine.Controllers
 #warning não aplicado ainda
         private Expression m_shadow;
 
-        public ModifyExplod(StateSystem statesystem, string label, TextSection textsection)
-                : base(statesystem, label, textsection)
-        {
-            m_id = textSection.GetAttribute<Expression>("id", null);
-        }
+        public ModifyExplod(string label) : base(label) { }
 
-        public override void Load()
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            if (isLoaded == false)
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
             {
-                base.Load();
-
-                m_animationNumber = textSection.GetAttribute<PrefixedExpression>("anim", null);
-                m_position = textSection.GetAttribute<Expression>("pos", null);
-                m_posType = textSection.GetAttribute<PositionType?>("postype", null);
-                m_facing = textSection.GetAttribute<Expression>("facing", null);
-                m_verticalFacing = textSection.GetAttribute<Expression>("vfacing", null);
-                m_bindTime = textSection.GetAttribute<Expression>("BindTime", null);
-
-                var expVel = textSection.GetAttribute<Expression>("vel", null);
-                var expVelocity = textSection.GetAttribute<Expression>("velocity", null);
-                m_velocity = expVel ?? expVelocity;
-
-                m_acceleration = textSection.GetAttribute<Expression>("accel", null);
-                m_randomDisplacement = textSection.GetAttribute<Expression>("random", null);
-                m_removeTime = textSection.GetAttribute<Expression>("removetime", null);
-                m_superMove = textSection.GetAttribute<Expression>("supermove", null);
-                m_superMoveTime = textSection.GetAttribute<Expression>("supermovetime", null);
-                m_pauseMoveTime = textSection.GetAttribute<Expression>("pausemovetime", null);
-                m_scale = textSection.GetAttribute<Expression>("scale", null);
-                m_spritePriority = textSection.GetAttribute<Expression>("sprpriority", null);
-                m_drawOnTop = textSection.GetAttribute<Expression>("ontop", null);
-                m_shadow = textSection.GetAttribute<Expression>("shadow", null);
-                m_ownPal = textSection.GetAttribute<Expression>("ownpal", null);
-                m_removeOnGetHit = textSection.GetAttribute<Expression>("removeongethit", null);
-                m_explodIgnoreHitPause = textSection.GetAttribute<Expression>("ignorehitpause", null);
-
-                m_alpha = textSection.GetAttribute<Expression>("alpha", null);
+                case "id":
+                    m_id = GetAttribute<Expression>(expression, null);
+                    break;
+                case "anim":
+                    m_animationNumber = GetAttribute<PrefixedExpression>(expression, null);
+                    break;
+                case "pos":
+                    m_position = GetAttribute<Expression>(expression, null);
+                    break;
+                case "postype":
+                    m_posType = GetAttribute<PositionType?>(expression, null);
+                    break;
+                case "facing":
+                    m_facing = GetAttribute<Expression>(expression, null);
+                    break;
+                case "vfacing":
+                    m_verticalFacing = GetAttribute<Expression>(expression, null);
+                    break;
+                case "bindtime":
+                    m_bindTime = GetAttribute<Expression>(expression, null);
+                    break;
+                case "vel":
+                case "velocity":
+                    m_velocity = GetAttribute<Expression>(expression, null);
+                    break;
+                case "accel":
+                    m_acceleration = GetAttribute<Expression>(expression, null);
+                    break;
+                case "random":
+                    m_randomDisplacement = GetAttribute<Expression>(expression, null);
+                    break;
+                case "removetime":
+                    m_removeTime = GetAttribute<Expression>(expression, null);
+                    break;
+                case "supermove":
+                    m_superMove = GetAttribute<Expression>(expression, null);
+                    break;
+                case "supermovetime":
+                    m_superMoveTime = GetAttribute<Expression>(expression, null);
+                    break;
+                case "pausemovetime":
+                    m_pauseMoveTime = GetAttribute<Expression>(expression, null);
+                    break;
+                case "scale":
+                    m_scale = GetAttribute<Expression>(expression, null);
+                    break;
+                case "sprpriority":
+                    m_spritePriority = GetAttribute<Expression>(expression, null);
+                    break;
+                case "ontop":
+                    m_drawOnTop = GetAttribute<Expression>(expression, null);
+                    break;
+                case "shadow":
+                    m_shadow = GetAttribute<Expression>(expression, null);
+                    break;
+                case "ownpal":
+                    m_ownPal = GetAttribute<Expression>(expression, null);
+                    break;
+                case "removeongethit":
+                    m_removeOnGetHit = GetAttribute<Expression>(expression, null);
+                    break;
+                case "ignorehitpause":
+                    m_explodIgnoreHitPause = GetAttribute<Expression>(expression, null);
+                    break;
+                case "alpha":
+                    m_alpha = GetAttribute<Expression>(expression, null);
+                    break;
             }
         }
 
         public override void Run(Character character)
         {
-            Load();
-
             var data = CreateModifyExplodData(character);
             if (data == null) return;
 
@@ -167,6 +200,6 @@ namespace UnityMugen.StateMachine.Controllers
 
             return data;
         }
-        
+
     }
 }

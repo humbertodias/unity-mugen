@@ -348,11 +348,6 @@ namespace UnityMugen.Evaluation
             var index = Make(state, node.Children[0].Children[0]);
             var value = Make(state, node.Children[1]);
 
-            //Character character = Exp.Constant(state.FunctionState).Value as Character;
-
-            // Original
-            //var args = new List<Exp> { Exp.Constant(state.FunctionState), index, value };
-
             var args = new List<Exp> { state.FunctionState, index, value };
 
             if (vardata.Type == typeof(Var))

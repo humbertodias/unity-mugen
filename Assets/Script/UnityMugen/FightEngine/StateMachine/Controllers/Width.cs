@@ -1,6 +1,5 @@
 ﻿using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -12,32 +11,27 @@ namespace UnityMugen.StateMachine.Controllers
         private Expression m_player;
         private Expression m_expValue;
 
-        public Width(StateSystem statesystem, string label, TextSection textsection)
-                : base(statesystem, label, textsection) { }
+        public Width(string label) : base(label) { }
 
-        public override void Load()
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            if (isLoaded == false)
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
             {
-                base.Load();
-
-                m_edge = textSection.GetAttribute<Expression>("edge", null);
-                m_player = textSection.GetAttribute<Expression>("player", null);
-
-                m_expValue = textSection.GetAttribute<Expression>("value", null);
-
-                if (m_expValue != null)
-                {
-                    m_edge = m_expValue;
-                    m_player = m_expValue;
-                }
+                case "edge":
+                    m_edge = GetAttribute<Expression>(expression, null);
+                    break;
+                case "player":
+                    m_player = GetAttribute<Expression>(expression, null);
+                    break;
+                case "value":
+                    m_edge = m_player = GetAttribute<Expression>(expression, null);
+                    break;
             }
         }
 
         public override void Run(Character character)
         {
-            Load();
-
             var playerwidth = EvaluationHelper.AsVector2(character, m_player, null) * Constant.Scale;
             if (playerwidth != null)
             {

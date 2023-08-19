@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityMugen.Audio;
 using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -68,7 +67,10 @@ namespace UnityMugen.StateMachine.Controllers
         private Expression m_fallRecoverTime;
         private Expression m_fallDamage;
         private Expression m_airFall;
+
+#warning ainda nao aplicado
         private Expression m_forceNoFall;
+
         private Expression m_downVelocity;
         private Expression m_downHitTime;
         private Expression m_downBounce;
@@ -98,118 +100,310 @@ namespace UnityMugen.StateMachine.Controllers
         private Expression m_fallShakePhaseOffSet;
         private Expression m_score;
 
-        public HitDef(StateSystem statesystem, string label, TextSection textsection)
-            : base(statesystem, label, textsection)
+        TempHitDef tempHitDef;
+
+        public HitDef(string label) : base(label)
         {
-            m_hitAttr = textSection.GetAttribute<HitAttribute>("attr", null);
+            m_hitFlag = HitFlag.Default;
+            m_guardFlag = HitFlag.NoGuard;
+            m_affectTeam = AffectTeam.Enemy;
+            m_hitAnimType = HitAnimationType.Light;
+            m_priority = HitPriority.Default;
+            m_attackEffect = AttackEffect.High;
+            tempHitDef = new TempHitDef();
         }
 
-        public override void Load()
+        public struct TempHitDef
         {
-            if (isLoaded == false)
+            public string m_airHitAnimType;
+            public string m_fallHitAnimType;
+            public string m_airEffect;
+        }
+
+        public override void Complete()
+        {
+            m_airHitAnimType = GetAttribute(tempHitDef.m_airHitAnimType, m_hitAnimType);
+            m_fallHitAnimType = GetAttribute(tempHitDef.m_fallHitAnimType, m_fallHitAnimType == HitAnimationType.Up ? HitAnimationType.Up : HitAnimationType.Back);
+            m_airEffect = GetAttribute(tempHitDef.m_airEffect, m_attackEffect);
+        }
+
+        public override void SetAttributes(string idAttribute, string expression)
+        {
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
             {
-                base.Load();
+                case "attr":
+                    m_hitAttr = GetAttribute<HitAttribute>(expression, null);
+                    break;
 
+                case "hitflag":
+                    {
 #warning hack because some animals kept the attribute no I don't put a value
-                if (!textSection.ContainsError("hitflag", out string error) && error != null)
-                /*    Debug.LogError("never create an empty attribute: "+ error)*/;
-                else
-                    m_hitFlag = textSection.GetAttribute("hitflag", HitFlag.Default);
-    /////////////////////////////
+                        if (string.IsNullOrEmpty(expression))
+                            m_hitFlag = null;
+                        else
+                            m_hitFlag = GetAttribute(expression, HitFlag.Default);
+                        break;
+                    }
+                case "guardflag":
+                    m_guardFlag = GetAttribute(expression, HitFlag.NoGuard);
+                    break;
+                case "affectteam":
+                    m_affectTeam = GetAttribute(expression, AffectTeam.Enemy);
+                    break;
+                case "animtype":
+                    m_hitAnimType = GetAttribute(expression, HitAnimationType.Light);
+                    break;
+                case "air.animtype":
+                    tempHitDef.m_airHitAnimType = expression;
+                    break;
+                case "fall.animtype":
+                    tempHitDef.m_fallHitAnimType = expression;
+                    break;
+                case "priority":
+                    m_priority = GetAttribute(expression, HitPriority.Default);
+                    break;
+                case "damage":
+                    m_damage = GetAttribute<Expression>(expression, null);
+                    break;
+                case "pausetime":
+                    m_pauseTime = GetAttribute<Expression>(expression, null);
+                    break;
+                case "guard.pausetime":
+                    m_guardPauseTime = GetAttribute<Expression>(expression, null);
+                    break;
+                case "sparkno":
+                    m_sparkNumber = GetAttribute<PrefixedExpression>(expression, null);
+                    break;
+                case "guard.sparkno":
+                    m_guardSparkNumber = GetAttribute<PrefixedExpression>(expression, null);
+                    break;
+                case "sparkxy":
+                    m_sparkPosition = GetAttribute<Expression>(expression, null);
+                    break;
+                case "hitsound":
+                    m_hitSound = GetAttribute<PrefixedExpression>(expression, null);
+                    break;
+                case "guardsound":
+                    m_guardHitSound = GetAttribute<PrefixedExpression>(expression, null);
+                    break;
+                case "ground.type":
+                    m_attackEffect = GetAttribute(expression, AttackEffect.High);
+                    break;
+                case "air.type":
+                    tempHitDef.m_airEffect = expression;
+                    break;
+                case "ground.slidetime":
+                    m_groundSlideTime = GetAttribute<Expression>(expression, null);
+                    break;
+                case "guard.slidetime":
+                    m_guardSlideTime = GetAttribute<Expression>(expression, null);
+                    break;
+                case "ground.hittime":
+                    m_groundHitTime = GetAttribute<Expression>(expression, null);
+                    break;
+                case "guard.hittime":
+                    m_guardHitTime = GetAttribute<Expression>(expression, null);
+                    break;
+                case "air.hittime":
+                    m_airHitTime = GetAttribute<Expression>(expression, null);
+                    break;
+                case "guard.ctrltime":
+                    m_guardCtrlTime = GetAttribute<Expression>(expression, null);
+                    break;
+                case "guard.dist":
+                    m_guardDistance = GetAttribute<Expression>(expression, null);
+                    break;
+                case "yaccel":
+                    m_yaccel = GetAttribute<Expression>(expression, null);
+                    break;
+                case "ground.velocity":
+                    m_groundVelocity = GetAttribute<Expression>(expression, null);
+                    break;
+                case "guard.velocity":
+                    m_guardVelocity = GetAttribute<Expression>(expression, null);
+                    break;
+                case "air.velocity":
+                    m_airVelocity = GetAttribute<Expression>(expression, null);
+                    break;
+                case "airguard.velocity":
+                    m_airGuardVelocity = GetAttribute<Expression>(expression, null);
+                    break;
+                case "ground.cornerpush.veloff":
+                    m_groundCornerPushOff = GetAttribute<Expression>(expression, null);
+                    break;
+                case "air.cornerpush.veloff":
+                    m_airCornerPushOff = GetAttribute<Expression>(expression, null);
+                    break;
+                case "down.cornerpush.veloff":
+                    m_downCornerPushOff = GetAttribute<Expression>(expression, null);
+                    break;
+                case "guard.cornerpush.veloff":
+                    m_guardCornerPushOff = GetAttribute<Expression>(expression, null);
+                    break;
+                case "airguard.cornerpush.veloff":
+                    m_airGuardCornerPushOff = GetAttribute<Expression>(expression, null);
+                    break;
+                case "airguard.ctrltime":
+                    m_airGuardCtrlTime = GetAttribute<Expression>(expression, null);
+                    break;
+                case "air.juggle":
+                    m_airJuggle = GetAttribute<Expression>(expression, null);
+                    break;
+                case "mindist":
+                    m_minDistance = GetAttribute<Expression>(expression, null);
+                    break;
+                case "maxdist":
+                    m_maxDistance = GetAttribute<Expression>(expression, null);
+                    break;
+                case "snap":
+                    m_snap = GetAttribute<Expression>(expression, null);
+                    break;
+                case "p1sprpriority":
+                    m_p1SpritePriority = GetAttribute<Expression>(expression, null);
+                    break;
+                case "p2sprpriority":
+                    m_p2SpritePriority = GetAttribute<Expression>(expression, null);
+                    break;
+                case "p1facing":
+                    m_p1Facing = GetAttribute<Expression>(expression, null);
+                    break;
+                case "p1getp2facing":
+                    m_p1GetP2Facing = GetAttribute<Expression>(expression, null);
+                    break;
+                case "p2facing":
+                    m_p2Facing = GetAttribute<Expression>(expression, null);
+                    break;
+                case "p1stateno":
+                    m_p1StateNumber = GetAttribute<Expression>(expression, null);
+                    break;
+                case "p2stateno":
+                    m_p2StateNumber = GetAttribute<Expression>(expression, null);
+                    break;
+                case "p2getp1state":
+                    m_p2GetP1State = GetAttribute<Expression>(expression, null);
+                    break;
+                case "forcestand":
+                    m_forceStand = GetAttribute<Expression>(expression, null);
+                    break;
+                case "fall":
+                    m_fall = GetAttribute<Expression>(expression, null);
+                    break;
+                case "fall.xvelocity":
+                    m_fallXVelocity = GetAttribute<Expression>(expression, null);
+                    break;
+                case "fall.yvelocity":
+                    m_fallYVelocity = GetAttribute<Expression>(expression, null);
+                    break;
+                case "fall.recover":
+                    m_fallRecover = GetAttribute<Expression>(expression, null);
+                    break;
+                case "fall.recovertime":
+                    m_fallRecoverTime = GetAttribute<Expression>(expression, null);
+                    break;
+                case "fall.damage":
+                    m_fallDamage = GetAttribute<Expression>(expression, null);
+                    break;
+                case "air.fall":
+                    m_airFall = GetAttribute<Expression>(expression, null);
+                    break;
+                case "forcenofall ":
+                    m_forceNoFall = GetAttribute<Expression>(expression, null);
+                    break;
+                case "down.velocity":
+                    m_downVelocity = GetAttribute<Expression>(expression, null);
+                    break;
+                case "down.hittime":
+                    m_downHitTime = GetAttribute<Expression>(expression, null);
+                    break;
+                case "down.bounce":
+                    m_downBounce = GetAttribute<Expression>(expression, null);
+                    break;
+                case "id":
+                    m_targetId = GetAttribute<Expression>(expression, null);
+                    break;
+                case "chainid":
+                    m_chainId = GetAttribute<Expression>(expression, null);
+                    break;
+                case "nochainid":
+                    m_noChainId = GetAttribute<Expression>(expression, null);
+                    break;
+                case "hitonce":
+                    m_hitOnce = GetAttribute<Expression>(expression, null);
+                    break;
+                case "kill":
+                    m_kill = GetAttribute<Expression>(expression, null);
+                    break;
+                case "guard.kill":
+                    m_guardKill = GetAttribute<Expression>(expression, null);
+                    break;
+                case "fall.kill":
+                    m_fallKill = GetAttribute<Expression>(expression, null);
+                    break;
+                case "numhits":
+                    m_numberOfHits = GetAttribute<Expression>(expression, null);
+                    break;
+                case "getpower":
+                    m_p1PowerIncrease = GetAttribute<Expression>(expression, null);
+                    break;
+                case "givepower":
+                    m_p2PowerIncrease = GetAttribute<Expression>(expression, null);
+                    break;
+                case "palfx.time":
+                    m_palTime = GetAttribute<Expression>(expression, null);
+                    break;
+                case "palfx.mul":
+                    m_palMul = GetAttribute<Expression>(expression, null);
+                    break;
+                case "palfx.add":
+                    m_palAdd = GetAttribute<Expression>(expression, null);
+                    break;
+                case "palfx.sinadd":
+                    m_palSinAdd = GetAttribute<Expression>(expression, null);
+                    break;
+                case "palfx.invertall":
+                    m_palInvert = GetAttribute<Expression>(expression, null);
+                    break;
+                case "palfx.color":
+                    m_palColor = GetAttribute<Expression>(expression, null);
+                    break;
+                case "envshake.time":
+                    m_shakeTime = GetAttribute<Expression>(expression, null);
+                    break;
+                case "envshake.freq":
+                    m_shakeFreq = GetAttribute<Expression>(expression, null);
+                    break;
+                case "envshake.ampl":
+                    m_shakeAmplitude = GetAttribute<Expression>(expression, null);
+                    break;
+                case "envshake.phase":
+                    m_shakePhaseOffSet = GetAttribute<Expression>(expression, null);
+                    break;
+                case "fall.envshake.time":
+                    m_fallShakeTime = GetAttribute<Expression>(expression, null);
+                    break;
+                case "fall.envshake.freq":
+                    m_fallShakeFreq = GetAttribute<Expression>(expression, null);
+                    break;
+                case "fall.envshake.ampl":
+                    m_fallShakeAmplitude = GetAttribute<Expression>(expression, null);
+                    break;
+                case "fall.envshake.phase":
+                    m_fallShakePhaseOffSet = GetAttribute<Expression>(expression, null);
+                    break;
+                case "score":
+                    m_score = GetAttribute<Expression>(expression, null);
+                    break;
 
-
-                m_guardFlag = textSection.GetAttribute("guardflag", HitFlag.NoGuard);
-                m_affectTeam = textSection.GetAttribute("affectteam", AffectTeam.Enemy);
-                m_hitAnimType = textSection.GetAttribute("animtype", HitAnimationType.Light);
-                m_airHitAnimType = textSection.GetAttribute("air.animtype", m_hitAnimType);
-                m_fallHitAnimType = textSection.GetAttribute("fall.animtype", m_airHitAnimType == HitAnimationType.Up ? HitAnimationType.Up : HitAnimationType.Back);
-                m_priority = textSection.GetAttribute("priority", HitPriority.Default);
-                m_damage = textSection.GetAttribute<Expression>("damage", null);
-                m_pauseTime = textSection.GetAttribute<Expression>("pausetime", null);
-                m_guardPauseTime = textSection.GetAttribute<Expression>("guard.pausetime", null);
-                m_sparkNumber = textSection.GetAttribute<PrefixedExpression>("sparkno", null);
-                m_guardSparkNumber = textSection.GetAttribute<PrefixedExpression>("guard.sparkno", null);
-                m_sparkPosition = textSection.GetAttribute<Expression>("sparkxy", null);
-                m_hitSound = textSection.GetAttribute<PrefixedExpression>("hitsound", null);
-                m_guardHitSound = textSection.GetAttribute<PrefixedExpression>("guardsound", null);
-                m_attackEffect = textSection.GetAttribute("ground.type", AttackEffect.High);
-                m_airEffect = textSection.GetAttribute("air.type", m_attackEffect);
-                m_groundSlideTime = textSection.GetAttribute<Expression>("ground.slidetime", null);
-                m_guardSlideTime = textSection.GetAttribute<Expression>("guard.slidetime", null);
-                m_groundHitTime = textSection.GetAttribute<Expression>("ground.hittime", null);
-                m_guardHitTime = textSection.GetAttribute<Expression>("guard.hittime", null);
-                m_airHitTime = textSection.GetAttribute<Expression>("air.hittime", null);
-                m_guardCtrlTime = textSection.GetAttribute<Expression>("guard.ctrltime", null);
-                m_guardDistance = textSection.GetAttribute<Expression>("guard.dist", null);
-                m_yaccel = textSection.GetAttribute<Expression>("yaccel", null);
-                m_groundVelocity = textSection.GetAttribute<Expression>("ground.velocity", null);
-                m_guardVelocity = textSection.GetAttribute<Expression>("guard.velocity", null);
-                m_airVelocity = textSection.GetAttribute<Expression>("air.velocity", null);
-                m_airGuardVelocity = textSection.GetAttribute<Expression>("airguard.velocity", null);
-                m_groundCornerPushOff = textSection.GetAttribute<Expression>("ground.cornerpush.veloff", null);
-                m_airCornerPushOff = textSection.GetAttribute<Expression>("air.cornerpush.veloff", null);
-                m_downCornerPushOff = textSection.GetAttribute<Expression>("down.cornerpush.veloff", null);
-                m_guardCornerPushOff = textSection.GetAttribute<Expression>("guard.cornerpush.veloff", null);
-                m_airGuardCornerPushOff = textSection.GetAttribute<Expression>("airguard.cornerpush.veloff", null);
-                m_airGuardCtrlTime = textSection.GetAttribute<Expression>("airguard.ctrltime", null);
-                m_airJuggle = textSection.GetAttribute<Expression>("air.juggle", null);
-                m_minDistance = textSection.GetAttribute<Expression>("mindist", null);
-                m_maxDistance = textSection.GetAttribute<Expression>("maxdist", null);
-                m_snap = textSection.GetAttribute<Expression>("snap", null);
-                m_p1SpritePriority = textSection.GetAttribute<Expression>("p1sprpriority", null);
-                m_p2SpritePriority = textSection.GetAttribute<Expression>("p2sprpriority", null);
-                m_p1Facing = textSection.GetAttribute<Expression>("p1facing", null);
-                m_p1GetP2Facing = textSection.GetAttribute<Expression>("p1getp2facing", null);
-                m_p2Facing = textSection.GetAttribute<Expression>("p2facing", null);
-                m_p1StateNumber = textSection.GetAttribute<Expression>("p1stateno", null);
-                m_p2StateNumber = textSection.GetAttribute<Expression>("p2stateno", null);
-                m_p2GetP1State = textSection.GetAttribute<Expression>("p2getp1state", null);
-                m_forceStand = textSection.GetAttribute<Expression>("forcestand", null);
-                m_fall = textSection.GetAttribute<Expression>("fall", null);
-                m_fallXVelocity = textSection.GetAttribute<Expression>("fall.xvelocity", null);
-                m_fallYVelocity = textSection.GetAttribute<Expression>("fall.yvelocity", null);
-                m_fallRecover = textSection.GetAttribute<Expression>("fall.recover", null);
-                m_fallRecoverTime = textSection.GetAttribute<Expression>("fall.recovertime", null);
-                m_fallDamage = textSection.GetAttribute<Expression>("fall.damage", null);
-                m_airFall = textSection.GetAttribute<Expression>("air.fall", null);
-                m_forceNoFall = textSection.GetAttribute<Expression>("forcenofall ", null);
-                m_downVelocity = textSection.GetAttribute<Expression>("down.velocity", null);
-                m_downHitTime = textSection.GetAttribute<Expression>("down.hittime", null);
-                m_downBounce = textSection.GetAttribute<Expression>("down.bounce", null);
-                m_targetId = textSection.GetAttribute<Expression>("id", null);
-                m_chainId = textSection.GetAttribute<Expression>("chainid", null);
-                m_noChainId = textSection.GetAttribute<Expression>("nochainid", null);
-                m_hitOnce = textSection.GetAttribute<Expression>("hitonce", null);
-                m_kill = textSection.GetAttribute<Expression>("kill", null);
-                m_guardKill = textSection.GetAttribute<Expression>("guard.kill", null);
-                m_fallKill = textSection.GetAttribute<Expression>("fall.kill", null);
-                m_numberOfHits = textSection.GetAttribute<Expression>("numhits", null);
-                m_p1PowerIncrease = textSection.GetAttribute<Expression>("getpower", null);
-                m_p2PowerIncrease = textSection.GetAttribute<Expression>("givepower", null);
-                m_palTime = textSection.GetAttribute<Expression>("palfx.time", null);
-                m_palMul = textSection.GetAttribute<Expression>("palfx.mul", null);
-                m_palAdd = textSection.GetAttribute<Expression>("palfx.add", null);
-                m_palSinAdd = textSection.GetAttribute<Expression>("palfx.sinadd", null);
-                m_palInvert = textSection.GetAttribute<Expression>("palfx.invertall", null);
-                m_palColor = textSection.GetAttribute<Expression>("palfx.color", null);
-                m_shakeTime = textSection.GetAttribute<Expression>("envshake.time", null);
-                m_shakeFreq = textSection.GetAttribute<Expression>("envshake.freq", null);
-                m_shakeAmplitude = textSection.GetAttribute<Expression>("envshake.ampl", null);
-                m_shakePhaseOffSet = textSection.GetAttribute<Expression>("envshake.phase", null);
-                m_fallShakeTime = textSection.GetAttribute<Expression>("fall.envshake.time", null);
-                m_fallShakeFreq = textSection.GetAttribute<Expression>("fall.envshake.freq", null);
-                m_fallShakeAmplitude = textSection.GetAttribute<Expression>("fall.envshake.ampl", null);
-                m_fallShakePhaseOffSet = textSection.GetAttribute<Expression>("fall.envshake.phase", null);
-                m_score = textSection.GetAttribute<Expression>("score", null);
-                // Este parametro nem tem no mugen 1.0 e numca foi usado nas versoes anteriores
-                //m_attackwidth = textsection.GetAttribute<Expression>("attack.width", null);
+                    // Este parametro nem tem no mugen 1.0 e numca foi usado nas versoes anteriores
+                    //case "attack.width":
+                    //    m_attackwidth = GetAttribute<Expression>(expression, null);
+                    //    break;
             }
         }
 
         public override void Run(Character character)
         {
-            Load();
-
             SetHitDefinition(character, character.OffensiveInfo.HitDef);
 
             character.OffensiveInfo.ActiveHitDef = true;

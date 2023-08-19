@@ -2,7 +2,6 @@
 using UnityMugen.Audio;
 using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -22,33 +21,51 @@ namespace UnityMugen.StateMachine.Controllers
         private Expression m_powerAdd;
         private Expression m_unhittable;
 
-        public SuperPause(StateSystem statesystem, string label, TextSection textsection)
-                : base(statesystem, label, textsection) { }
+        public SuperPause(string label) : base(label) { }
 
-        public override void Load()
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            if (isLoaded == false)
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
             {
-                base.Load();
-
-                m_time = textSection.GetAttribute<Expression>("time", null);
-                m_cmdBufferTime = textSection.GetAttribute<Expression>("endcmdbuftime", null);
-                m_moveTime = textSection.GetAttribute<Expression>("movetime", null);
-                m_sparkNumber = textSection.GetAttribute<PrefixedExpression>("anim", null);
-                m_soundId = textSection.GetAttribute<PrefixedExpression>("sound", null);
-                m_pauseBackground = textSection.GetAttribute<Expression>("pausebg", null);
-                m_animPosition = textSection.GetAttribute<Expression>("pos", null);
-                m_darken = textSection.GetAttribute<Expression>("darken", null);
-                m_p2DefMul = textSection.GetAttribute<Expression>("p2defmul", null);
-                m_powerAdd = textSection.GetAttribute<Expression>("poweradd", null);
-                m_unhittable = textSection.GetAttribute<Expression>("unhittable", null);
+                case "time":
+                    m_time = GetAttribute<Expression>(expression, null);
+                    break;
+                case "endcmdbuftime":
+                    m_cmdBufferTime = GetAttribute<Expression>(expression, null);
+                    break;
+                case "movetime":
+                    m_moveTime = GetAttribute<Expression>(expression, null);
+                    break;
+                case "anim":
+                    m_sparkNumber = GetAttribute<PrefixedExpression>(expression, null);
+                    break;
+                case "sound":
+                    m_soundId = GetAttribute<PrefixedExpression>(expression, null);
+                    break;
+                case "pausebg":
+                    m_pauseBackground = GetAttribute<Expression>(expression, null);
+                    break;
+                case "pos":
+                    m_animPosition = GetAttribute<Expression>(expression, null);
+                    break;
+                case "darken":
+                    m_darken = GetAttribute<Expression>(expression, null);
+                    break;
+                case "p2defmul":
+                    m_p2DefMul = GetAttribute<Expression>(expression, null);
+                    break;
+                case "poweradd":
+                    m_powerAdd = GetAttribute<Expression>(expression, null);
+                    break;
+                case "unhittable":
+                    m_unhittable = GetAttribute<Expression>(expression, null);
+                    break;
             }
         }
 
         public override void Run(Character character)
         {
-            Load();
-
             int? time = EvaluationHelper.AsInt32(character, m_time, 30);
             var buffertime = EvaluationHelper.AsInt32(character, m_cmdBufferTime, 0);
             var movetime = EvaluationHelper.AsInt32(character, m_moveTime, 0);

@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 using UnityMugen.Video;
 
 namespace UnityMugen.StateMachine.Controllers
@@ -32,44 +31,70 @@ namespace UnityMugen.StateMachine.Controllers
         public Expression m_alpha;
         public Expression m_color;
 
-        public GraphicUI(StateSystem statesystem, string label, TextSection textsection)
-            : base(statesystem, label, textsection) { }
-
-        public override void Load()
+        public GraphicUI(string label) : base(label)
         {
-            if (isLoaded == false)
+            m_posType = UnityMugen.PositionTypeUI.Center;
+            m_layer = Layer.Front;
+            m_trans = Misc.ToBlending(BlendType.None);
+        }
+
+        public override void SetAttributes(string idAttribute, string expression)
+        {
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
             {
-                base.Load();
-
-                m_update = textSection.GetAttribute<Expression>("update", null);
-                m_name = textSection.GetAttribute<string>("name", null);
-                m_id = textSection.GetAttribute<Expression>("id", null);
-
-                m_pos = textSection.GetAttribute<Expression>("pos", null);
-                m_posType = textSection.GetAttribute("postype", UnityMugen.PositionTypeUI.Center);
-                m_scale = textSection.GetAttribute<Expression>("scale", null);
-
-                m_anim = textSection.GetAttribute<PrefixedExpression>("anim", null);
-
-                m_sprPriority = textSection.GetAttribute<Expression>("sprpriority", null);
-                m_layer = textSection.GetAttribute("layer", Layer.Front);
-                m_fillAmount = textSection.GetAttribute<Expression>("fillamount", null);
-                m_fillOrigin = textSection.GetAttribute<Expression>("fillorigin", null);
-                m_removeTime = textSection.GetAttribute<Expression>("removetime", null);
-                m_color = textSection.GetAttribute<Expression>("color", null);
-
-                m_trans = textSection.GetAttribute<Blending?>("trans", Misc.ToBlending(BlendType.None));
-                m_alpha = textSection.GetAttribute<Expression>("alpha", null);
-
+                case "update":
+                    m_update = GetAttribute<Expression>(expression, null);
+                    break;
+                case "name":
+                    m_name = GetAttribute<string>(expression, null);
+                    break;
+                case "id":
+                    m_id = GetAttribute<Expression>(expression, null);
+                    break;
+                case "pos":
+                    m_pos = GetAttribute<Expression>(expression, null);
+                    break;
+                case "postype":
+                    m_posType = GetAttribute(expression, UnityMugen.PositionTypeUI.Center);
+                    break;
+                case "scale":
+                    m_scale = GetAttribute<Expression>(expression, null);
+                    break;
+                case "anim":
+                    m_anim = GetAttribute<PrefixedExpression>(expression, null);
+                    break;
+                case "sprpriority":
+                    m_sprPriority = GetAttribute<Expression>(expression, null);
+                    break;
+                case "layer":
+                    m_layer = GetAttribute(expression, Layer.Front);
+                    break;
+                case "fillamount":
+                    m_fillAmount = GetAttribute<Expression>(expression, null);
+                    break;
+                case "fillorigin":
+                    m_fillOrigin = GetAttribute<Expression>(expression, null);
+                    break;
+                case "removetime":
+                    m_removeTime = GetAttribute<Expression>(expression, null);
+                    break;
+                case "color":
+                    m_color = GetAttribute<Expression>(expression, null);
+                    break;
+                case "trans":
+                    m_trans = GetAttribute<Blending?>(expression, Misc.ToBlending(BlendType.None));
+                    break;
+                case "alpha":
+                    m_alpha = GetAttribute<Expression>(expression, null);
+                    break;
             }
         }
 
+
+
         public override void Run(Character character)
         {
-            Load();
-
-
-
             var update = EvaluationHelper.AsBoolean(character, m_update, false);
             long Id = EvaluationHelper.AsInt32(character, m_id, int.MinValue);
 
@@ -122,7 +147,7 @@ namespace UnityMugen.StateMachine.Controllers
                 graphicUIData.removetime = EvaluationHelper.AsInt32(character, m_removeTime, null);
                 graphicUIData.color = EvaluationHelper.AsVector4(character, m_color, null);
 
-                Blending? Transparency = textSection.GetAttribute<Blending?>("trans", null);
+                Blending? Transparency = m_trans;
                 Vector2? alpha = EvaluationHelper.AsVector2(character, m_alpha, null);
 
                 if (Transparency.HasValue && alpha.HasValue &&
@@ -134,8 +159,8 @@ namespace UnityMugen.StateMachine.Controllers
                     else
                         graphicUIData.transparency = Misc.ToBlending(m_trans.Value.BlendType);
                 }
-            }
 
+            }
 
             if (!update)
             {

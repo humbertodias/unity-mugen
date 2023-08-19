@@ -1,10 +1,8 @@
 ﻿using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
-
     [StateControllerName("ForceFeedback")]
     public class ForceFeedback : StateController
     {
@@ -14,29 +12,38 @@ namespace UnityMugen.StateMachine.Controllers
         private Expression m_ampl;
         private Expression m_self;
 
-        public ForceFeedback(StateSystem statesystem, string label, TextSection textsection)
-            : base(statesystem, label, textsection) { }
-
-        public override void Load()
+        public ForceFeedback(string label) : base(label)
         {
-            if (isLoaded == false)
-            {
-                base.Load();
+            m_rumbleType = ForceFeedbackType.Sine;
+        }
 
-                ForceFeedbackType m_rumbletype = textSection.GetAttribute("waveform", ForceFeedbackType.Sine);
-                m_time = textSection.GetAttribute<Expression>("time", null);
-                m_self = textSection.GetAttribute<Expression>("self", null);
+        public override void SetAttributes(string idAttribute, string expression)
+        {
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
+            {
+                case "waveform":
+                    m_rumbleType = GetAttribute(expression, ForceFeedbackType.Sine);
+                    break;
+                case "time":
+                    m_time = GetAttribute<Expression>(expression, null);
+                    break;
+                case "self":
+                    m_self = GetAttribute<Expression>(expression, null);
+                    break;
 
 #warning variaveis nao aplicaveis no projeto freq, ampl
-                m_freq = textSection.GetAttribute<Expression>("freq", null);
-                m_ampl = textSection.GetAttribute<Expression>("ampl", null);
+                case "freq":
+                    m_freq = GetAttribute<Expression>(expression, null);
+                    break;
+                case "ampl":
+                    m_ampl = GetAttribute<Expression>(expression, null);
+                    break;
             }
         }
 
         public override void Run(Character character)
         {
-            Load();
-
             var time = EvaluationHelper.AsInt32(character, m_time, 60);
             var Self = EvaluationHelper.AsBoolean(character, m_self, true);
 

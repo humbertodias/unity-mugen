@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -11,17 +10,21 @@ namespace UnityMugen.StateMachine.Controllers
     {
         private Expression m_value;
 
-        public PlayerPush(StateSystem statesystem, string label, TextSection textsection)
-                : base(statesystem, label, textsection)
-        {
-            m_value = textsection.GetAttribute<Expression>("value", null);
-        }
+        public PlayerPush(string label) : base(label) { }
 
+        public override void SetAttributes(string idAttribute, string expression)
+        {
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
+            {
+                case "value":
+                    m_value = GetAttribute<Expression>(expression, null);
+                    break;
+            }
+        }
 
         public override void Run(Character character)
         {
-            base.Load();
-
             var value = EvaluationHelper.AsBoolean(character, m_value, null);
             if (value == null)
             {
@@ -30,7 +33,6 @@ namespace UnityMugen.StateMachine.Controllers
             }
 
             character.PushFlag = value.Value;
-
         }
 
         public override bool IsValid()

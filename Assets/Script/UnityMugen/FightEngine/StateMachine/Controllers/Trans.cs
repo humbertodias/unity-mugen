@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 using UnityMugen.Video;
 
 namespace UnityMugen.StateMachine.Controllers
@@ -13,24 +12,27 @@ namespace UnityMugen.StateMachine.Controllers
         private Blending m_blending;
         private Expression m_alpha;
 
-        public Trans(StateSystem statesystem, string label, TextSection textsection)
-                : base(statesystem, label, textsection) { }
-
-        public override void Load()
+        public Trans(string label) : base(label)
         {
-            if (isLoaded == false)
-            {
-                base.Load();
+            m_blending = new Blending();
+        }
 
-                m_blending = textSection.GetAttribute("trans", new Blending());
-                m_alpha = textSection.GetAttribute<Expression>("alpha", null);
+        public override void SetAttributes(string idAttribute, string expression)
+        {
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
+            {
+                case "trans":
+                    m_blending = GetAttribute(expression, new Blending());
+                    break;
+                case "alpha":
+                    m_alpha = GetAttribute<Expression>(expression, null);
+                    break;
             }
         }
 
         public override void Run(Character character)
         {
-            Load();
-
             var alpha = EvaluationHelper.AsVector2(character, m_alpha, new Vector2(255, 0));
 
             if (m_blending.BlendType == BlendType.Add && m_blending.SourceFactor == 0 && m_blending.DestinationFactor == 0)

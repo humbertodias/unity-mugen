@@ -1,89 +1,57 @@
-﻿using System.Diagnostics;
-using System.Text.RegularExpressions;
-using UnityMugen.Combat;
-using UnityMugen.Evaluation;
-using UnityMugen.IO;
+﻿using UnityMugen.Combat;
 
 namespace UnityMugen.StateMachine.Controllers
 {
 
     [StateControllerName("ParentVarSet")]
-    public class ParentVarSet : StateController
+    public class ParentVarSet : VarSet
     {
-        private static readonly Regex s_lineRegex;
-        private readonly Expression m_index;
+        public ParentVarSet(string label) : base(label) { }
 
-        public Expression IntNumber => m_intNumber;
-        public Expression FloatNumber => m_floatNumber;
-        public Expression SystemIntNumber => m_systemIntNumber;
-        public Expression SystemFloatNumber => m_systemFloatNumber;
-        public Expression Value => m_value;
-
-        private readonly Expression m_intNumber;
-        private readonly Expression m_floatNumber;
-        private readonly Expression m_systemIntNumber;
-        private readonly Expression m_systemFloatNumber;
-        private readonly Expression m_value;
-
-        static ParentVarSet()
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            s_lineRegex = new Regex(@"(.*)?var\((.+)\)", RegexOptions.IgnoreCase);
-        }
-
-        public ParentVarSet(StateSystem statesystem, string label, TextSection textsection)
-                : base(statesystem, label, textsection)
-        {
-            base.Load();
-
-            m_intNumber = textsection.GetAttribute<Expression>("v", null);
-            m_floatNumber = textsection.GetAttribute<Expression>("fv", null);
-            m_systemIntNumber = textsection.GetAttribute<Expression>("sysvar", null);
-            m_systemFloatNumber = textsection.GetAttribute<Expression>("sysfvar", null);
-            m_value = textsection.GetAttribute<Expression>("value", null);
-
+            base.SetAttributes(idAttribute, expression);
         }
 
         public override void Run(Character character)
         {
-            base.Load();
-
             var helper = character as UnityMugen.Combat.Helper;
             if (helper == null) return;
 
-            if (IntNumber != null)
+            if (m_intNumber != null)
             {
-                var index = EvaluationHelper.AsInt32(character, IntNumber, null);
-                var value = EvaluationHelper.AsInt32(character, Value, null);
+                var index = EvaluationHelper.AsInt32(character, m_intNumber, null);
+                var value = EvaluationHelper.AsInt32(character, m_value, null);
 
                 if (index != null && value != null && helper.Creator.Variables.SetInteger(index.Value, false, value.Value) == false)
                 {
                 }
             }
 
-            if (FloatNumber != null)
+            if (m_floatNumber != null)
             {
-                var index = EvaluationHelper.AsInt32(character, FloatNumber, null);
-                var value = EvaluationHelper.AsSingle(character, Value, null);
+                var index = EvaluationHelper.AsInt32(character, m_floatNumber, null);
+                var value = EvaluationHelper.AsSingle(character, m_value, null);
 
                 if (index != null && value != null && helper.Creator.Variables.SetFloat(index.Value, false, value.Value) == false)
                 {
                 }
             }
 
-            if (SystemIntNumber != null)
+            if (m_systemIntNumber != null)
             {
-                var index = EvaluationHelper.AsInt32(character, SystemIntNumber, null);
-                var value = EvaluationHelper.AsInt32(character, Value, null);
+                var index = EvaluationHelper.AsInt32(character, m_systemIntNumber, null);
+                var value = EvaluationHelper.AsInt32(character, m_value, null);
 
                 if (index != null && value != null && helper.Creator.Variables.SetInteger(index.Value, true, value.Value) == false)
                 {
                 }
             }
 
-            if (SystemFloatNumber != null)
+            if (m_systemFloatNumber != null)
             {
-                var index = EvaluationHelper.AsInt32(character, SystemFloatNumber, null);
-                var value = EvaluationHelper.AsSingle(character, Value, null);
+                var index = EvaluationHelper.AsInt32(character, m_systemFloatNumber, null);
+                var value = EvaluationHelper.AsSingle(character, m_value, null);
 
                 if (index != null && value != null && helper.Creator.Variables.SetFloat(index.Value, true, value.Value) == false)
                 {

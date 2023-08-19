@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -14,34 +13,33 @@ namespace UnityMugen.StateMachine.Controllers
         private Expression m_canKill;
         private Expression m_abs;
 
-        public LifeAdd(StateSystem statesystem, string label, TextSection textsection)
-                : base(statesystem, label, textsection)
-        {
-            m_life = textSection.GetAttribute<Expression>("value", null);
-        }
+        public LifeAdd(string label) : base(label) { }
 
-        public override void Load()
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            if (isLoaded == false)
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
             {
-                base.Load();
-
-                m_canKill = textSection.GetAttribute<Expression>("kill", null);
-                m_abs = textSection.GetAttribute<Expression>("absolute", null);
+                case "value":
+                    m_life = GetAttribute<Expression>(expression, null);
+                    break;
+                case "kill":
+                    m_canKill = GetAttribute<Expression>(expression, null);
+                    break;
+                case "absolute":
+                    m_abs = GetAttribute<Expression>(expression, null);
+                    break;
             }
         }
 
         public override void Run(Character character)
         {
-            Load();
-
             var amount = EvaluationHelper.AsInt32(character, m_life, null);
             if (amount == null)
             {
                 Debug.Log("LifeAdd : value Required");
                 return;
             }
-
 
             var cankill = EvaluationHelper.AsBoolean(character, m_canKill, true);
             var absolute = EvaluationHelper.AsBoolean(character, m_abs, false);

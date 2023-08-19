@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityMugen.Collections;
 using UnityMugen.Combat;
 using UnityMugen.IO;
+using UnityMugen.StateMachine.Controllers;
 
 namespace UnityMugen.StateMachine
 {
@@ -36,7 +37,7 @@ namespace UnityMugen.StateMachine
         private static ReadOnlyDictionary<string, Constructor> BuildControllerMap()
         {
             var attribType = typeof(StateControllerNameAttribute);
-            var constructortypes = new[] { typeof(StateSystem), typeof(string), typeof(TextSection) };
+            var constructortypes = new[] { /*typeof(StateSystem), */typeof(string)/*, typeof(TextSection)*/ };
 
             var controllermap = new Dictionary<string, Constructor>(StringComparer.OrdinalIgnoreCase);
 
@@ -60,8 +61,7 @@ namespace UnityMugen.StateMachine
 
             return new ReadOnlyDictionary<string, Constructor>(controllermap);
         }
-
-
+        
         public StateManager CreateManager(Character character, string[] filepaths)
         {
             if (character == null) throw new ArgumentNullException(nameof(character));
@@ -227,14 +227,28 @@ namespace UnityMugen.StateMachine
                 return null;
             }
 
-
             if (m_controllerMap.ContainsKey(typename) == false)
             {
                 UnityEngine.Debug.LogWarningFormat("Controller '{0}' has invalid type - '{1}'.", textsection, typename);
                 return null;
             }
 
-            var controller = (StateController)m_controllerMap[typename](this, title/*match.Groups[1].Value*/, textsection, false);
+            var controller = (StateController)m_controllerMap[typename](title);
+
+            List<KeyValuePair<string,string>> triggers = new List<KeyValuePair<string, string>>();
+            foreach (var section in textsection.ParsedLines)
+            {
+                if (section.Key == "type") continue;
+
+                if (section.Key.Length >= 7 && section.Key.Substring(0,7) == "trigger")
+                {
+                    triggers.Add(section);
+                    continue;
+                }
+                controller.SetAttributes(section.Key, section.Value);
+            }
+            controller.triggerMap = controller.BuildTriggers(triggers);
+            controller.Complete();
             return controller;
         }
     }

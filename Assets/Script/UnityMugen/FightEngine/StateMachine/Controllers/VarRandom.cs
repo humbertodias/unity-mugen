@@ -1,6 +1,5 @@
 ﻿using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -11,26 +10,24 @@ namespace UnityMugen.StateMachine.Controllers
         private Expression m_intNumber;
         private Expression m_range;
 
-        public VarRandom(StateSystem statesystem, string label, TextSection textsection)
-                : base(statesystem, label, textsection)
-        {
-            m_intNumber = textSection.GetAttribute<Expression>("v", null);
-        }
+        public VarRandom(string label) : base(label) { }
 
-        public override void Load()
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            if (isLoaded == false)
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
             {
-                base.Load();
-
-                m_range = textSection.GetAttribute<Expression>("range", null);
+                case "v":
+                    m_intNumber = GetAttribute<Expression>(expression, null);
+                    break;
+                case "range":
+                    m_range = GetAttribute<Expression>(expression, null);
+                    break;
             }
         }
 
         public override void Run(Character character)
         {
-            Load();
-
             var varindex = EvaluationHelper.AsInt32(character, m_intNumber, null);
             if (varindex == null) return;
 

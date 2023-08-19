@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 using UnityMugen.Video;
 
 namespace UnityMugen.StateMachine.Controllers
@@ -11,7 +10,6 @@ namespace UnityMugen.StateMachine.Controllers
     public class Projectile : HitDef
     {
         private Expression m_projPriority;
-        private Expression m_pauseTime;
         private Expression m_pauseMoveTime;
 
 #warning Não aplicado ainda
@@ -45,68 +43,148 @@ namespace UnityMugen.StateMachine.Controllers
 
         private AfterImage m_afterImage;
 
+        AfterImageData afterImageData = new AfterImageData();
 
-        public Projectile(StateSystem statesystem, string label, TextSection textsection)
-                : base(statesystem, label, textsection) { }
-
-        public override void Load()
+        public Projectile(string label) : base(label)
         {
-            if (isLoaded == false)
+            m_posType = PositionType.P1;
+            afterImageData.m_trans = Misc.ToBlending(BlendType.None);
+        }
+
+        public override void Complete()
+        {
+            m_afterImage = new AfterImage(afterImageData);
+        }
+
+        public override void SetAttributes(string idAttribute, string expression)
+        {
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
             {
-                base.Load();
+                case "projid":
+                    m_projectileId = GetAttribute<Expression>(expression, null);
+                    break;
+                case "projanim":
+                    m_animation = GetAttribute<Expression>(expression, null);
+                    break;
+                case "projhitanim":
+                    m_hitAnimation = GetAttribute<Expression>(expression, null);
+                    break;
+                case "projremanim":
+                    m_removeAnimation = GetAttribute<Expression>(expression, null);
+                    break;
+                case "projcancelanim":
+                    m_cancelAnimation = GetAttribute<Expression>(expression, null);
+                    break;
+                case "projscale":
+                    m_scale = GetAttribute<Expression>(expression, null);
+                    break;
+                case "projremove":
+                    m_removeOnHit = GetAttribute<Expression>(expression, null);
+                    break;
+                case "projremovetime":
+                    m_removeTime = GetAttribute<Expression>(expression, null);
+                    break;
+                case "velocity":
+                    m_velocity = GetAttribute<Expression>(expression, null);
+                    break;
+                case "remvelocity":
+                    m_removeVelocity = GetAttribute<Expression>(expression, null);
+                    break;
+                case "accel":
+                    m_acceleration = GetAttribute<Expression>(expression, null);
+                    break;
+                case "velmul":
+                    m_velocityMultiplier = GetAttribute<Expression>(expression, null);
+                    break;
+                case "projhits":
+                    m_hits = GetAttribute<Expression>(expression, null);
+                    break;
+                case "projmisstime":
+                    m_missTime = GetAttribute<Expression>(expression, null);
+                    break;
+                case "projpriority":
+                    m_projPriority = GetAttribute<Expression>(expression, null);
+                    break;
+                case "projsprpriority":
+                    m_spritePriority = GetAttribute<Expression>(expression, null);
+                    break;
+                case "projedgebound":
+                    m_edgeBound = GetAttribute<Expression>(expression, null);
+                    break;
+                case "projstagebound":
+                    m_stageBound = GetAttribute<Expression>(expression, null);
+                    break;
+                case "projheightbound":
+                    m_heightBound = GetAttribute<Expression>(expression, null);
+                    break;
+                case "offset":
+                    m_offSet = GetAttribute<Expression>(expression, null);
+                    break;
+                case "postype":
+                    m_posType = GetAttribute(expression, PositionType.P1);
+                    break;
+                case "projshadow":
+                    m_shadow = GetAttribute<Expression>(expression, null);
+                    break;
+                case "supermovetime":
+                    m_superMoveTime = GetAttribute<Expression>(expression, null);
+                    break;
+                case "pausemovetime":
+                    m_pauseMoveTime = GetAttribute<Expression>(expression, null);
+                    break;
+                case "ownpal":
+                    m_ownPal = GetAttribute<Expression>(expression, null);
+                    break;
+                case "remappal":
+                    m_remapPal = GetAttribute<Expression>(expression, null);
+                    break;
 
-                m_projectileId = textSection.GetAttribute<Expression>("ProjID", null);
-                m_animation = textSection.GetAttribute<Expression>("projanim", null);
-                m_hitAnimation = textSection.GetAttribute<Expression>("projhitanim", null);
-                m_removeAnimation = textSection.GetAttribute<Expression>("projremanim", null);
-                m_cancelAnimation = textSection.GetAttribute<Expression>("projcancelanim", null);
-                m_scale = textSection.GetAttribute<Expression>("projscale", null);
-                m_removeOnHit = textSection.GetAttribute<Expression>("projremove", null);
-                m_removeTime = textSection.GetAttribute<Expression>("projremovetime", null);
-                m_velocity = textSection.GetAttribute<Expression>("velocity", null);
-                m_removeVelocity = textSection.GetAttribute<Expression>("remvelocity", null);
-                m_acceleration = textSection.GetAttribute<Expression>("accel", null);
-                m_velocityMultiplier = textSection.GetAttribute<Expression>("velmul", null);
-                m_hits = textSection.GetAttribute<Expression>("projhits", null);
-                m_missTime = textSection.GetAttribute<Expression>("projmisstime", null);
-                m_projPriority = textSection.GetAttribute<Expression>("projpriority", null);
-                m_spritePriority = textSection.GetAttribute<Expression>("projsprpriority", null);
-                m_edgeBound = textSection.GetAttribute<Expression>("projedgebound", null);
-                m_stageBound = textSection.GetAttribute<Expression>("projstagebound", null);
-                m_heightBound = textSection.GetAttribute<Expression>("projheightbound", null);
-                m_offSet = textSection.GetAttribute<Expression>("offset", null);
-                m_posType = textSection.GetAttribute("postype", PositionType.P1);
-                m_shadow = textSection.GetAttribute<Expression>("projshadow", null);
-                m_superMoveTime = textSection.GetAttribute<Expression>("supermovetime", null);
-
-                m_pauseTime = textSection.GetAttribute<Expression>("pausetime", null);
-                m_pauseMoveTime = textSection.GetAttribute<Expression>("pausemovetime", null);
-
-                m_ownPal = textSection.GetAttribute<Expression>("ownpal", null);
-                m_remapPal = textSection.GetAttribute<Expression>("remappal", null);
-
-                AfterImageData afterImageData = new AfterImageData();
-                afterImageData.m_time = textSection.GetAttribute<Expression>("afterimage.time", null);
-                afterImageData.m_numberOfFrames = textSection.GetAttribute<Expression>("afterimage.length", null);
-                afterImageData.m_paletteColor = textSection.GetAttribute<Expression>("afterimage.palcolor", null);
-                afterImageData.m_paletteInversion = textSection.GetAttribute<Expression>("afterimage.palinvertall", null);
-                afterImageData.m_paletteBrightness = textSection.GetAttribute<Expression>("afterimage.palbright", null);
-                afterImageData.m_paletteContrast = textSection.GetAttribute<Expression>("afterimage.palcontrast", null);
-                afterImageData.m_palettePostBrightness = textSection.GetAttribute<Expression>("afterimage.palpostbright", null);
-                afterImageData.m_paletteAdd = textSection.GetAttribute<Expression>("afterimage.paladd", null);
-                afterImageData.m_paletteMutliply = textSection.GetAttribute<Expression>("afterimage.palmul", null);
-                afterImageData.m_timeGap = textSection.GetAttribute<Expression>("afterimage.timeGap", null);
-                afterImageData.m_frameGap = textSection.GetAttribute<Expression>("afterimage.frameGap", null);
-                afterImageData.m_trans = textSection.GetAttribute<Blending?>("afterimage.trans", Misc.ToBlending(BlendType.None));
-                afterImageData.m_alpha = textSection.GetAttribute<Expression>("afterimage.alpha", null);
-                m_afterImage = new AfterImage(afterImageData);
+                //AfterImage
+                case "afterimage.time":
+                    afterImageData.m_time = GetAttribute<Expression>(expression, null);
+                    break;
+                case "afterimage.length":
+                    afterImageData.m_numberOfFrames = GetAttribute<Expression>(expression, null);
+                    break;
+                case "afterimage.palcolor":
+                    afterImageData.m_paletteColor = GetAttribute<Expression>(expression, null);
+                    break;
+                case "afterimage.palinvertall":
+                    afterImageData.m_paletteInversion = GetAttribute<Expression>(expression, null);
+                    break;
+                case "afterimage.palbright":
+                    afterImageData.m_paletteBrightness = GetAttribute<Expression>(expression, null);
+                    break;
+                case "afterimage.palcontrast":
+                    afterImageData.m_paletteContrast = GetAttribute<Expression>(expression, null);
+                    break;
+                case "afterimage.palpostbright":
+                    afterImageData.m_palettePostBrightness = GetAttribute<Expression>(expression, null);
+                    break;
+                case "afterimage.paladd":
+                    afterImageData.m_paletteAdd = GetAttribute<Expression>(expression, null);
+                    break;
+                case "afterimage.palmul":
+                    afterImageData.m_paletteMutliply = GetAttribute<Expression>(expression, null);
+                    break;
+                case "afterimage.timegap":
+                    afterImageData.m_timeGap = GetAttribute<Expression>(expression, null);
+                    break;
+                case "afterimage.framegap":
+                    afterImageData.m_frameGap = GetAttribute<Expression>(expression, null);
+                    break;
+                case "afterimage.trans":
+                    afterImageData.m_trans = GetAttribute<Blending?>(expression, Misc.ToBlending(BlendType.None));
+                    break;
+                case "afterimage.alpha":
+                    afterImageData.m_alpha = GetAttribute<Expression>(expression, null);
+                    break;
             }
         }
 
         public override void Run(Character character)
         {
-            Load();
-
             var data = new ProjectileData();
 
             if (m_hitAttr != null)
@@ -152,7 +230,6 @@ namespace UnityMugen.StateMachine.Controllers
 
             character.InstanceProjectile(data);
         }
-
 
         public override bool IsValid()
         {

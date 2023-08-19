@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityMugen.Combat;
 using UnityMugen.Evaluation;
 using UnityMugen.Evaluation.Triggers;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -12,24 +11,22 @@ namespace UnityMugen.StateMachine.Controllers
     {
         private Expression m_value;
 
-        public ScoreAdd(StateSystem statesystem, string label, TextSection textsection)
-            : base(statesystem, label, textsection) { }
+        public ScoreAdd(string label) : base(label) { }
 
-        public override void Load()
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            if (isLoaded == false)
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
             {
-                base.Load();
-
-                m_value = textSection.GetAttribute<Expression>("value", null);
+                case "value":
+                    m_value = GetAttribute<Expression>(expression, null);
+                    break;
             }
         }
 
 #warning Novo State Adicionar a documentacao posteriormente
         public override void Run(Character character)
         {
-            Load();
-
             var Value = EvaluationHelper.AsInt32(character, m_value, null);
             if (Value == null)
             {

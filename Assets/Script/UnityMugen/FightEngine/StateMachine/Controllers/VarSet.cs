@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Text.RegularExpressions;
 using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -12,104 +10,97 @@ namespace UnityMugen.StateMachine.Controllers
     public class VarSet : StateController
     {
         private static readonly Regex s_lineRegex;
-        private readonly Expression m_index;
 
-        public Expression IntNumber => m_intNumber;
-        public Expression FloatNumber => m_floatNumber;
-        public Expression SystemIntNumber => m_systemIntNumber;
-        public Expression SystemFloatNumber => m_systemFloatNumber;
-        public Expression Value => m_value;
-
-        private readonly Expression m_intNumber;
-        private readonly Expression m_floatNumber;
-        private readonly Expression m_systemIntNumber;
-        private readonly Expression m_systemFloatNumber;
-        private readonly Expression m_value;
+        protected Expression m_intNumber;
+        protected Expression m_floatNumber;
+        protected Expression m_systemIntNumber;
+        protected Expression m_systemFloatNumber;
+        protected Expression m_value;
 
         static VarSet()
         {
             s_lineRegex = new Regex(@"(.*)?var\((.+)\)", RegexOptions.IgnoreCase);
         }
 
-        public VarSet(StateSystem statesystem, string label, TextSection textsection)
-                : base(statesystem, label, textsection)
+        public VarSet(string label) : base(label) { }
+
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            base.Load();
-
-            m_intNumber = textsection.GetAttribute<Expression>("v", null);
-            m_floatNumber = textsection.GetAttribute<Expression>("fv", null);
-            m_systemIntNumber = textsection.GetAttribute<Expression>("sysvar", null);
-            m_systemFloatNumber = textsection.GetAttribute<Expression>("sysfvar", null);
-            m_value = textsection.GetAttribute<Expression>("value", null);
-
-            if (m_intNumber != null)
-                m_index = m_intNumber;
-            else if (m_floatNumber != null)
-                m_index = m_floatNumber;
-            else if (m_systemIntNumber != null)
-                m_index = m_systemIntNumber;
-            else if (m_systemFloatNumber != null)
-                m_index = m_systemFloatNumber;
-
-            foreach (var parsedline in textsection.ParsedLines)
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
             {
-                var match = s_lineRegex.Match(parsedline.Key);
-                if (match.Success == false) continue;
+                case "v":
+                    m_intNumber = GetAttribute<Expression>(expression, null);
+                    break;
+                case "fv":
+                    m_floatNumber = GetAttribute<Expression>(expression, null);
+                    break;
+                case "sysvar":
+                    m_systemIntNumber = GetAttribute<Expression>(expression, null);
+                    break;
+                case "sysfvar":
+                    m_systemFloatNumber = GetAttribute<Expression>(expression, null);
+                    break;
+                case "value":
+                    m_value = GetAttribute<Expression>(expression, null);
+                    break;
+                default:
+                    {
+                        var match = s_lineRegex.Match(idAttribute);
+                        if (match.Success == false) return;
 
-                var evalsystem = LauncherEngine.Inst.evaluationSystem;
-                var sc = StringComparer.OrdinalIgnoreCase;
-                var varType = match.Groups[1].Value;
-                var varNumber = evalsystem.CreateExpression(match.Groups[2].Value);
+                        var evalsystem = LauncherEngine.Inst.evaluationSystem;
+                        var sc = StringComparer.OrdinalIgnoreCase;
+                        var varType = match.Groups[1].Value;
+                        var varNumber = evalsystem.CreateExpression(match.Groups[2].Value);
 
-                if (sc.Equals(varType, "")) m_intNumber = varNumber;
-                if (sc.Equals(varType, "f")) m_floatNumber = varNumber;
-                if (sc.Equals(varType, "sys")) m_systemIntNumber = varNumber;
-                if (sc.Equals(varType, "sysf")) m_systemFloatNumber = varNumber;
+                        if (sc.Equals(varType, "")) m_intNumber = varNumber;
+                        if (sc.Equals(varType, "f")) m_floatNumber = varNumber;
+                        if (sc.Equals(varType, "sys")) m_systemIntNumber = varNumber;
+                        if (sc.Equals(varType, "sysf")) m_systemFloatNumber = varNumber;
 
-                m_value = evalsystem.CreateExpression(parsedline.Value);
+                        m_value = evalsystem.CreateExpression(expression);
+                        break;
+                    }
             }
-
         }
-
 
         public override void Run(Character character)
         {
-            base.Load();
-
-            if (IntNumber != null)
+            if (m_intNumber != null)
             {
-                var index = EvaluationHelper.AsInt32(character, IntNumber, null);
-                var value = EvaluationHelper.AsInt32(character, Value, null);
+                var index = EvaluationHelper.AsInt32(character, m_intNumber, null);
+                var value = EvaluationHelper.AsInt32(character, m_value, null);
 
                 if (index != null && value != null && character.Variables.SetInteger(index.Value, false, value.Value) == false)
                 {
                 }
             }
 
-            if (FloatNumber != null)
+            if (m_floatNumber != null)
             {
-                var index = EvaluationHelper.AsInt32(character, FloatNumber, null);
-                var value = EvaluationHelper.AsSingle(character, Value, null);
+                var index = EvaluationHelper.AsInt32(character, m_floatNumber, null);
+                var value = EvaluationHelper.AsSingle(character, m_value, null);
 
                 if (index != null && value != null && character.Variables.SetFloat(index.Value, false, value.Value) == false)
                 {
                 }
             }
 
-            if (SystemIntNumber != null)
+            if (m_systemIntNumber != null)
             {
-                var index = EvaluationHelper.AsInt32(character, SystemIntNumber, null);
-                var value = EvaluationHelper.AsInt32(character, Value, null);
+                var index = EvaluationHelper.AsInt32(character, m_systemIntNumber, null);
+                var value = EvaluationHelper.AsInt32(character, m_value, null);
 
                 if (index != null && value != null && character.Variables.SetInteger(index.Value, true, value.Value) == false)
                 {
                 }
             }
 
-            if (SystemFloatNumber != null)
+            if (m_systemFloatNumber != null)
             {
-                var index = EvaluationHelper.AsInt32(character, SystemFloatNumber, null);
-                var value = EvaluationHelper.AsSingle(character, Value, null);
+                var index = EvaluationHelper.AsInt32(character, m_systemFloatNumber, null);
+                var value = EvaluationHelper.AsSingle(character, m_value, null);
 
                 if (index != null && value != null && character.Variables.SetFloat(index.Value, true, value.Value) == false)
                 {
@@ -122,14 +113,14 @@ namespace UnityMugen.StateMachine.Controllers
             if (base.IsValid() == false)
                 return false;
 
-            if (Value == null)
+            if (m_value == null)
                 return false;
 
             var count = 0;
-            if (IntNumber != null) ++count;
-            if (FloatNumber != null) ++count;
-            if (SystemIntNumber != null) ++count;
-            if (SystemFloatNumber != null) ++count;
+            if (m_intNumber != null) ++count;
+            if (m_floatNumber != null) ++count;
+            if (m_systemIntNumber != null) ++count;
+            if (m_systemFloatNumber != null) ++count;
             if (count != 1)
                 return false;
 

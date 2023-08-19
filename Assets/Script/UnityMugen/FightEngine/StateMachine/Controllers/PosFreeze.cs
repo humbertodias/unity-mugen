@@ -1,6 +1,5 @@
 ﻿using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -10,23 +9,21 @@ namespace UnityMugen.StateMachine.Controllers
     {
         private Expression m_freeze;
 
-        public PosFreeze(StateSystem statesystem, string label, TextSection textsection)
-                : base(statesystem, label, textsection) { }
+        public PosFreeze(string label) : base(label) { }
 
-        public override void Load()
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            if (isLoaded == false)
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
             {
-                base.Load();
-
-                m_freeze = textSection.GetAttribute<Expression>("value", null);
+                case "value":
+                    m_freeze = GetAttribute<Expression>(expression, null);
+                    break;
             }
         }
 
         public override void Run(Character character)
         {
-            Load();
-
             var freeze = EvaluationHelper.AsBoolean(character, m_freeze, true);
 
             character.PositionFreeze = freeze;

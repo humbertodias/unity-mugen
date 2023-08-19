@@ -1,6 +1,5 @@
 ﻿using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -12,27 +11,27 @@ namespace UnityMugen.StateMachine.Controllers
         private HitAttribute m_hitAttr2;
         private Expression m_time;
 
-        public NotHitBy(StateSystem statesystem, string label, TextSection textsection)
-                : base(statesystem, label, textsection)
-        {
-            m_hitAttr1 = textsection.GetAttribute<HitAttribute>("value", null);
-            m_hitAttr2 = textsection.GetAttribute<HitAttribute>("value2", null);
-        }
+        public NotHitBy(string label) : base(label) { }
 
-        public override void Load()
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            if (isLoaded == false)
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
             {
-                base.Load();
-
-                m_time = textSection.GetAttribute<Expression>("time", null);
+                case "value":
+                    m_hitAttr1 = GetAttribute<HitAttribute>(expression, null);
+                    break;
+                case "value2":
+                    m_hitAttr2 = GetAttribute<HitAttribute>(expression, null);
+                    break;
+                case "time":
+                    m_time = GetAttribute<Expression>(expression, null);
+                    break;
             }
         }
 
         public override void Run(Character character)
         {
-            Load();
-
             var time = EvaluationHelper.AsInt32(character, m_time, 1);
 
             if (m_hitAttr1 != null)

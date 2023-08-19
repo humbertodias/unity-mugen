@@ -2,7 +2,6 @@
 using UnityMugen.Audio;
 using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -25,33 +24,45 @@ namespace UnityMugen.StateMachine.Controllers
         private Expression m_pan;
         private Expression m_absPan;
 
-        public PlaySnd(StateSystem statesystem, string label, TextSection textsection)
-                : base(statesystem, label, textsection)
-        {
-            m_soundID = textsection.GetAttribute<PrefixedExpression>("value", null);
-            m_pan = textsection.GetAttribute<Expression>("pan", null);
-            m_absPan = textsection.GetAttribute<Expression>("abspan", null);
-        }
+        public PlaySnd(string label) : base(label) { }
 
-        public override void Load()
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            if (isLoaded == false)
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
             {
-                base.Load();
-
-                m_volumeScale = textSection.GetAttribute<Expression>("volumescale", null);
-                m_volume = textSection.GetAttribute<Expression>("volume", null);
-                m_channel = textSection.GetAttribute<Expression>("channel", null);
-                m_channelPriority = textSection.GetAttribute<Expression>("lowpriority", null);
-                m_freqMul = textSection.GetAttribute<Expression>("freqmul", null);
-                m_loop = textSection.GetAttribute<Expression>("loop", null);
+                case "value":
+                    m_soundID = GetAttribute<PrefixedExpression>(expression, null);
+                    break;
+                case "pan":
+                    m_pan = GetAttribute<Expression>(expression, null);
+                    break;
+                case "abspan":
+                    m_absPan = GetAttribute<Expression>(expression, null);
+                    break;
+                case "volumescale":
+                    m_volumeScale = GetAttribute<Expression>(expression, null);
+                    break;
+                case "volume":
+                    m_volume = GetAttribute<Expression>(expression, null);
+                    break;
+                case "channel":
+                    m_channel = GetAttribute<Expression>(expression, null);
+                    break;
+                case "lowpriority":
+                    m_channelPriority = GetAttribute<Expression>(expression, null);
+                    break;
+                case "freqmul":
+                    m_freqMul = GetAttribute<Expression>(expression, null);
+                    break;
+                case "loop":
+                    m_loop = GetAttribute<Expression>(expression, null);
+                    break;
             }
         }
 
         public override void Run(Character character)
         {
-            Load();
-
             var soundid = EvaluationHelper.AsSoundId(character, m_soundID, null);
 
             if (soundid == null)
@@ -59,7 +70,6 @@ namespace UnityMugen.StateMachine.Controllers
                 Debug.Log("PlaySnd : value Required");
                 return;
             }
-
 
             var volume = EvaluationHelper.AsInt32(character, m_volume, 100);
             int? volumeScale = EvaluationHelper.AsInt32(character, m_volumeScale, null);

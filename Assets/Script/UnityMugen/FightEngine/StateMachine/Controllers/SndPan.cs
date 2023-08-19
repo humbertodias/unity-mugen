@@ -1,6 +1,5 @@
 ﻿using UnityMugen.Combat;
 using UnityMugen.Evaluation;
-using UnityMugen.IO;
 
 namespace UnityMugen.StateMachine.Controllers
 {
@@ -12,18 +11,27 @@ namespace UnityMugen.StateMachine.Controllers
         private Expression m_pan;
         private Expression m_absPan;
 
-        public SndPan(StateSystem statesystem, string label, TextSection textsection)
-                : base(statesystem, label, textsection)
+        public SndPan(string label) : base(label) { }
+
+        public override void SetAttributes(string idAttribute, string expression)
         {
-            m_channel = textSection.GetAttribute<Expression>("channel", null);
-            m_pan = textSection.GetAttribute<Expression>("pan", null);
-            m_absPan = textSection.GetAttribute<Expression>("abspan", null);
+            base.SetAttributes(idAttribute, expression);
+            switch (idAttribute)
+            {
+                case "channel":
+                    m_channel = GetAttribute<Expression>(expression, null);
+                    break;
+                case "pan":
+                    m_pan = GetAttribute<Expression>(expression, null);
+                    break;
+                case "abspan":
+                    m_absPan = GetAttribute<Expression>(expression, null);
+                    break;
+            }
         }
 
         public override void Run(Character character)
         {
-            base.Load();
-
             var channel = EvaluationHelper.AsInt32(character, m_channel, null);
             var pan = EvaluationHelper.AsInt32(character, m_pan, null);
             var abspan = EvaluationHelper.AsInt32(character, m_absPan, null);
