@@ -54,9 +54,14 @@ namespace UnityMugen.Editors
         void OnGUI()
         {
             SerializedObject serializedObject = new SerializedObject(this);
-
-            UpdateInterface();
-
+            try
+            {
+                UpdateInterface();
+            }
+            catch
+            {
+                Init();
+            }
             serializedObject.ApplyModifiedProperties();
         }
 

@@ -364,6 +364,7 @@ namespace UnityMugen.Evaluation
 
                 case Operator.BinaryAnd:
                 case Operator.BinaryOr:
+                case Operator.BinaryXor:
 
                 case Operator.LogicalAnd:
                 case Operator.LogicalOr:
@@ -446,6 +447,7 @@ namespace UnityMugen.Evaluation
                     StoreLocalVariable(state, result);
                     break;
 
+                case Operator.BinaryXor:
                 case Operator.LogicalXor:
                     state.Generator.Emit(OpCodes.Xor);
                     StoreLocalVariable(state, result);
