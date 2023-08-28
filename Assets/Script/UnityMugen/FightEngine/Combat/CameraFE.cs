@@ -3,10 +3,34 @@ using UnityEngine;
 
 namespace UnityMugen.Combat
 {
+    public class StateZoom
+    {
+        public float Scale;
+        public Vector2 Pos;
+        public int Time;
+        public float Lag;
+
+        public void Reset()
+        {
+            Scale = 1f;
+            Pos = Vector2.zero;
+            Time = 0;
+            Lag = 0f;
+        }
+
+        public void SetStateZoom(float scale, Vector2 pos, int time, float lag)
+        {
+            Scale = scale;
+            Pos = pos;
+            Time = time;
+            Lag = lag;
+        }
+    }
     public class CameraFE : MonoBehaviour
     {
         static FightEngine Engine => LauncherEngine.Inst.mugen.Engine;
 
+        public StateZoom StateZoom { get; private set; }
         public Vector3 lastPosCamFollow;
         [NonSerialized] public new Camera camera;
         public Bound CameraBounds;
@@ -16,11 +40,13 @@ namespace UnityMugen.Combat
         public Transform transDown;
         public Transform transLeft;
         public Transform transRight;
+        public Transform transCenter;
 
-        public float up;
-        public float down;
-        public float left;
-        public float right;
+        //public float up;
+        //public float down;
+        //public float left;
+        //public float right;
+        public Rect Corners;
 
         public bool isNormalSpeed = true;
         public float zoomLimiter = 0;
@@ -38,6 +64,9 @@ namespace UnityMugen.Combat
             camera.backgroundColor = Color.black;
             CameraBounds = new Bound(0f, 0f, 0f, 0f);
             Location = new Vector2(0, 0);
+
+            StateZoom = new StateZoom();
+            StateZoom.Reset();
         }
 
 
@@ -48,21 +77,46 @@ namespace UnityMugen.Combat
         float velLeft => PosL.CurrentVelocity.x;
         float velRight => PosR.CurrentVelocity.x;
 
+        public float ScaleCamera { get; private set; }
+
+        //Last Data before Start StateZoom
+        float SaveLastZoomLimiter = -2.21f;
+        public void SetStateZoom(float scale, Vector2 pos, int time, float lag)
+        {
+           // if (StateZoom.Time == 0)
+           //     SaveLastZoomLimiter = zoomLimiter;
+            
+            StateZoom.SetStateZoom(scale, pos, time, lag);
+        }
+
         public void UpdateFE()
         {
-            UpdateFEScreen();
-            UpdateCameraBound();
+            
+            float horizontal = 0, heightA = 0;
+            if (StateZoom.Time > 0)
+            {
+                zoomLimiter = SaveLastZoomLimiter / StateZoom.Scale;
+                horizontal = StateZoom.Pos.x;
+                //horizontal = Misc.Center(PosL.GetLeftEdgePosition(true), PosR.GetRightEdgePosition(true));
+                heightA = (StateZoom.Pos.y + Engine.stageScreen.Stage.FloorTension) * Engine.stageScreen.Stage.VerticalFollow;
+                
+                CameraBounds.down = Engine.stageScreen.Stage.boundLow - halfY() - (zoomLimiter / 12f);
 
-            Zoom();
+                StateZoom.Time--;
+            }
+            else
+            {
+                UpdateFEScreen();
+                UpdateCameraBound();
+                Zoom();
 
-            if (PosHighest == null)
-                GetCharacterHighest();
+                //if (PosHighest == null)
+                //    GetCharacterHighest();
+                heightA = (PosHighest.CurrentLocation.y + Engine.stageScreen.Stage.FloorTension) * Engine.stageScreen.Stage.VerticalFollow;
+                horizontal = Misc.Center(PosL.GetLeftEdgePosition(true), PosR.GetRightEdgePosition(true));
 
-            var heightA = (PosHighest.CurrentLocation.y + Engine.stageScreen.Stage.FloorTension) * Engine.stageScreen.Stage.VerticalFollow;
-            var height = Math.Min(0, heightA) - Location.y;
-
-            //var height = PosHighest.CurrentLocation.y;
-            float horizontal = Misc.Center(PosL.GetLeftEdgePosition(true), PosR.GetRightEdgePosition(true));
+            }
+            ScaleCamera = zoomLimiter / Engine.stageScreen.Stage.minZoom;
 
             horizontal = Mathf.Lerp(camera.transform.position.x, horizontal, fps * ((isNormalSpeed ? normalSpeedMoveCamera : maxSpeedMoveCamera) + velLeft + velRight));
 
@@ -78,18 +132,18 @@ namespace UnityMugen.Combat
             else if ((PosL.CameraFollowX && PosR.CameraFollowX) &&
                 (PosL.CameraFollowY == false || PosR.CameraFollowY == false))
             {
-                camera.transform.position = new Vector3(cameraLocation.x, camera.transform.position.y, camera.transform.position.z);
+                camera.transform.position = new Vector3(cameraLocation.x, camera.transform.position.y, cameraLocation.z);
                 lastPosCamFollow = camera.transform.position;
             }
 
             else if ((PosL.CameraFollowX == false || PosR.CameraFollowX == false) &&
                 (PosL.CameraFollowY && PosR.CameraFollowY))
             {
-                camera.transform.position = new Vector3(camera.transform.position.x, cameraLocation.y, camera.transform.position.z);
+                camera.transform.position = new Vector3(camera.transform.position.x, cameraLocation.y, cameraLocation.z);
                 lastPosCamFollow = camera.transform.position;
             }
             else
-                camera.transform.position = lastPosCamFollow;
+                camera.transform.position = new Vector3(lastPosCamFollow.x, lastPosCamFollow.y, cameraLocation.z);
         }
 
         void UpdateCameraBound()
@@ -169,19 +223,29 @@ namespace UnityMugen.Combat
 
         void UpdateFEScreen()
         {
+            var C = CornerCamera();
+            transLeft.localPosition = new Vector3(C.xMin, 0, -transform.position.z);
+            transUp.localPosition = new Vector3(0, C.yMax, -transform.position.z);
+            transRight.localPosition = new Vector3(C.xMax, 0, -transform.position.z);
+            transDown.localPosition = new Vector3(0, C.yMin, -transform.position.z);
+            transCenter.localPosition = new Vector3((C.xMin + C.xMax) / 2, (C.yMin + C.yMax) / 2, -transform.position.z);
+            transCenter.localPosition = new Vector3((C.xMin + C.xMax) / 2, (C.yMin + C.yMax) / 2, -transform.position.z);
 
+            Corners.yMax = transUp.position.y;
+            Corners.yMin = transDown.position.y;
+            Corners.xMin = transLeft.position.x;
+            Corners.xMax = transRight.position.x;
+        }
+
+        public Rect CornerCamera()
+        {
+            Rect rect = new Rect();
             Vector3[] frustumCorners = new Vector3[4];
-
             camera.CalculateFrustumCorners(new Rect(0, 0, 1, 1), -transform.position.z, Camera.MonoOrStereoscopicEye.Mono, frustumCorners);
-
-            var worldSpaceCorner0 = camera.transform.TransformVector(frustumCorners[0]);
-            var worldSpaceCorner1 = camera.transform.TransformVector(frustumCorners[1]);
-            var worldSpaceCorner2 = camera.transform.TransformVector(frustumCorners[2]);
-            var worldSpaceCorner3 = camera.transform.TransformVector(frustumCorners[3]);
-            transLeft.localPosition = new Vector3(worldSpaceCorner0.x, 0, -transform.position.z);
-            transUp.localPosition = new Vector3(0, worldSpaceCorner1.y, -transform.position.z);
-            transRight.localPosition = new Vector3(worldSpaceCorner2.x, 0, -transform.position.z);
-            transDown.localPosition = new Vector3(0, worldSpaceCorner3.y, -transform.position.z);
+            rect.xMin = camera.transform.TransformVector(frustumCorners[0]).x;
+            rect.yMax = camera.transform.TransformVector(frustumCorners[1]).y;
+            rect.xMax = camera.transform.TransformVector(frustumCorners[2]).x;
+            rect.yMin = camera.transform.TransformVector(frustumCorners[3]).y;
 
             //for (int i = 0; i < 4; i++)
             //{
@@ -190,12 +254,50 @@ namespace UnityMugen.Combat
             //    UnityEngine.Debug.DrawRay(new Vector3(v.x, v.y, v.z), worldSpaceCorner, Color.blue);
             //}
 
-            up = transUp.position.y;
-            down = transDown.position.y;
-            left = transLeft.position.x;
-            right = transRight.position.x;
+            return rect;
         }
 
+
+        /*
+        void UpdateFEScreen()
+        {
+            var C = CornerCamera();
+            transLeft.position = new Vector3(C.xMin, C.center.y, 0);
+            transUp.position = new Vector3(C.center.x, C.yMax, 0);
+            transRight.position = new Vector3(C.xMax, C.center.y, 0);
+            transDown.position = new Vector3(C.center.x, C.yMin, 0);
+
+            Corners.yMax = transUp.position.y;
+            Corners.yMin = transDown.position.y;
+            Corners.xMin = transLeft.position.x;
+            Corners.xMax = transRight.position.x;
+        }
+
+        public Rect CornerCamera()
+        {
+            Rect rect = new Rect();
+            Vector3[] frustumCorners = new Vector3[4];
+            camera.CalculateFrustumCorners(new Rect(0, 0, 1, 1), -transform.position.z, Camera.MonoOrStereoscopicEye.Mono, frustumCorners);
+            //rect.xMin = camera.transform.TransformVector(frustumCorners[0]).x;
+            //rect.yMax = camera.transform.TransformVector(frustumCorners[1]).y;
+            //rect.xMax = camera.transform.TransformVector(frustumCorners[2]).x;
+            //rect.yMin = camera.transform.TransformVector(frustumCorners[3]).y;
+
+            rect.xMin = camera.transform.TransformPoint(frustumCorners[0]).x;
+            rect.yMax = camera.transform.TransformPoint(frustumCorners[1]).y;
+            rect.xMax = camera.transform.TransformPoint(frustumCorners[2]).x;
+            rect.yMin = camera.transform.TransformPoint(frustumCorners[3]).y;
+
+            //for (int i = 0; i < 4; i++)
+            //{
+            //    var worldSpaceCorner = camera.transform.TransformVector(frustumCorners[i]);
+            //    Vector3 v = camera.transform.position;
+            //    UnityEngine.Debug.DrawRay(new Vector3(v.x, v.y, v.z), worldSpaceCorner, Color.blue);
+            //}
+
+            return rect;
+        }
+        */
 
         public void ResetScreenCamera(Vector3 StartPositionCamera)
         {
@@ -205,20 +307,20 @@ namespace UnityMugen.Combat
 
         public Rect ConverterBound()
         {
-            Rect rect = new Rect();
-            rect.xMax = this.right;
-            rect.xMin = this.left;
-            rect.yMax = this.up;
-            rect.yMin = this.down;
-            return rect;
+            //Rect rect = new Rect();
+            //rect.xMax = this.right;
+            //rect.xMin = this.left;
+            //rect.yMax = this.up;
+            //rect.yMin = this.down;
+            return Corners;
         }
 
         public Rect ScreenBounds()
         {
             Rect rect = new Rect();
-            rect.xMax = right;
-            rect.xMin = left;
-            rect.yMax = up;
+            rect.xMax = Corners.xMax;
+            rect.xMin = Corners.xMin;
+            rect.yMax = Corners.yMin;
             rect.yMin = Location.y;// sc.transDown.position.y;
             return rect;
         }

@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityMugen.Combat;
 using UnityMugen.StateMachine;
@@ -6,320 +8,140 @@ namespace UnityMugen.Evaluation.Triggers
 {
 
     [CustomFunction("GetHitVar")]
-    internal static class GetHitVar
+    class GetHitVar : Function
     {
-        [Tag("fall.envshake.time")]
-        public static int GetFallShakeTime(Character character, ref bool error)
+        public GetHitVar(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.DefensiveInfo.HitDef.EnvShakeFallTime;
         }
 
-        [Tag("fall.envshake.freq")]
-        public static float GetFallShakeFreq(Character character, ref bool error)
+        static GetHitVar()
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+            HitVarMap = new Dictionary<string, Converter<Combat.Character, Number>>(StringComparer.OrdinalIgnoreCase);
 
-            return character.DefensiveInfo.HitDef.EnvShakeFallFrequency;
-        }
+            HitVarMap["xveladd"] = GetXVelAdd;
+            HitVarMap["yveladd"] = GetYVelAdd;
+            HitVarMap["type"] = GetHitType;
+            HitVarMap["animtype"] = GetAnimType;
+            HitVarMap["airtype"] = GetAirHitType;
+            HitVarMap["groundtype"] = GetGroundHitType;
+            HitVarMap["damage"] = GetDamage;
+            HitVarMap["hitcount"] = GetHitCount;
+            HitVarMap["fallcount"] = GetFallCount;
+            HitVarMap["hitshaketime"] = GetHitShakeTime;
+            HitVarMap["hittime"] = GetHitTime;
+            HitVarMap["slidetime"] = GetSlideTime;
+            HitVarMap["ctrltime"] = GetGuardControlTime;
+            HitVarMap["recovertime"] = GetRecoverTime;
+            HitVarMap["xoff"] = GetSnapX;
+            HitVarMap["yoff"] = GetSnapY;
+            HitVarMap["zoff"] = GetSnapZ;
+            HitVarMap["xvel"] = x => GetHitVelocityX(x);
+            HitVarMap["yvel"] = x => GetHitVelocityY(x);
+            HitVarMap["yaccel"] = GetYAccleration;
+            HitVarMap["chainid"] = x => new Number(x.DefensiveInfo.HitDef.ChainId);
+            HitVarMap["hitid"] = x => new Number(x.DefensiveInfo.HitDef.ChainId);
+            HitVarMap["guarded"] = x => new Number(x.DefensiveInfo.Blocked);
+            HitVarMap["isbound"] = GetIsBound;
+            HitVarMap["fall"] = x => new Number(x.DefensiveInfo.IsFalling);
+            HitVarMap["fall.damage"] = x => new Number(x.DefensiveInfo.HitDef.FallDamage);
+            HitVarMap["fall.xvel"] = x => new Number((x.DefensiveInfo.HitDef.FallVelocityX ?? x.CurrentVelocity.x) * Constant.Scale2);
+            HitVarMap["fall.yvel"] = x => new Number(x.DefensiveInfo.HitDef.FallVelocityY * Constant.Scale2);
+            HitVarMap["fall.time"] = x => new Number(x.FallTime);
+            HitVarMap["fall.recover"] = x => new Number(x.DefensiveInfo.HitDef.FallCanRecover);
+            HitVarMap["fall.recovertime"] = x => new Number(x.DefensiveInfo.HitDef.FallRecoverTime);
+            HitVarMap["fall.kill"] = x => new Number(x.DefensiveInfo.HitDef.CanFallKill);
+            HitVarMap["fall.envshake.time"] = x => new Number(x.DefensiveInfo.HitDef.EnvShakeFallTime);
+            HitVarMap["fall.envshake.freq"] = x => new Number(x.DefensiveInfo.HitDef.EnvShakeFallFrequency);
+            HitVarMap["fall.envshake.ampl"] = x => new Number(x.DefensiveInfo.HitDef.EnvShakeFallAmplitude);
+            HitVarMap["fall.envshake.phase"] = x => new Number(x.DefensiveInfo.HitDef.EnvShakeFallPhase);
 
-        [Tag("fall.envshake.ampl")]
-        public static float GetFallShakeAmpl(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
 
-            return character.DefensiveInfo.HitDef.EnvShakeFallAmplitude;
-        }
-
-        [Tag("fall.envshake.phase")]
-        public static float GetFallShakePhase(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.DefensiveInfo.HitDef.EnvShakeFallPhase;
-        }
-
-
-        [Tag("guarded")]
-        public static bool GetGuarded(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
-
-            return character.DefensiveInfo.Blocked;
-        }
-
-        [Tag("chainid")]
-        public static int GetChainId(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.DefensiveInfo.HitDef.ChainId;
-        }
-
-        [Tag("hitid")]
-        public static int GetHitId(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return GetChainId(character, ref error);
-        }
-
-        [Tag("fall")]
-        public static bool GetFalling(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
-
-            return character.DefensiveInfo.IsFalling;
-        }
-
-        [Tag("fall.damage")]
-        public static int GetFallDamage(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.DefensiveInfo.HitDef.FallDamage;
-        }
-
-        [Tag("fall.recover")]
-        public static bool GetCanFallRecover(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
-
-            return character.DefensiveInfo.HitDef.FallCanRecover;
-        }
-
-        [Tag("fall.kill")]
-        public static bool GetCanFallKill(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
-
-            return character.DefensiveInfo.HitDef.CanFallKill;
-        }
-
-        [Tag("fall.recovertime")]
-        public static int GetFallRecoverTime(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.DefensiveInfo.HitDef.FallRecoverTime;
-        }
-
-        [Tag("fall.time")]
-        public static int GetFallTime(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.FallTime;
-        }
-
-        [Tag("fall.xvel")]
-        public static float GetFallVelocityX(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return (character.DefensiveInfo.HitDef.FallVelocityX ?? character.CurrentVelocity.x) * Constant.Scale2;
-        }
-
-        [Tag("fall.yvel")]
-        public static float GetFallVelocityY(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.DefensiveInfo.HitDef.FallVelocityY * Constant.Scale2;
+            HitVarMap["score"] = x => new Number(x.DefensiveInfo.HitDef.Score);
+            HitVarMap["guardpower"] = x => new Number(x.DefensiveInfo.HitDef.P1GuardPowerAdjustment);
+            HitVarMap["hitpower"] = x => new Number(x.DefensiveInfo.HitDef.P1HitPowerAdjustment);
+            HitVarMap["id"] = x => new Number(x.DefensiveInfo.HitDef.AttackerID);
+            HitVarMap["hitdamage"] = HitDamage;
+            //HitVarMap["attr"] = Attr;
         }
 
 #warning rever estes metodos abaixos pois eles so retornam 0 e error
-        [Tag("xveladd")]
-        public static int GetVelocityAddX(Character character, ref bool error)
+        static Number GetXVelAdd(Character character)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
             Debug.Log("Error | GetVelocityAddX");
 
             //character.DefensiveInfo.GetHitVelocity().x * Constant.Scale2
-            return 0;
+            return new Number(0);
         }
 
-        [Tag("yveladd")]
-        public static int GetVelocityAddY(Character character, ref bool error)
+        static Number GetYVelAdd(Character character)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
             Debug.Log("Error | GetVelocityAddY");
-            return 0;
+            return new Number(0);
         }
 
-        [Tag("fallcount")]
-        public static int GetFallCount(Character character, ref bool error)// Novo Tiago - nao tenho recerteza nada para comparar ///
+        static Number GetFallCount(Character character)// Novo Tiago - nao tenho recerteza nada para comparar ///
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+            var time = character.StateManager.StateTime;
+            if (time < 0) time = 0;
 
             if ((character.StateManager.StateNumber == StateNumber.HitBounce ||
                 character.StateManager.StateNumber == StateNumber.HitTrip)
-                    && TimeT.Evaluate(character, ref error) == 0)
+                    && time == 0)
                 ;
 
-            if (character.DefensiveInfo.IsFalling || HitFall.Evaluate(character, ref error))
+            if (character.DefensiveInfo.IsFalling || character.DefensiveInfo.IsFalling)
                 ;
 
             Debug.Log("Error | GetFallCount");
-            return 0;
+            return new Number(0);
         }
 
-        [Tag("recovertime")]
-        public static int GetRecoverTime(Character character, ref bool error) // Novo Tiago
+        static Number GetRecoverTime(Character character) // Novo Tiago
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
             // Debug.Log("Error | GetRecoverTime");
             if (character.StateManager.StateNumber == StateNumber.HitLieDown)
-                return character.BasePlayer.playerConstants.LieDownTime - TimeT.Evaluate(character, ref error);
-
-
-            return 0;
+            {
+                var time = character.StateManager.StateTime;
+                if (time < 0) time = 0;
+                return new Number(character.BasePlayer.playerConstants.LieDownTime - time);
+            }
+            return new Number(0);
         }
 
-        [Tag("hitcount")]
-        public static int GetHitCount(Character character, ref bool error)
+        static Number GetHitCount(Character character)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.DefensiveInfo.HitCount;
+            return new Number(character.DefensiveInfo.HitCount);
         }
 
-        [Tag("xvel")]
-        public static float GetHitVelocityX(Character character, ref bool error)
+        static Number GetHitVelocityX(Character character)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
             if (character.DefensiveInfo.Attacker.typeEntity != TypeEntity.Projectile &&
-                character.DefensiveInfo.Attacker.CurrentFacing == character.CurrentFacing) // Novo Em analize de acordo com IK
-                return (character.DefensiveInfo.GetHitVelocity().x * -FacingTrigger.Evaluate(character.DefensiveInfo.Attacker.BasePlayer, ref error)) * Constant.Scale2;
+                character.DefensiveInfo.Attacker.CurrentFacing == character.CurrentFacing)
+            { // Novo Em analize de acordo com IK
 
-            else
-                return (character.DefensiveInfo.GetHitVelocity().x * FacingTrigger.Evaluate(character, ref error)) * Constant.Scale2;
+                int facing = character.DefensiveInfo.Attacker.BasePlayer.CurrentFacing == UnityMugen.Facing.Left ? -1 : 1;
+                return new Number((character.DefensiveInfo.GetHitVelocity().x * -facing) * Constant.Scale2);
+            }
+            else {
+                int facing = character.CurrentFacing == UnityMugen.Facing.Left ? -1 : 1;
+                return new Number((character.DefensiveInfo.GetHitVelocity().x * facing) * Constant.Scale2);
+            } 
         }
 
-        [Tag("yvel")]
-        public static float GetHitVelocityY(Character character, ref bool error)
+        static Number GetHitVelocityY(Character character)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.DefensiveInfo.GetHitVelocity().y * Constant.Scale2;
+            return new Number(character.DefensiveInfo.GetHitVelocity().y * Constant.Scale2);
         }
 
-        [Tag("type")]
-        public static int GetHitType(Character character, ref bool error)
+        static Number GetHitType(Character character)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            if (character.Life == 0) return 3;
-
-            return character.DefensiveInfo.HitStateType == UnityMugen.StateType.Airborne ? GetAirHitType(character, ref error) : GetGroundHitType(character, ref error);
+            if (character.Life == 0) return new Number(3);
+            return character.DefensiveInfo.HitStateType == UnityMugen.StateType.Airborne ? GetAirHitType(character) : GetGroundHitType(character);
         }
 
-        [Tag("animtype")]
-        public static int GetAnimType(Character character, ref bool error)
+        static Number GetAnimType(Character character)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
             var hat = HitAnimationType.Light;
 
             if (character.DefensiveInfo.IsFalling) hat = character.DefensiveInfo.HitDef.FallAnimationType;
@@ -328,219 +150,137 @@ namespace UnityMugen.Evaluation.Triggers
 
             switch (hat)
             {
+                case HitAnimationType.None:
+                    return new Number();
+
                 case HitAnimationType.Light:
-                    return 0;
+                    return new Number(0);
 
                 case HitAnimationType.Medium:
-                    return 1;
+                    return new Number(1);
 
                 case HitAnimationType.Hard:
-                    return 2;
+                    return new Number(2);
 
                 case HitAnimationType.Back:
-                    return 3;
+                    return new Number(3);
 
                 case HitAnimationType.Up:
-                    return 4;
+                    return new Number(4);
 
                 case HitAnimationType.DiagUp:
-                    return 5;
+                    return new Number(5);
 
                 default:
-                    error = true;
-                    return 0;
+                    return new Number(0);
             }
         }
 
-        [Tag("airtype")]
-        public static int GetAirHitType(Character character, ref bool error)
+        static Number GetAirHitType(Character character)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
             switch (character.DefensiveInfo.HitDef.AirAttackEffect)
             {
                 case AttackEffect.High:
-                    return 1;
+                    return new Number(1);
 
                 case AttackEffect.Low:
-                    return 2;
+                    return new Number(2);
 
                 case AttackEffect.Trip:
-                    return 3;
+                    return new Number(3);
 
+                case AttackEffect.None:
                 default:
-                    return 4;
+                    return new Number(0);
             }
         }
 
-        [Tag("groundtype")]
-        public static int GetGroundHitType(Character character, ref bool error)
+        static Number GetGroundHitType(Character character)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
             switch (character.DefensiveInfo.HitDef.GroundAttackEffect)
             {
                 case AttackEffect.High:
-                    return 1;
+                    return new Number(1);
 
                 case AttackEffect.Low:
-                    return 2;
+                    return new Number(2);
 
                 case AttackEffect.Trip:
-                    return 3;
+                    return new Number(3);
 
+                case AttackEffect.None:
                 default:
-                    return 0;
+                    return new Number(0);
             }
         }
 
-        [Tag("damage")]
-        public static float GetDamage(Character character, ref bool error)
+        static Number GetDamage(Character character)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.DefensiveInfo.Blocked ? character.DefensiveInfo.HitDef.GuardDamage : character.DefensiveInfo.HitDef.HitDamage;
+            return character.DefensiveInfo.Blocked ? new Number(character.DefensiveInfo.HitDef.GuardDamage) : new Number(character.DefensiveInfo.HitDef.HitDamage);
         }
 
-        [Tag("hitshaketime")]
-        public static float GetHitShakeTime(Character character, ref bool error)
+        static Number GetHitShakeTime(Character p)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.DefensiveInfo.HitShakeTime;
+            return new Number(p.DefensiveInfo.HitShakeTime);
         }
 
-        [Tag("hittime")]
-        public static int GetHitTime(Character character, ref bool error)
+        static Number GetHitTime(Combat.Character p)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.DefensiveInfo.HitTime;
+            return new Number(p.DefensiveInfo.HitTime);
         }
 
-        [Tag("slidetime")]
-        public static int GetSlideTime(Character character, ref bool error)
+        static Number GetSlideTime(Combat.Character p)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.DefensiveInfo.Blocked ? character.DefensiveInfo.HitDef.GuardSlideTime : character.DefensiveInfo.HitDef.GroundSlideTime;
+            return (p.DefensiveInfo.Blocked == true) ? new Number(p.DefensiveInfo.HitDef.GuardSlideTime) : new Number(p.DefensiveInfo.HitDef.GroundSlideTime);
         }
 
-        [Tag("ctrltime")]
-        public static int GetGuardControlTime(Character character, ref bool error)
+        static Number GetGuardControlTime(Character character)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
             switch (character.DefensiveInfo.HitStateType)
             {
                 case UnityMugen.StateType.Airborne:
-                    return character.DefensiveInfo.HitDef.AirGuardControlTime;
+                    return new Number(character.DefensiveInfo.HitDef.AirGuardControlTime);
 
                 default:
-                    return character.DefensiveInfo.HitDef.GuardControlTime;
+                    return new Number(character.DefensiveInfo.HitDef.GuardControlTime);
             }
         }
 
-        [Tag("xoff")]
-        public static float GetSnapX(Character character, ref bool error)
+        static Number GetSnapX(Character character)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
             var location = character.DefensiveInfo.HitDef.SnapLocation;
             if (location.HasValue == false)
-            {
-                error = true;
-                return 0;
-            }
+                return new Number();
 
-            return location.Value.x * Constant.Scale2;
+            return new Number(location.Value.x * Constant.Scale2);
         }
 
-        [Tag("yoff")]
-        public static float GetSnapY(Character character, ref bool error)
+        static Number GetSnapY(Character character)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
             var location = character.DefensiveInfo.HitDef.SnapLocation;
             if (location.HasValue == false)
-            {
-                error = true;
-                return 0;
-            }
+                return new Number();
 
-            return location.Value.y * Constant.Scale2;
+            return new Number(location.Value.y * Constant.Scale2);
         }
 
-        [Tag("zoff")]
-        public static int GetSnapZ(Character character, ref bool error)
+        static Number GetSnapZ(Character character)
         {
-            error = true;
-            Debug.Log("Error | GetSnapZ");
-            return 0;
+            return new Number();
         }
 
-        [Tag("yaccel")]
-        public static float GetYAccleration(Character character, ref bool error)
+        static Number GetYAccleration(Character character)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
             if (character.DefensiveInfo.HitDef.YAcceleration != 0)
-                return character.DefensiveInfo.HitDef.YAcceleration * Constant.Scale2;
+                return new Number(character.DefensiveInfo.HitDef.YAcceleration * Constant.Scale2);
             else
-                return Constant.YaccelDefault;
+                return new Number(Constant.YaccelDefault);
         }
 
-        [Tag("isbound")]
-        public static bool GetIsBound(Character character, ref bool error)
+        static Number GetIsBound(Character character)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
-
             var bind = character.Bind;
-            return bind.IsActive && bind.IsTargetBind;
+            return new Number(bind.IsActive && bind.IsTargetBind);
 
             //Teste
             //return bind.IsActive && character.Id == character.Enemy().Bind.BindTo.Id;
@@ -552,14 +292,11 @@ namespace UnityMugen.Evaluation.Triggers
 
         // Abaixo Novos Atibutos
 #warning testar e adicionar a documentacao
-        [Tag("attr")]
-        public static HitAttribute Attr(Character character, ref bool error)
+        //[Tag("attr")]
+        public static HitAttribute Attr(Character character)
         {
-            if (character == null)
-            {
-                error = true;
-                return null;
-            }
+            //if (character == null)
+            //    return new Number();
 
             if (character.DefensiveInfo.HitDef.HitAttribute.AttackData.Count > 0)
                 return character.DefensiveInfo.HitDef.HitAttribute;
@@ -567,67 +304,28 @@ namespace UnityMugen.Evaluation.Triggers
                 return character.OffensiveInfo.HitDef.HitAttribute;
         }
 
-        [Tag("hitdamage")]
-        public static float HitDamage(Character character, ref bool error)
+        static Number HitDamage(Character character)
         {
             if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+                return new Number();
 
             if (character.DefensiveInfo.HitDef.HitDamage != 0)
-                return character.DefensiveInfo.HitDef.HitDamage;
+                return new Number(character.DefensiveInfo.HitDef.HitDamage);
             else
-                return character.OffensiveInfo.HitDef.HitDamage;
+                return new Number(character.OffensiveInfo.HitDef.HitDamage);
         }
 
-        [Tag("score")]
-        public static int GetHitVarScore(Character character, ref bool error)
+
+
+        public override Number Evaluate(Character state)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+            if (state == null) return new Number();
 
-            return character.DefensiveInfo.HitDef.Score;
+            string consttype = (string)Arguments[0];
+
+            if (HitVarMap.ContainsKey(consttype) == true) return HitVarMap[consttype](state);
+            return new Number();
         }
-
-        [Tag("id")]
-        public static float GetHitVarID(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-            return character.DefensiveInfo.HitDef.AttackerID;
-        }
-
-        [Tag("hitpower")]
-        public static float Hitpower(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-            return character.DefensiveInfo.HitDef.P1HitPowerAdjustment;
-        }
-
-        [Tag("guardpower")]
-        public static float Guardpower(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-            return character.DefensiveInfo.HitDef.P1GuardPowerAdjustment;
-        }
-
-
 
         public static Node Parse(ParseState parsestate)
         {
@@ -645,5 +343,8 @@ namespace UnityMugen.Evaluation.Triggers
 
             return parsestate.BaseNode;
         }
+
+        static Dictionary<string, Converter<Combat.Character, Number>> HitVarMap { get; set; }
     }
+
 }

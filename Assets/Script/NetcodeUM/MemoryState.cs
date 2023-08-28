@@ -424,10 +424,11 @@ public struct CameraMemory
         CameraBounds = cameraFE.CameraBounds;
         Location = cameraFE.Location;
 
-        up = cameraFE.up;
-        down = cameraFE.down;
-        left = cameraFE.left;
-        right = cameraFE.right;
+        //up = cameraFE.up;
+        //down = cameraFE.down;
+        //left = cameraFE.left;
+        //right = cameraFE.right;
+        Corner = cameraFE.Corners;
 
         isNormalSpeed = cameraFE.isNormalSpeed;
         zoomLimiter = cameraFE.zoomLimiter;
@@ -445,10 +446,11 @@ public struct CameraMemory
         cameraFE.CameraBounds = CameraBounds;
         cameraFE.Location = Location;
 
-        cameraFE.up = up;
-        cameraFE.down = down;
-        cameraFE.left = left;
-        cameraFE.right = right;
+        //cameraFE.up = up;
+        //cameraFE.down = down;
+        //cameraFE.left = left;
+        //cameraFE.right = right;
+        cameraFE.Corners = Corner;
 
         cameraFE.isNormalSpeed = isNormalSpeed;
         cameraFE.zoomLimiter = zoomLimiter;
@@ -463,10 +465,11 @@ public struct CameraMemory
     public Transform transDown { get; }
     public Transform transLeft { get; }
     public Transform transRight { get; }
-    public float up { get; }
-    public float down { get; }
-    public float left { get; }
-    public float right { get; }
+    //public float up { get; }
+    //public float down { get; }
+    //public float left { get; }
+    //public float right { get; }
+    public Rect Corner { get; }
 
     public bool isNormalSpeed { get; }
     public float zoomLimiter { get; }

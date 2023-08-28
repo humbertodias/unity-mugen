@@ -53,6 +53,7 @@ namespace UnityMugen.StateMachine.Controllers
 
         public override void Complete()
         {
+            base.Complete();
             m_afterImage = new AfterImage(afterImageData);
         }
 

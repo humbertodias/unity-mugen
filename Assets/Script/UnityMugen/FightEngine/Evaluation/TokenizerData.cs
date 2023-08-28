@@ -214,7 +214,7 @@ namespace UnityMugen.Evaluation
 
     public class BinaryOperatorData : OperatorData
     {
-        public BinaryOperatorData(Operator @operator, string text, string functionname, int precedence)
+        public BinaryOperatorData(Operator @operator, string text, int precedence, string functionname)
             : base(@operator, text, functionname)
         {
             if (precedence < 0) throw new ArgumentOutOfRangeException(nameof(precedence));
@@ -234,32 +234,33 @@ namespace UnityMugen.Evaluation
 
     public class CustomFunctionData : NodeData
     {
-        public CustomFunctionData(string text, string name, Type type)
-            : base(text, name)
+        public CustomFunctionData(string text, string functionname)
+            : base(text, functionname)
         {
-            m_type = type;
-            m_parse = (NodeParse)Delegate.CreateDelegate(typeof(NodeParse), type.GetMethod("Parse", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public));
+            var methodinfo = Type.GetType(functionname).GetMethod("Parse");
+
+            m_function = (NodeParse)Delegate.CreateDelegate(typeof(NodeParse), methodinfo);
         }
 
-        public Type Type => m_type;
+        public Node Parse(ParseState state)
+        {
+            if (state == null) throw new ArgumentNullException("state");
 
-        public NodeParse Parse => m_parse;
+            return m_function(state);
+        }
 
         #region Fields
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly Type m_type;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly NodeParse m_parse;
+        readonly NodeParse m_function;
 
         #endregion
     }
 
     public class StateRedirectionData : CustomFunctionData
     {
-        public StateRedirectionData(string text, string name, Type type)
-            : base(text, name, type)
+        public StateRedirectionData(string text, string name)
+            : base(text, name)
         {
         }
     }

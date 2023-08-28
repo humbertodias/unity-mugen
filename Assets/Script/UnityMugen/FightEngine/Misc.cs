@@ -400,5 +400,49 @@ namespace UnityMugen
                 return Misc.Clamp(0, 10000, 5000 + (count - 15) * 1000);
         }
 
+        public static Vector2 P2Dist(Character character)
+        {
+            var opponent = character.GetOpponent();
+            if (opponent == null)
+            {
+                return Vector2.zero;
+            }
+            Vector2 vector2;
+            var distance = Math.Abs(character.CurrentLocation.x - opponent.CurrentLocation.x);
+            if (character.CurrentFacing == UnityMugen.Facing.Right)
+            {
+                vector2.x = (opponent.CurrentLocation.x >= character.CurrentLocation.x ? distance : -distance) * Constant.Scale2;
+            }
+            else
+            {
+                vector2.x = (opponent.CurrentLocation.x >= character.CurrentLocation.x ? -distance : distance) * Constant.Scale2;
+            }
+
+            vector2.y = (opponent.CurrentLocation.y - character.CurrentLocation.y) * Constant.Scale2;
+
+            return vector2;
+        }
+
+        //Triggers//
+        public static Vector2 ScreenPos(Entity entity)
+        {
+            var drawlocation = Camera.main.WorldToScreenPoint(entity.CurrentLocationYTransform());
+            float x = drawlocation.x / (Screen.width / Constant.LocalCoord.x);
+            float y = (Screen.height - drawlocation.y) / (Screen.height / Constant.LocalCoord.y);
+            return new Vector2(x, y);
+        }
+
+        public static Vector2 Pos(Entity entity)
+        {
+            var drawlocationCenterCam = Camera.main.WorldToScreenPoint(entity.Engine.CameraFE.transCenter.position);
+            float xCam = drawlocationCenterCam.x / (Screen.width / Constant.LocalCoord.x);
+
+            var drawlocationEntity = Camera.main.WorldToScreenPoint(entity.CurrentLocationYTransform());
+            float xEntity = drawlocationEntity.x / (Screen.width / Constant.LocalCoord.x);
+
+            return new Vector2(xEntity - xCam, entity.CurrentLocation.y * Constant.Scale2);
+        }
+        ////////////
     }
+
 }

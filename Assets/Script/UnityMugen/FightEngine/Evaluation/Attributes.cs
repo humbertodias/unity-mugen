@@ -4,67 +4,67 @@ using System.Diagnostics;
 namespace UnityMugen.Evaluation
 {
 
-    public class TagAttribute : Attribute
+    class TokenMappingAttribute : Attribute
     {
-        public TagAttribute(string text)
+        public TokenMappingAttribute(string text)
         {
+            if (text == null) throw new ArgumentNullException("text");
+
             m_text = text;
         }
 
-        public override string ToString()
+        public string Text
         {
-            return m_text;
+            get { return m_text; }
         }
-
-        public string Value => m_text;
 
         #region Fields
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly string m_text;
+        readonly string m_text;
 
         #endregion
     }
 
-    public class TokenMappingAttribute : TagAttribute
+    class FunctionMappingAttribute : TokenMappingAttribute
     {
-        public TokenMappingAttribute(string text)
+        protected FunctionMappingAttribute(string text, Type type)
             : base(text)
         {
-        }
-    }
+            if (type == null) throw new ArgumentNullException("type");
 
-    public abstract class FunctionMappingAttribute : TokenMappingAttribute
-    {
-        protected FunctionMappingAttribute(string text, string name)
-            : base(text)
+            m_type = type;
+        }
+
+        public Type Type
         {
-            m_name = name;
+            get { return m_type; }
         }
-
-        public string Name => m_name;
 
         #region Fields
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly string m_name;
+        readonly Type m_type;
 
         #endregion
     }
 
-    public class UnaryOperatorMappingAttribute : FunctionMappingAttribute
+    class UnaryOperatorMappingAttribute : FunctionMappingAttribute
     {
-        public UnaryOperatorMappingAttribute(string text, string name)
-            : base(text, name)
+        public UnaryOperatorMappingAttribute(string text, Type type)
+            : base(text, type)
         {
         }
+
     }
 
-    public class BinaryOperatorMappingAttribute : FunctionMappingAttribute
+    class BinaryOperatorMappingAttribute : FunctionMappingAttribute
     {
-        public BinaryOperatorMappingAttribute(string text, string name, int precedence)
-            : base(text, name)
+        public BinaryOperatorMappingAttribute(string text, Type type, int precedence)
+            : base(text, type)
         {
+            if (precedence < 0) throw new ArgumentOutOfRangeException("precedence");
+
             m_precedence = precedence;
         }
 
@@ -78,19 +78,47 @@ namespace UnityMugen.Evaluation
         #endregion
     }
 
-    public class CustomFunctionAttribute : FunctionMappingAttribute
+    class CustomFunctionAttribute : Attribute
     {
         public CustomFunctionAttribute(string text)
-            : base(text, text)
         {
+            if (text == null) throw new ArgumentNullException("text");
+
+            m_text = text;
         }
+
+        public String Text
+        {
+            get { return m_text; }
+        }
+
+        #region Fields
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        readonly string m_text;
+
+        #endregion
     }
 
-    public class StateRedirectionAttribute : FunctionMappingAttribute
+    class StateRedirectionAttribute : Attribute
     {
         public StateRedirectionAttribute(string text)
-            : base(text, text)
         {
+            if (text == null) throw new ArgumentNullException("text");
+
+            m_text = text;
         }
+
+        public string Text
+        {
+            get { return m_text; }
+        }
+
+        #region Fields
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        readonly string m_text;
+
+        #endregion
     }
 }

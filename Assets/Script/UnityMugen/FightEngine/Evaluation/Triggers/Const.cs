@@ -1,872 +1,274 @@
+using System;
+using System.Collections.Generic;
 using UnityMugen.Combat;
 
 namespace UnityMugen.Evaluation.Triggers
 {
 
     [CustomFunction("Const")]
-    internal static class Const
+    internal class Const : Function
     {
-        [Tag("data.life")]
-        public static float Data_Life(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.MaximumLife;
-        }
-        [Tag("data.power")]
-        public static float Data_Power(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.MaximumPower;
-        }
-        [Tag("data.attack")]
-        public static float Data_Attack(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.AttackPower;
-        }
-        [Tag("data.defence")]
-        public static int Data_Defence(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.DefensivePower;
-        }
-        [Tag("data.fall.defence_mul")]
-        public static float Data_Fall_Defence_Mul(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.FallDefenceMul;
-        }
+        //playerConstants == Constants
 
-        [Tag("data.fall.defence_up")]
-        public static float Data_Fall_Defence_Up(Character character, ref bool error)
+        static Const()
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.FallDefenseUp;
-        }
+            s_playermap = new Dictionary<string, Converter<Combat.Player, Number>>(StringComparer.OrdinalIgnoreCase);
+            s_helpermap = new Dictionary<string, Converter<Combat.Helper, Number>>(StringComparer.OrdinalIgnoreCase);
 
-        [Tag("data.liedown.time")]
-        public static int Data_Liedown_Time(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.LieDownTime;
-        }
-        [Tag("data.airjuggle")]
-        public static int Data_Airjuggle(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.AirJuggle;
-        }
 
-        [Tag("data.sparkno")]
-        public static int Data_Sparkno(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.DefaultSparkNumber;
-        }
-        [Tag("data.guard.sparkno")]
-        public static int Data_Guard_Sparkno(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.DefaultGuardSparkNumber;
-        }
-        [Tag("data.KO.echo")]
-        public static bool Data_Ko_Echo(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
-
-            return character.BasePlayer.playerConstants.KOEcho;
-        }
-        [Tag("data.IntPersistIndex")]
-        public static int Data_IntPersistIndex(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.PersistanceIntIndex;
-        }
-        [Tag("data.FloatPersistIndex")]
-        public static int Data_FloatPersistIndex(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.PersistanceFloatIndex;
-        }
+            s_playermap["data.life"] = x => new Number(x.playerConstants.MaximumLife);
+            s_helpermap["data.life"] = x => new Number(x.BasePlayer.playerConstants.MaximumLife);
 
-        [Tag("size.draw.offset.x")]
-        public static float Size_Draw_Offset_X(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.Drawoffset.x;
-        }
-        [Tag("size.draw.offset.y")]
-        public static float Size_Draw_Offset_Y(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.Drawoffset.y;
-        }
+            s_playermap["data.power"] = x => new Number(x.playerConstants.MaximumPower);
+            s_helpermap["data.power"] = x => new Number(x.BasePlayer.playerConstants.MaximumPower);
 
-        [Tag("size.xscale")]
-        public static float Size_Xscale(Character character, ref bool error)
-        {
-            var player = character as Player;
-            if (player != null) return player.playerConstants.Scale.x;
+            s_playermap["data.attack"] = x => new Number(x.playerConstants.AttackPower);
+            s_helpermap["data.attack"] = x => new Number(x.BasePlayer.playerConstants.AttackPower);
 
-            var helper = character as Helper;
-            if (helper != null) return helper.Data.Scale.x;
+            s_playermap["data.defence"] = x => new Number(x.playerConstants.DefensivePower);
+            s_helpermap["data.defence"] = x => new Number(x.BasePlayer.playerConstants.DefensivePower);
 
-            error = true;
-            return 0;
-        }
-        [Tag("size.yscale")]
-        public static float Size_Yscale(Character character, ref bool error)
-        {
-            var player = character as Player;
-            if (player != null) return player.playerConstants.Scale.y;
+            s_playermap["data.fall.defence_mul"] = x => new Number(100.0f / (100.0f + x.playerConstants.FallDefenceMul));
+            s_helpermap["data.fall.defence_mul"] = x => new Number(100.0f / (100.0f + x.BasePlayer.playerConstants.FallDefenceMul));
 
-            var helper = character as Helper;
-            if (helper != null) return helper.Data.Scale.y;
+            s_playermap["data.fall.defence_up"] = x => new Number(x.playerConstants.FallDefenceMul);
+            s_helpermap["data.fall.defence_up"] = x => new Number(x.BasePlayer.playerConstants.FallDefenseUp);
 
-            error = true;
-            return 0;
-        }
-        [Tag("size.ground.back")]
-        public static float Size_Ground_Back(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.GroundBack;
-        }
-        [Tag("size.ground.front")]
-        public static float Size_Ground_Front(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.GroundFront;
-        }
-        [Tag("Size.Air.Back")]
-        public static float Size_Air_Back(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.Airback;
-        }
-        [Tag("Size.Air.Front")]
-        public static float Size_Air_Front(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.Airfront;
-        }
-        [Tag("Size.Height")]
-        public static float Size_Height(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.Height;
-        }
-        [Tag("Size.Attack.Dist")]
-        public static float Size_Attack_Dist(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.Attackdistance;
-        }
-        [Tag("Size.Proj.Attack.Dist")]
-        public static float Size_Proj_Attack_Dist(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.Projectileattackdist;
-        }
-        [Tag("Size.Proj.Doscale")]
-        public static bool Size_Proj_Doscale(Character character, ref bool error)
-        {
-            var player = character as Player;
-            if (player != null) return player.playerConstants.ProjectileScaling;
+            s_playermap["data.liedown.time"] = x => new Number(x.playerConstants.LieDownTime);
+            s_helpermap["data.liedown.time"] = x => new Number(x.BasePlayer.playerConstants.LieDownTime);
 
-            var helper = character as Helper;
-            if (helper != null) return helper.Data.ProjectileScaling;
+            s_playermap["data.airjuggle"] = x => new Number(x.playerConstants.AirJuggle);
+            s_helpermap["data.airjuggle"] = x => new Number(x.BasePlayer.playerConstants.AirJuggle);
 
-            error = true;
-            return false;
-        }
-        [Tag("Size.Head.Pos.X")]
-        public static float Size_Head_Pos_X(Character character, ref bool error)
-        {
-            var player = character as Player;
-            if (player != null) return player.playerConstants.Headposition.x;
+            s_playermap["data.sparkno"] = x => new Number(x.playerConstants.DefaultSparkNumber);
+            s_helpermap["data.sparkno"] = x => new Number(x.BasePlayer.playerConstants.DefaultSparkNumber);
 
-            var helper = character as Helper;
-            if (helper != null) return helper.Data.HeadPosition.x;
+            s_playermap["data.guard.sparkno"] = x => new Number(x.playerConstants.DefaultGuardSparkNumber);
+            s_helpermap["data.guard.sparkno"] = x => new Number(x.BasePlayer.playerConstants.DefaultGuardSparkNumber);
 
-            error = true;
-            return 0;
-        }
-        [Tag("Size.Head.Pos.Y")]
-        public static float Size_Head_Pos_Y(Character character, ref bool error)
-        {
-            var player = character as Player;
-            if (player != null) return player.playerConstants.Headposition.y;
+            s_playermap["data.KO.echo"] = x => new Number(x.playerConstants.KOEcho);
+            s_helpermap["data.KO.echo"] = x => new Number(x.BasePlayer.playerConstants.KOEcho);
 
-            var helper = character as Helper;
-            if (helper != null) return helper.Data.HeadPosition.y * Constant.Scale2;
+            s_playermap["data.IntPersistIndex"] = x => new Number(x.playerConstants.PersistanceIntIndex);
+            s_helpermap["data.IntPersistIndex"] = x => new Number(x.BasePlayer.playerConstants.PersistanceIntIndex);
 
-            error = true;
-            return 0;
-        }
-        [Tag("size.mid.pos.x")]
-        public static float Size_Mid_Pos_X(Character character, ref bool error)
-        {
-            var player = character as Player;
-            if (player != null) return player.playerConstants.Midposition.x;
+            s_playermap["data.FloatPersistIndex"] = x => new Number(x.playerConstants.PersistanceFloatIndex);
+            s_helpermap["data.FloatPersistIndex"] = x => new Number(x.BasePlayer.playerConstants.PersistanceFloatIndex);
 
-            var helper = character as Helper;
-            if (helper != null) return helper.Data.MidPosition.x * Constant.Scale2;
+            s_playermap["size.draw.offset.x"] = x => new Number(x.playerConstants.Drawoffset.x);
+            s_helpermap["size.draw.offset.x"] = x => new Number(x.BasePlayer.playerConstants.Drawoffset.x);
 
-            error = true;
-            return 0;
-        }
-        [Tag("size.mid.pos.y")]
-        public static float Size_Mid_Pos_Y(Character character, ref bool error)
-        {
-            var player = character as Player;
-            if (player != null) return player.playerConstants.Midposition.y;
+            s_playermap["size.draw.offset.y"] = x => new Number(x.playerConstants.Drawoffset.y);
+            s_helpermap["size.draw.offset.y"] = x => new Number(x.BasePlayer.playerConstants.Drawoffset.y);
 
-            var helper = character as Helper;
-            if (helper != null) return helper.Data.MidPosition.y * Constant.Scale2;
+            s_playermap["size.xscale"] = x => new Number(x.playerConstants.Scale.x);
+            s_helpermap["size.xscale"] = x => new Number(x.Data.Scale.x);
 
-            error = true;
-            return 0;
-        }
-        [Tag("Size.Shadowoffset")]
-        public static float Size_Shadowoffset(Character character, ref bool error)
-        {
-            var player = character as Player;
-            if (player != null) return player.playerConstants.Shadowoffset;
+            s_playermap["size.yscale"] = x => new Number(x.playerConstants.Scale.y);
+            s_helpermap["size.yscale"] = x => new Number(x.Data.Scale.y);
 
-            var helper = character as Helper;
-            if (helper != null) return helper.Data.ShadowOffset * Constant.Scale2;
+            s_playermap["size.ground.back"] = x => new Number(x.playerConstants.GroundBack);
+            s_helpermap["size.ground.back"] = x => new Number(x.BasePlayer.playerConstants.GroundBack);
 
-            error = true;
-            return 0;
-        }
+            s_playermap["size.ground.front"] = x => new Number(x.playerConstants.GroundFront);
+            s_helpermap["size.ground.front"] = x => new Number(x.BasePlayer.playerConstants.GroundFront);
 
+            s_playermap["size.air.back"] = x => new Number(x.playerConstants.Airback);
+            s_helpermap["size.air.back"] = x => new Number(x.BasePlayer.playerConstants.Airback);
 
+            s_playermap["size.air.front"] = x => new Number(x.playerConstants.Airfront);
+            s_helpermap["size.air.front"] = x => new Number(x.BasePlayer.playerConstants.Airfront);
 
+            s_playermap["size.height"] = x => new Number(x.playerConstants.Height);
+            s_helpermap["size.height"] = x => new Number(x.BasePlayer.playerConstants.Height);
 
+            s_playermap["size.attack.dist"] = x => new Number(x.playerConstants.Attackdistance);
+            s_helpermap["size.attack.dist"] = x => new Number(x.BasePlayer.playerConstants.Attackdistance);
 
+            s_playermap["size.proj.attack.dist"] = x => new Number(x.playerConstants.Projectileattackdist);
+            s_helpermap["size.proj.attack.dist"] = x => new Number(x.BasePlayer.playerConstants.Projectileattackdist);
 
+            s_playermap["size.proj.doscale"] = x => new Number(x.playerConstants.ProjectileScaling);
+            s_helpermap["size.proj.doscale"] = x => new Number(x.Data.ProjectileScaling);
 
-        [Tag("Velocity.Walk.Fwd.X")]
-        public static float Velocity_Walk_Fwd_X(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.Walk_forward;
-        }
-        [Tag("Velocity.Walk.Back.X")]
-        public static float Velocity_Walk_Back_X(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.Walk_back;
-        }
-        [Tag("Velocity.Run.Fwd.X")]
-        public static float Velocity_Run_Fwd_X(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.Run_fwd.x;
-        }
-        [Tag("Velocity.Run.Fwd.Y")]
-        public static float Velocity_Run_Fwd_Y(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.Run_fwd.y;
-        }
-        [Tag("Velocity.Run.Back.X")]
-        public static float Velocity_Run_Back_X(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.Run_back.x;
-        }
-        [Tag("Velocity.Run.Back.Y")]
-        public static float Velocity_Run_Back_Y(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.Run_back.y;
-        }
-        [Tag("Velocity.Jump.Y")]
-        public static float Velocity_Jump_Y(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.Jump_neutral.y;
-        }
-        [Tag("Velocity.Jump.Neu.X")]
-        public static float Velocity_Jump_Neu_X(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.Jump_neutral.x;
-        }
-        [Tag("Velocity.Jump.Neu.Y")]
-        public static float Velocity_Jump_Neu_Y(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.Jump_neutral.y;
-        }
-        [Tag("Velocity.Runjump.Y")]
-        public static float Velocity_Runjump_Y(Character character, ref bool error)
-        {
-            return Velocity_Jump_Neu_Y(character, ref error);
-        }
-        [Tag("Velocity.Jump.Back.X")]
-        public static float Velocity_Jump_Back_X(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.Jump_back.x;
-        }
-        [Tag("Velocity.Jump.Fwd.X")]
-        public static float Velocity_Jump_Fwd_X(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.Jump_forward.x;
-        }
-        [Tag("Velocity.Runjump.Back.X")]
-        public static float Velocity_Runjump_Back_X(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.Runjump_back.x;
-        }
-        [Tag("Velocity.Runjump.Fwd.X")]
-        public static float Velocity_Runjump_Fwd_X(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.Runjump_fwd.x;
-        }
-        [Tag("Velocity.Airjump.Y")]
-        public static float Velocity_Airjump_Y(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.Airjump_neutral.y;
-        }
-        [Tag("Velocity.Airjump.Neu.X")]
-        public static float Velocity_Airjump_Neu_X(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.Airjump_neutral.x;
-        }
-        [Tag("Velocity.Airjump.Back.X")]
-        public static float Velocity_Airjump_Back_X(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.Airjump_back.x;
-        }
-        [Tag("Velocity.Airjump.Fwd.X")]
-        public static float Velocity_Airjump_Fwd_X(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.Airjump_forward.x;
-        }
-        [Tag("Velocity.air.gethit.groundrecover.x")]
-        public static float Velocity_air_gethit_groundrecover_x(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-            return character.BasePlayer.playerConstants.AirGethitGroundrecover.x;
-        }
-        [Tag("Velocity.air.gethit.groundrecover.y")]
-        public static float Velocity_air_gethit_groundrecover_y(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-            return character.BasePlayer.playerConstants.AirGethitGroundrecover.y;
-        }
-        [Tag("Velocity.air.gethit.airrecover.mul.x")]
-        public static float Velocity_air_gethit_airrecover_mul_x(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-            return character.BasePlayer.playerConstants.AirGethitAirrecoverMul.x;
-        }
-        [Tag("Velocity.air.gethit.airrecover.mul.y")]
-        public static float Velocity_air_gethit_airrecover_mul_y(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-            return character.BasePlayer.playerConstants.AirGethitAirrecoverMul.y;
-        }
-        [Tag("Velocity.air.gethit.airrecover.add.x")]
-        public static float Velocity_air_gethit_airrecover_add_X(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-            return character.BasePlayer.playerConstants.AirGethitAirrecoverAdd.x;
-        }
-        [Tag("Velocity.air.gethit.airrecover.add.y")]
-        public static float Velocity_air_gethit_airrecover_add_Y(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-            return character.BasePlayer.playerConstants.AirGethitAirrecoverAdd.y;
-        }
-        [Tag("Velocity.air.gethit.airrecover.back")]
-        public static float Velocity_air_gethit_airrecover_back(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-            return character.BasePlayer.playerConstants.AirGethitAirrecoverBack;
-        }
-        [Tag("Velocity.air.gethit.airrecover.fwd")]
-        public static float Velocity_air_gethit_airrecover_fwd(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-            return character.BasePlayer.playerConstants.AirGethitAirrecoverFwd;
-        }
-        [Tag("Velocity.air.gethit.airrecover.up")]
-        public static float Velocity_air_gethit_airrecover_up(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-            return character.BasePlayer.playerConstants.AirGethitAirrecoverUp;
-        }
-        [Tag("Velocity.air.gethit.airrecover.down")]
-        public static float Velocity_air_gethit_airrecover_down(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-            return character.BasePlayer.playerConstants.AirGethitAirrecoverDown;
-        }
+            s_playermap["size.head.pos.x"] = x => new Number((Int32)x.playerConstants.Headposition.x);
+            s_helpermap["size.head.pos.x"] = x => new Number((Int32)x.Data.HeadPosition.x);
 
+            s_playermap["size.head.pos.y"] = x => new Number((Int32)x.playerConstants.Headposition.y);
+            s_helpermap["size.head.pos.y"] = x => new Number((Int32)x.Data.HeadPosition.y);
 
+            s_playermap["size.mid.pos.x"] = x => new Number((Int32)x.playerConstants.Midposition.x);
+            s_helpermap["size.mid.pos.x"] = x => new Number((Int32)x.Data.MidPosition.x);
 
+            s_playermap["size.mid.pos.y"] = x => new Number((Int32)x.playerConstants.Midposition.y);
+            s_helpermap["size.mid.pos.y"] = x => new Number((Int32)x.Data.MidPosition.y);
 
+            s_playermap["size.shadowoffset"] = x => new Number(x.playerConstants.Shadowoffset);
+            s_helpermap["size.shadowoffset"] = x => new Number(x.Data.ShadowOffset);
 
-        [Tag("Movement.Airjump.Num")]
-        public static int Movement_Airjump_Num(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.Airjumps;
-        }
-        [Tag("Movement.Airjump.Height")]
-        public static float Movement_Airjump_Height(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.Airjumpheight;
-        }
-        [Tag("Movement.Yaccel")]
-        public static float Movement_Yaccel(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.Vert_acceleration;
-        }
-        [Tag("Movement.Stand.Friction")]
-        public static float Movement_Stand_Friction(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.Standfriction;
-        }
-        [Tag("Movement.Crouch.Friction")]
-        public static float Movement_Crouch_Friction(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.Crouchfriction;
-        }
+            s_playermap["velocity.walk.fwd.x"] = x => new Number(x.playerConstants.Walk_forward);
+            s_helpermap["velocity.walk.fwd.x"] = x => new Number(x.BasePlayer.playerConstants.Walk_forward);
 
+            s_playermap["velocity.walk.back.x"] = x => new Number(x.playerConstants.Walk_back);
+            s_helpermap["velocity.walk.back.x"] = x => new Number(x.BasePlayer.playerConstants.Walk_back);
 
+            s_playermap["velocity.run.fwd.x"] = x => new Number(x.playerConstants.Run_fwd.x);
+            s_helpermap["velocity.run.fwd.x"] = x => new Number(x.BasePlayer.playerConstants.Run_fwd.x);
 
-        [Tag("Movement.stand.friction.threshold")]
-        public static float MovementStandFrictionThreshold(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.StandFrictionThreshold;
-        }
-        [Tag("Movement.crouch.friction.threshold")]
-        public static float MovementCrouchFrictionThreshold(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.CrouchFrictionThreshold;
-        }
-        [Tag("Movement.jump.changeanim.threshold")]
-        public static float MovementJumpChangeanimThreshold(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.JumpChangeanimThreshold;
-        }
-        [Tag("Movement.air.gethit.groundlevel")]
-        public static float MovementAirGethitGroundlevel(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.AirGethitGroundlevel;
-        }
-        [Tag("Movement.air.gethit.groundrecover.ground.threshold")]
-        public static float MovementAirGethitGroundrecoverGroundThreshold(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.AirGethitGroundrecoverGroundThreshold;
-        }
-        [Tag("Movement.air.gethit.groundrecover.groundlevel")]
-        public static float Movement_Air_Gethit_Groundrecover_Groundlevel(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.AirGethitGroundrecoverGroundlevel;
-        }
-        [Tag("Movement.air.gethit.airrecover.threshold")]
-        public static float Movement_AirGethitAirrecoverThreshold(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.AirGethitAirrecoverThreshold;
-        }
-        [Tag("Movement.air.gethit.airrecover.yaccel")]
-        public static float Movement_AirGethitAirrecoverYaccel(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.AirGethitAirrecoverYaccel;
-        }
-        [Tag("Movement.air.gethit.trip.groundlevel")]
-        public static float Movement_AirGethitTripGroundlevel(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.AirGethitTripGroundlevel;
-        }
-        [Tag("Movement.down.bounce.offset.x")]
-        public static float Movement_DownBounceOffsetX(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.DownBounceOffset.x;
-        }
-        [Tag("Movement.down.bounce.offset.y")]
-        public static float Movement_DownBounceOffsetY(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.DownBounceOffset.y;
-        }
-        [Tag("Movement.down.bounce.yaccel")]
-        public static float Movement_DownBounceYaccel(Character character, ref bool error)
-        {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.DownBounceYaccel;
+            s_playermap["velocity.run.fwd.y"] = x => new Number(x.playerConstants.Run_fwd.y);
+            s_helpermap["velocity.run.fwd.y"] = x => new Number(x.BasePlayer.playerConstants.Run_fwd.y);
+
+            s_playermap["velocity.run.back.x"] = x => new Number(x.playerConstants.Run_back.x);
+            s_helpermap["velocity.run.back.x"] = x => new Number(x.BasePlayer.playerConstants.Run_back.x);
+
+            s_playermap["velocity.run.back.y"] = x => new Number(x.playerConstants.Run_back.y);
+            s_helpermap["velocity.run.back.y"] = x => new Number(x.BasePlayer.playerConstants.Run_back.y);
+
+            s_playermap["velocity.jump.y"] = x => new Number(x.playerConstants.Jump_neutral.y);
+            s_helpermap["velocity.jump.y"] = x => new Number(x.BasePlayer.playerConstants.Jump_neutral.y);
+
+            s_playermap["velocity.jump.neu.x"] = x => new Number(x.playerConstants.Jump_neutral.x);
+            s_helpermap["velocity.jump.neu.x"] = x => new Number(x.BasePlayer.playerConstants.Jump_neutral.x);
+
+            s_playermap["velocity.jump.neu.y"] = x => new Number(x.playerConstants.Jump_neutral.y);
+            s_helpermap["velocity.jump.neu.y"] = x => new Number(x.BasePlayer.playerConstants.Jump_neutral.y);
+
+            s_playermap["velocity.runjump.y"] = x => new Number(x.playerConstants.Jump_neutral.y);
+            s_helpermap["velocity.runjump.y"] = x => new Number(x.BasePlayer.playerConstants.Jump_neutral.y);
+
+            s_playermap["velocity.jump.back.x"] = x => new Number(x.playerConstants.Jump_back.x);
+            s_helpermap["velocity.jump.back.x"] = x => new Number(x.BasePlayer.playerConstants.Jump_back.x);
+
+            s_playermap["velocity.jump.fwd.x"] = x => new Number(x.playerConstants.Jump_forward.x);
+            s_helpermap["velocity.jump.fwd.x"] = x => new Number(x.BasePlayer.playerConstants.Jump_forward.x);
+
+            s_playermap["velocity.runjump.back.x"] = x => new Number(x.playerConstants.Runjump_back.x);
+            s_helpermap["velocity.runjump.back.x"] = x => new Number(x.BasePlayer.playerConstants.Runjump_back.x);
+
+            s_playermap["velocity.runjump.fwd.x"] = x => new Number(x.playerConstants.Runjump_fwd.x);
+            s_helpermap["velocity.runjump.fwd.x"] = x => new Number(x.BasePlayer.playerConstants.Runjump_fwd.x);
+
+            s_playermap["velocity.airjump.y"] = x => new Number(x.playerConstants.Airjump_neutral.y);
+            s_helpermap["velocity.airjump.y"] = x => new Number(x.BasePlayer.playerConstants.Airjump_neutral.y);
+
+            s_playermap["velocity.airjump.neu.x"] = x => new Number(x.playerConstants.Airjump_neutral.x);
+            s_helpermap["velocity.airjump.neu.x"] = x => new Number(x.BasePlayer.playerConstants.Airjump_neutral.x);
+
+            s_playermap["velocity.airjump.back.x"] = x => new Number(x.playerConstants.Airjump_back.x);
+            s_helpermap["velocity.airjump.back.x"] = x => new Number(x.BasePlayer.playerConstants.Airjump_back.x);
+
+            s_playermap["velocity.airjump.fwd.x"] = x => new Number(x.playerConstants.Airjump_forward.x);
+            s_helpermap["velocity.airjump.fwd.x"] = x => new Number(x.BasePlayer.playerConstants.Airjump_forward.x);
+
+            s_playermap["velocity.air.gethit.groundrecover.x"] = x => new Number(x.playerConstants.AirGethitGroundrecover.x);
+            s_helpermap["velocity.air.gethit.groundrecover.x"] = x => new Number(x.BasePlayer.playerConstants.AirGethitGroundrecover.x);
+
+            s_playermap["velocity.air.gethit.groundrecover.y"] = x => new Number(x.playerConstants.AirGethitGroundrecover.y);
+            s_helpermap["velocity.air.gethit.groundrecover.y"] = x => new Number(x.BasePlayer.playerConstants.AirGethitGroundrecover.y);
+
+            s_playermap["velocity.air.gethit.airrecover.mul.x"] = x => new Number(x.playerConstants.AirGethitAirrecoverMul.x);
+            s_helpermap["velocity.air.gethit.airrecover.mul.x"] = x => new Number(x.BasePlayer.playerConstants.AirGethitAirrecoverMul.x);
+
+            s_playermap["velocity.air.gethit.airrecover.mul.y"] = x => new Number(x.playerConstants.AirGethitAirrecoverMul.y);
+            s_helpermap["velocity.air.gethit.airrecover.mul.y"] = x => new Number(x.BasePlayer.playerConstants.AirGethitAirrecoverMul.y);
+
+            s_playermap["velocity.air.gethit.airrecover.add.x"] = x => new Number(x.playerConstants.AirGethitAirrecoverAdd.x);
+            s_helpermap["velocity.air.gethit.airrecover.add.x"] = x => new Number(x.BasePlayer.playerConstants.AirGethitAirrecoverAdd.x);
+
+            s_playermap["velocity.air.gethit.airrecover.add.y"] = x => new Number(x.playerConstants.AirGethitAirrecoverAdd.y);
+            s_helpermap["velocity.air.gethit.airrecover.add.y"] = x => new Number(x.BasePlayer.playerConstants.AirGethitAirrecoverAdd.y);
+
+            s_playermap["velocity.air.gethit.airrecover.back"] = x => new Number(x.playerConstants.AirGethitAirrecoverBack);
+            s_helpermap["velocity.air.gethit.airrecover.back"] = x => new Number(x.BasePlayer.playerConstants.AirGethitAirrecoverBack);
+
+            s_playermap["velocity.air.gethit.airrecover.fwd"] = x => new Number(x.playerConstants.AirGethitAirrecoverFwd);
+            s_helpermap["velocity.air.gethit.airrecover.fwd"] = x => new Number(x.BasePlayer.playerConstants.AirGethitAirrecoverFwd);
+
+            s_playermap["velocity.air.gethit.airrecover.up"] = x => new Number(x.playerConstants.AirGethitAirrecoverUp);
+            s_helpermap["velocity.air.gethit.airrecover.up"] = x => new Number(x.BasePlayer.playerConstants.AirGethitAirrecoverUp);
+
+            s_playermap["velocity.air.gethit.airrecover.down"] = x => new Number(x.playerConstants.AirGethitAirrecoverDown);
+            s_helpermap["velocity.air.gethit.airrecover.down"] = x => new Number(x.BasePlayer.playerConstants.AirGethitAirrecoverDown);
+
+
+
+            s_playermap["movement.airjump.num"] = x => new Number(x.playerConstants.Airjumps);
+            s_helpermap["movement.airjump.num"] = x => new Number(x.BasePlayer.playerConstants.Airjumps);
+
+            s_playermap["movement.airjump.height"] = x => new Number(x.playerConstants.Airjumpheight);
+            s_helpermap["movement.airjump.height"] = x => new Number(x.BasePlayer.playerConstants.Airjumpheight);
+
+            s_playermap["movement.yaccel"] = x => new Number(x.playerConstants.Vert_acceleration);
+            s_helpermap["movement.yaccel"] = x => new Number(x.BasePlayer.playerConstants.Vert_acceleration);
+
+            s_playermap["movement.stand.friction"] = x => new Number(x.playerConstants.Standfriction);
+            s_helpermap["movement.stand.friction"] = x => new Number(x.BasePlayer.playerConstants.Standfriction);
+
+            s_playermap["movement.crouch.friction"] = x => new Number(x.playerConstants.Crouchfriction);
+            s_helpermap["movement.crouch.friction"] = x => new Number(x.BasePlayer.playerConstants.Crouchfriction);
+
+            s_playermap["movement.stand.friction.threshold"] = x => new Number(x.playerConstants.StandFrictionThreshold);
+            s_helpermap["movement.stand.friction.threshold"] = x => new Number(x.BasePlayer.playerConstants.StandFrictionThreshold);
+
+            s_playermap["movement.crouch.friction.threshold"] = x => new Number(x.playerConstants.CrouchFrictionThreshold);
+            s_helpermap["movement.crouch.friction.threshold"] = x => new Number(x.BasePlayer.playerConstants.CrouchFrictionThreshold);
+
+            s_playermap["movement.jump.changeanim.threshold"] = x => new Number(x.playerConstants.JumpChangeanimThreshold);
+            s_helpermap["movement.jump.changeanim.threshold"] = x => new Number(x.BasePlayer.playerConstants.JumpChangeanimThreshold);
+
+            s_playermap["movement.air.gethit.groundlevel"] = x => new Number(x.playerConstants.AirGethitGroundlevel);
+            s_helpermap["movement.air.gethit.groundlevel"] = x => new Number(x.BasePlayer.playerConstants.AirGethitGroundlevel);
+
+            s_playermap["movement.air.gethit.groundrecover.ground.threshold"] = x => new Number(x.playerConstants.AirGethitGroundrecoverGroundThreshold);
+            s_helpermap["movement.air.gethit.groundrecover.ground.threshold"] = x => new Number(x.BasePlayer.playerConstants.AirGethitGroundrecoverGroundThreshold);
+
+            s_playermap["movement.air.gethit.groundrecover.groundlevel"] = x => new Number(x.playerConstants.AirGethitGroundrecoverGroundlevel);
+            s_helpermap["movement.air.gethit.groundrecover.groundlevel"] = x => new Number(x.BasePlayer.playerConstants.AirGethitGroundrecoverGroundlevel);
+
+            s_playermap["movement.air.gethit.airrecover.threshold"] = x => new Number(x.playerConstants.AirGethitAirrecoverThreshold);
+            s_helpermap["movement.air.gethit.airrecover.threshold"] = x => new Number(x.BasePlayer.playerConstants.AirGethitAirrecoverThreshold);
+
+            s_playermap["movement.air.gethit.airrecover.yaccel"] = x => new Number(x.playerConstants.AirGethitAirrecoverYaccel);
+            s_helpermap["movement.air.gethit.airrecover.yaccel"] = x => new Number(x.BasePlayer.playerConstants.AirGethitAirrecoverYaccel);
+
+            s_playermap["movement.air.gethit.trip.groundlevel"] = x => new Number(x.playerConstants.AirGethitTripGroundlevel);
+            s_helpermap["movement.air.gethit.trip.groundlevel"] = x => new Number(x.BasePlayer.playerConstants.AirGethitTripGroundlevel);
+
+            s_playermap["movement.down.bounce.offset.x"] = x => new Number(x.playerConstants.DownBounceOffset.x);
+            s_helpermap["movement.down.bounce.offset.x"] = x => new Number(x.BasePlayer.playerConstants.DownBounceOffset.x);
+
+            s_playermap["movement.down.bounce.offset.y"] = x => new Number(x.playerConstants.DownBounceOffset.y);
+            s_helpermap["movement.down.bounce.offset.y"] = x => new Number(x.BasePlayer.playerConstants.DownBounceOffset.y);
+
+            s_playermap["movement.down.bounce.yaccel"] = x => new Number(x.playerConstants.DownBounceYaccel);
+            s_helpermap["movement.down.bounce.yaccel"] = x => new Number(x.BasePlayer.playerConstants.DownBounceYaccel);
+
+            s_playermap["movement.down.bounce.groundlevel"] = x => new Number(x.playerConstants.DownBounceGroundlevel);
+            s_helpermap["movement.down.bounce.groundlevel"] = x => new Number(x.BasePlayer.playerConstants.DownBounceGroundlevel);
+
+            s_playermap["movement.down.friction.threshold"] = x => new Number(x.playerConstants.DownFrictionThreshold);
+            s_helpermap["movement.down.friction.threshold"] = x => new Number(x.BasePlayer.playerConstants.DownFrictionThreshold);
+
         }
-        [Tag("Movement.down.bounce.groundlevel")]
-        public static float Movement_DownBounceGroundlevel(Character character, ref bool error)
+
+        public Const(List<IFunction> children, List<Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.DownBounceGroundlevel;
         }
-        [Tag("Movement.down.friction.threshold")]
-        public static float Movement_DownFrictionThreshold(Character character, ref bool error)
+
+        public override Number Evaluate(Character state)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-
-            return character.BasePlayer.playerConstants.DownFrictionThreshold;
-        }
+            if (Arguments.Count != 1) return new Number();
+            string consttype = (string)Arguments[0];
 
+            Combat.Player player = state as Combat.Player;
+            if (player != null && s_playermap.ContainsKey(consttype) == true) return s_playermap[consttype](player);
 
+            Combat.Helper helper = state as Combat.Helper;
+            if (helper != null && s_helpermap.ContainsKey(consttype) == true) return s_helpermap[consttype](helper);
+
+            return new Number();
+        }
 
         public static Node Parse(ParseState state)
         {
@@ -884,5 +286,13 @@ namespace UnityMugen.Evaluation.Triggers
 
             return state.BaseNode;
         }
+
+        #region Fields
+
+        readonly static Dictionary<string, Converter<Combat.Player, Number>> s_playermap;
+        readonly static Dictionary<string, Converter<Combat.Helper, Number>> s_helpermap;
+
+        #endregion
+
     }
 }

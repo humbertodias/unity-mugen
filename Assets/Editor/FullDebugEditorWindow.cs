@@ -362,6 +362,8 @@ public class FullDebugEditorWindow : EditorWindow
             EntityData(mainPlayer as Entity);
             CharacterData(mainPlayer as Character);
 
+            TriggerData(mainPlayer as Entity);
+
         }
         EditorGUILayout.EndVertical();
     }
@@ -439,8 +441,26 @@ public class FullDebugEditorWindow : EditorWindow
         EditorGUILayout.EndHorizontal();
 
     }
-    
-    
+
+    void TriggerData(Entity entity)
+    {
+        EditorGUILayout.BeginHorizontal();
+        {
+            EditorGUILayout.LabelField("ScreenPos: ");
+            EditorGUILayout.Vector2Field("", Misc.ScreenPos(entity));
+            EditorGUILayout.LabelField("Vector2");
+        }
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        {
+            EditorGUILayout.LabelField("Pos: ");
+            EditorGUILayout.Vector2Field("", Misc.Pos(entity));
+            EditorGUILayout.LabelField("Vector2");
+        }
+        EditorGUILayout.EndHorizontal();
+
+    }
 
     void CharacterData(Character character)
     {

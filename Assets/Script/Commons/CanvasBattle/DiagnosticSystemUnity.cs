@@ -2,9 +2,7 @@
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityMugen;
 using UnityMugen.Combat;
-using UnityMugen.Evaluation.Triggers;
 
 namespace UnityMugen.Interface
 {
@@ -112,8 +110,7 @@ namespace UnityMugen.Interface
                 diagPlayer.activeHitDef.text = String.Format("{0}", player.OffensiveInfo.ActiveHitDef);
                 diagPlayer.jugglePoints.text = String.Format("{0}", player.JugglePoints);
 
-                bool error = false;
-                diagPlayer.posRefCamera.text = string.Format("{0}, {1}", ScreenPos.Evaluate(player, ref error, Axis.X), ScreenPos.Evaluate(player, ref error, Axis.Y));
+                diagPlayer.posRefCamera.text = string.Format("{0}", Misc.ScreenPos(player));//Trigger.ScreenPos
                 //diagPlayer.posRefCamera.text = string.Format("{0}, {1}", Pos.Evaluate(player, ref error, Axis.X), Pos.Evaluate(player, ref error, Axis.Y));
                 diagPlayer.posRefStage.text = String.Format("{0}", player.CurrentLocation.ToString());
                 //player.Clipboard.ToString()

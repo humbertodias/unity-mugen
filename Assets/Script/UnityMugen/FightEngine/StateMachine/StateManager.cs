@@ -85,8 +85,7 @@ namespace UnityMugen.StateMachine
 
             bool facep2 = EvaluationHelper.AsBoolean(m_character, state.faceEnemy, false);
 
-            bool error = false;
-            if (facep2 && P2Dist.Evaluate(m_character, ref error, Axis.X) < 0 && error == false)
+            if (facep2 && Misc.P2Dist(m_character).x < 0)
                 Character.CurrentFacing = Character.FlipFacing(Character.CurrentFacing);
 
             int? jugglePoints = EvaluationHelper.AsInt32(m_character, state.jugglePoints, null);
@@ -158,9 +157,9 @@ namespace UnityMugen.StateMachine
         }
         public void Run(bool hitpause)
         {
-            if (Character is Helper)
+            if (Character is Combat.Helper)
             {
-                if ((Character as Helper).Data.KeyControl)
+                if ((Character as Combat.Helper).Data.KeyControl)
                 {
                     RunState(-4, true, hitpause);
                     RunState(-1, true, hitpause);

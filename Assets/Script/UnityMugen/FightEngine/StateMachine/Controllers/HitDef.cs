@@ -123,7 +123,7 @@ namespace UnityMugen.StateMachine.Controllers
         public override void Complete()
         {
             m_airHitAnimType = GetAttribute(tempHitDef.m_airHitAnimType, m_hitAnimType);
-            m_fallHitAnimType = GetAttribute(tempHitDef.m_fallHitAnimType, m_fallHitAnimType == HitAnimationType.Up ? HitAnimationType.Up : HitAnimationType.Back);
+            m_fallHitAnimType = GetAttribute(tempHitDef.m_fallHitAnimType, m_airHitAnimType == HitAnimationType.Up ? HitAnimationType.Up : HitAnimationType.Back);
             m_airEffect = GetAttribute(tempHitDef.m_airEffect, m_attackEffect);
         }
 

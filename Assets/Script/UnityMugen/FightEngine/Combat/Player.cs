@@ -11,14 +11,8 @@ namespace UnityMugen.Combat
 
     public class Player : Character
     {
-        //public GameObject entity2D;
-        //public PaletteManager paletteManager;
-
         public PlayerConstants playerConstants { get; set; }
         public PlayerProfileManager profile { get; set; }
-        //public AudiosClipsManager audiosClipsManager;
-        //public CommandList commandList;
-        //public AnimationFEManager animationFEManager { get; set; }
         public SpriteManager spriteManager { get; set; }
 
         private float m_power;

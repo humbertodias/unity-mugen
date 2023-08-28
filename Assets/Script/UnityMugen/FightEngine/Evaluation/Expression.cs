@@ -8,7 +8,7 @@ namespace UnityMugen.Evaluation
 
     public class Expression : IExpression
     {
-        public Expression(string expression, List<EvaluationCallback> functions)
+        public Expression(string expression, List<IFunction> functions)
         {
             if (expression == null) throw new ArgumentNullException(nameof(expression));
             if (functions == null) throw new ArgumentNullException(nameof(functions));
@@ -34,7 +34,7 @@ namespace UnityMugen.Evaluation
             {
                 try
                 {
-                    result[i] = m_functions[i](character);
+                    result[i] = m_functions[i].Evaluate(character);
                 }
                 catch
                 {
@@ -47,11 +47,12 @@ namespace UnityMugen.Evaluation
 
         public Number EvaluateFirst(Character character)
         {
-            if (IsValid == false) return new Number();
+            if (IsValid == false) 
+                return new Number();
 
             try
             {
-                return m_functions[0](character);
+                return m_functions[0].Evaluate(character);
             }
             catch
             {
@@ -72,7 +73,7 @@ namespace UnityMugen.Evaluation
         private readonly string m_expression;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly List<EvaluationCallback> m_functions;
+        private readonly List<IFunction> m_functions;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly bool m_isvalid;

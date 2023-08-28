@@ -115,8 +115,7 @@ namespace UnityMugen.Combat
                     // em analize verificar o gohan, m_creator.P2Dist(Axis.X) < 0
                     //Gohan teste - Seed = 402259687
 
-                    bool error = false;
-                    if (facep2 && P2Dist.Evaluate(Creator, ref error, Axis.X) < 0 && error == false)
+                    if (facep2 && Misc.P2Dist(Creator).x < 0)
                     {
                         CurrentFlip = (Creator.GetDrawFlip() == SpriteEffects.FlipHorizontally ? SpriteEffects.None : SpriteEffects.FlipHorizontally);
 

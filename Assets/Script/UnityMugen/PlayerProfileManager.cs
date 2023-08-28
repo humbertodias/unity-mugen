@@ -45,13 +45,16 @@ namespace UnityMugen
         public string[] NamePalettes()
         {
             List<string> palettes = new List<string>();
-            for (int i = 0; i < palettesName.Length; i++)
+            if (palettesName != null)
             {
-                string path = Application.streamingAssetsPath + "/" + charName + "/Palettes/" + palettesName[i] + ".act";
-                if (System.IO.File.Exists(path))
-                    palettes.Add(path);
-                else
-                    Debug.LogWarning("File not exist: " + path);
+                for (int i = 0; i < palettesName.Length; i++)
+                {
+                    string path = Application.streamingAssetsPath + "/" + charName + "/Palettes/" + palettesName[i] + ".act";
+                    if (System.IO.File.Exists(path))
+                        palettes.Add(path);
+                    else
+                        Debug.LogWarning("File not exist: " + path);
+                }
             }
             return palettes.ToArray();
         }

@@ -4,29 +4,29 @@ using System.Linq;
 using UnityEngine;
 using UnityMugen.Combat;
 
-namespace UnityMugen.Evaluation.Triggers
+namespace UnityMugen.Evaluation.Triggers.Redirection
 {
 
     [StateRedirection("Parent")]
-    internal static class Parent
+    class Parent : Function
     {
-        public static Character RedirectState(Character character, ref bool error)
+        public Parent(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return null;
-            }
+        } 
+
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Children.Count != 1) return new Number();
 
             var helper = character as UnityMugen.Combat.Helper;
             if (helper == null)
             {
-                error = true;
                 Debug.Log("Error | Parent");
-                return null;
+                return new Number();
             }
 
-            return helper.Creator;
+            return Children[0].Evaluate(helper.Creator);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -41,27 +41,26 @@ namespace UnityMugen.Evaluation.Triggers
             return parsestate.BaseNode;
         }
     }
-
+     
     [StateRedirection("Root")]
-    internal static class Root
+    class Root : Function
     {
-        public static Character RedirectState(Character character, ref bool error)
+        public Root(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return null;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Children.Count != 1) return new Number();
 
             var helper = character as UnityMugen.Combat.Helper;
             if (helper == null)
             {
-                error = true;
                 Debug.Log("Error | Root");
-                return null;
+                return new Number();
             }
 
-            return helper.BasePlayer;
+            return Children[0].Evaluate(helper.BasePlayer);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -78,23 +77,23 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [StateRedirection("Helper")]
-    internal static class HelperT
+    class Helper : Function
     {
-        public static Character RedirectState(Character character, ref bool error, int helperId)
+        public Helper(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments) { }
+        public override Number Evaluate(Character character)
         {
-            if (character == null)
-            {
-                error = true;
-                return null;
-            }
+            if (character == null || Children.Count != 2) return new Number();
+
+            Number helperId = Children[0].Evaluate(character);
+            if (helperId.NumberType != NumberType.Int) return new Number();
 
             List<UnityMugen.Combat.Helper> helpers;
-            if (character.BasePlayer.Helpers.TryGetValue(helperId, out helpers) &&
+            if (character.BasePlayer.Helpers.TryGetValue(helperId.IntValue, out helpers) &&
                 helpers.Count > 0)
-                return helpers[0];
+                return Children[1].Evaluate(helpers[0]);
 
-            error = true;
-            return null;
+            return new Number();
         }
 
         public static Node Parse(ParseState parsestate)
@@ -121,24 +120,26 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [StateRedirection("Target")]
-    internal static class Target
+    class Target : Function
     {
-        // Se Valor <= -1 ele Redireciona o gatilho para o primeiro alvo encontrado.
-        public static Character RedirectState(Character character, ref bool error, int target_id)
+        public Target(List<IFunction> children, List<System.Object> arguments)
+                  : base(children, arguments)
         {
-            if (character == null)
+        }
+        // Se Valor <= -1 ele Redireciona o gatilho para o primeiro alvo encontrado.
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Children.Count != 2) return new Number();
+
+            Number target_id = Children[0].Evaluate(character);
+            if (target_id.NumberType != NumberType.Int) return new Number();
+
+            foreach (var target in character.GetTargets(target_id.IntValue))
             {
-                error = true;
-                return null;
+                return Children[1].Evaluate(target);
             }
 
-            foreach (var target in character.GetTargets(target_id))
-            {
-                return target;
-            }
-
-            error = true;
-            return null;
+            return new Number();
         }
 
         public static Node Parse(ParseState parsestate)
@@ -165,26 +166,24 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [StateRedirection("Partner")]
-    internal static class Partner
+    class Partner : Function
     {
-        public static Character RedirectState(Character character, ref bool error)
+        public Partner(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return null;
-            }
-
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Children.Count != 1) return new Number();
 
             var partner = GetTeamMate(character);
             if (partner == null)
             {
-                error = true;
                 Debug.Log("Error | Partner");
-                return null;
+                return new Number();
             }
 
-            return partner;
+            return Children[0].Evaluate(partner);
         }
 
         private static Player GetTeamMate(Character character)
@@ -213,16 +212,18 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [StateRedirection("Enemy")]
-    internal static class Enemy
+    class Enemy : Function
     {
-        public static Character RedirectState(Character character, ref bool error, int nth)
+        public Enemy(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                Debug.Log("Error | Enemy");
-                return null;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Children.Count != 2) return new Number();
+
+            Number nth = Children[0].Evaluate(character);
+            if (nth.NumberType == NumberType.None) return new Number();
 
             var count = 0;
             foreach (var entity in character.Engine.Entities)
@@ -233,21 +234,19 @@ namespace UnityMugen.Evaluation.Triggers
                 var enemyplayer = enemy as Player;
                 if (enemyplayer == null) continue;
 
-                if (count != nth)
+                if (count != nth.IntValue)
                 {
                     ++count;
                     continue;
                 }
 
-                return enemy;
+                return Children[1].Evaluate(enemy);
             }
 
-            error = true;
-            Debug.Log("Error | Enemy");
-            return null;
+            return new Number();
         }
 
-
+        /*
         public static Character RedirectState(Character character, ref bool error, bool nth)
         {
             if (character == null)
@@ -272,7 +271,7 @@ namespace UnityMugen.Evaluation.Triggers
             Debug.Log("Error | Enemy");
             return null;
         }
-
+        */
 
         public static Node Parse(ParseState parsestate)
         {
@@ -297,36 +296,33 @@ namespace UnityMugen.Evaluation.Triggers
         }
     }
 
+#warning Not threadsafe
     [StateRedirection("EnemyNear")]
-    internal static class EnemyNear
+    class EnemyNear : Function
     {
-
+        public EnemyNear(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
+        {
+        }
 #warning isso tem que retornar o inimigo mais perto
         // nth = 0 o inimigo mais perto
         // nth = 1 o segundo inimigo mais perto
         // nth = 2 o terceiro inimigo mais perto
         // ... assim por diante
-        public static Character RedirectState(Character character, ref bool error, int nth = 0)
+        public override Number Evaluate(Character character)
         {
-            if (character == null)
-            {
-                error = true;
-                Debug.Log("Error | EnemyNear");
-                return null;
-            }
+            if (character == null || Children.Count != 2) return new Number();
+
+            Number nth = Children[0].Evaluate(character);
+            if (nth.NumberType == NumberType.None) return new Number();
 
             var playerlist = BuildPlayerList(character);
 
             playerlist = SortPlayerList(character.CurrentLocation, playerlist);
 
-            if (nth >= playerlist.Count)
-            {
-                error = true;
-                Debug.Log("Error | EnemyNear");
-                return null;
-            }
+            if (nth.IntValue >= playerlist.Count) return new Number();
 
-            return playerlist[nth];
+            return Children[1].Evaluate(playerlist[nth.IntValue]);
         }
 
 
@@ -384,28 +380,30 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [StateRedirection("PlayerID")]
-    internal static class PlayerIDT
+    class PlayerID : Function
     {
-        public static Character RedirectState(Character character, ref bool error, int characterId)
+        public PlayerID(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                Debug.Log("Error | PlayerID");
-                return null;
-            }
+        }
+    
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Children.Count != 2) return new Number();
+
+            Number characterId = Children[0].Evaluate(character);
+            if (characterId.NumberType != NumberType.Int) return new Number();
 
             foreach (var entity in character.Engine.Entities)
             {
                 var character2 = entity as Character;
-                if (character2 == null || character2.Id != characterId) continue;
+                if (character2 == null || character2.Id != characterId.IntValue) continue;
 
-                return character2;
+                return Children[1].Evaluate(character2);
             }
 
-            error = true;
             Debug.Log("Error | PlayerID");
-            return null;
+            return new Number();
         }
 
         public static Node Parse(ParseState parsestate)

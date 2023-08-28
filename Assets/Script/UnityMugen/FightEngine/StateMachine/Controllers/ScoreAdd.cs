@@ -34,11 +34,10 @@ namespace UnityMugen.StateMachine.Controllers
                 return;
             }
 
-            bool error = false;
             if (character is Player player)
                 player.Score += Value.Value;
             else if (character is UnityMugen.Combat.Helper helper)
-                (Root.RedirectState(helper, ref error) as Player).Score += Value.Value;
+                helper.BasePlayer.Score += Value.Value;
         }
     }
 }

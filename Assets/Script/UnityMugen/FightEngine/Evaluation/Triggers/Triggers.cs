@@ -7,18 +7,23 @@ namespace UnityMugen.Evaluation.Triggers
 {
 
     [CustomFunction("Const240p")]
-    internal static class Const240p
+    class Const240p : Function
     {
-        public static int Evaluate(Character character, ref bool error, int value)
+        public Const240p(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            return value;
         }
-
-        public static float Evaluate(Character character, ref bool error, float value)
+        public override Number Evaluate(Character state)
         {
-            return value;
-        }
+            if (Children.Count != 1) return new Number();
 
+            Number number = Children[0].Evaluate(state);
+
+            if (number.NumberType == NumberType.Int) return new Number(number.IntValue);
+            if (number.NumberType == NumberType.Float) return new Number(number.FloatValue);
+
+            return new Number();
+        }
         public static Node Parse(ParseState state)
         {
             return state.BuildParenNumberNode(true);
@@ -26,18 +31,23 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("Const480p")]
-    internal static class Const480p
+    class Const480p : Function
     {
-        public static int Evaluate(Character character, ref bool error, int value)
+        public Const480p(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            return value;
         }
-
-        public static float Evaluate(Character character, ref bool error, float value)
+        public override Number Evaluate(Character state)
         {
-            return value;
-        }
+            if (Children.Count != 1) return new Number();
 
+            Number number = Children[0].Evaluate(state);
+
+            if (number.NumberType == NumberType.Int) return new Number(number.IntValue);
+            if (number.NumberType == NumberType.Float) return new Number(number.FloatValue);
+
+            return new Number();
+        }
         public static Node Parse(ParseState state)
         {
             return state.BuildParenNumberNode(true);
@@ -45,18 +55,23 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("Const720p")]
-    internal static class Const720p
+    class Const720p : Function
     {
-        public static int Evaluate(Character character, ref bool error, int value)
+        public Const720p(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            return value;
         }
-
-        public static float Evaluate(Character character, ref bool error, float value)
+        public override Number Evaluate(Character state)
         {
-            return value;
-        }
+            if (Children.Count != 1) return new Number();
 
+            Number number = Children[0].Evaluate(state);
+
+            if (number.NumberType == NumberType.Int) return new Number(number.IntValue);
+            if (number.NumberType == NumberType.Float) return new Number(number.FloatValue);
+
+            return new Number();
+        }
         public static Node Parse(ParseState state)
         {
             return state.BuildParenNumberNode(true);
@@ -64,16 +79,22 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("Abs")]
-    internal static class Abs
+    class Abs : Function
     {
-        public static int Evaluate(Character character, ref bool error, int value)
+        public Abs(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            return Math.Abs(value);
         }
-
-        public static float Evaluate(Character character, ref bool error, float value)
+        public override Number Evaluate(Character state)
         {
-            return Math.Abs(value);
+            if (Children.Count != 1) return new Number();
+
+            Number number = Children[0].Evaluate(state);
+
+            if (number.NumberType == NumberType.Int) return new Number(Math.Abs(number.IntValue));
+            if (number.NumberType == NumberType.Float) return new Number(Math.Abs(number.FloatValue));
+
+            return new Number();
         }
 
         public static Node Parse(ParseState state)
@@ -83,22 +104,26 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("Acos")]
-    internal static class Acos
+    class Acos : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-
-        public static float Evaluate(Character character, ref bool error, float value)
+        public Acos(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments) { }
+        public override Number Evaluate(Character state)
         {
-            if (value < -1 || value > 1)
+            if (Children.Count != 1) return new Number();
+
+            Number number = Children[0].Evaluate(state);
+            if (number.NumberType == NumberType.None) return new Number();
+
+            if (number.FloatValue < -1 || number.FloatValue > 1)
             {
                 if (KeepLog)
                     Debug.Log("Error | Acos");
 
-                error = true;
-                return 0;
+                return new Number();
             }
 
-            return (float)Math.Acos(value);
+            return new Number(Math.Acos(number.FloatValue));
         }
 
         public static Node Parse(ParseState state)
@@ -108,25 +133,28 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("AiLevel")]
-    internal static class AiLevel
+    class AiLevel : Function
     {
-        public static int Evaluate(Character character, ref bool error)
+        public AiLevel(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments) { }
+        public override Number Evaluate(Character character)
         {
             if (character == null)
             {
-                error = true;
-                return 0;
-            }
+                if (KeepLog)
+                    Debug.Log("Error | Acos");
 
+                return new Number();
+            }
             if (character.PlayerMode == PlayerMode.Human)
-                return 0;
+                return new Number(0);
 
             if (LauncherEngine.Inst.engineInitialization.Mode == UnityMugen.CombatMode.Training &&
                 LauncherEngine.Inst.trainnerSettings.stanceType == UnityMugen.StanceType.COM &&
                 character.PlayerMode == PlayerMode.Ai)
-                return LauncherEngine.Inst.trainnerSettings.COMLevel;
+                return new Number(LauncherEngine.Inst.trainnerSettings.COMLevel);
 
-            return LauncherEngine.Inst.initializationSettings.AiLevel;
+            return new Number(LauncherEngine.Inst.initializationSettings.AiLevel);
         }
 
         public static Node Parse(ParseState state)
@@ -136,17 +164,23 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("Alive")]
-    internal static class Alive
+    class Alive : Function
     {
-        public static bool Evaluate(Character character, ref bool error)
+        public Alive(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
+        {
+        }
+        public override Number Evaluate(Character character)
         {
             if (character == null)
             {
-                error = true;
-                return false;
+                if (KeepLog)
+                    Debug.Log("Error | Acos");
+
+                return new Number();
             }
 
-            return character.Life > 0;
+            return new Number(character.Life > 0);
         }
 
         public static Node Parse(ParseState state)
@@ -156,17 +190,23 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("Anim")]
-    internal static class Anim
+    class Anim : Function
     {
-        public static int Evaluate(Character character, ref bool error)
+        public Anim(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
+        {
+        }
+        public override Number Evaluate(Character character)
         {
             if (character == null || character.AnimationManager.CurrentAnimation == null)
             {
-                error = true;
-                return 0;
+                if (KeepLog)
+                    Debug.Log("Error | Acos");
+
+                return new Number();
             }
 
-            return character.AnimationManager.CurrentAnimation.Number;
+            return new Number(character.AnimationManager.CurrentAnimation.Number);
         }
 
         public static Node Parse(ParseState state)
@@ -176,51 +216,72 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("AnimElem")]
-    internal static class AnimElem
+    class AnimElem : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static bool Evaluate(Character character, ref bool error, int r1, int rhs, Operator compareType)
+        
+        public AnimElem(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
-
-            var animation = character.AnimationManager.CurrentAnimation;
-            if (animation == null)
-            {
-                error = true;
-                if (KeepLog)
-                    Debug.Log("Error | AnimElem");
-                return false;
-            }
-
-            var elementindex = r1 - 1;
-            if (elementindex < 0 || elementindex >= animation.Elements.Count)
-            {
-                return false;
-            }
-
-            var elementstarttime = animation.GetElementStartTime(elementindex);
-            var animationtime = character.AnimationManager.TimeInAnimation;
-            while (animation.TotalTime != -1 && animationtime >= animation.TotalTime)
-            {
-                var looptime = animation.TotalTime - animation.GetElementStartTime(animation.Loopstart);
-                animationtime -= looptime;
-            }
-
-            var timeoffset = animationtime - elementstarttime;
-
-            if (character.AnimationManager.IsAnimationFinished) return false;
-
-            var result = SpecialFunctions.LogicalOperation(compareType, timeoffset, rhs);
-            if (character.InHitPause)
-                return result;
-            else
-                return compareType == Operator.Equals ? result && character.UpdatedAnimation : result;
         }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
+            if (Children.Count == 2 && Arguments.Count == 1) 
+            {
+
+                Number r1 = Children[0].Evaluate(character);
+                Number rhs = Children[1].Evaluate(character);
+                Operator compareType = (Operator)Arguments[0];
+
+                var animation = character.AnimationManager.CurrentAnimation;
+                if (animation == null)
+                {
+                    if (KeepLog)
+                        Debug.Log("Error | AnimElem");
+                    return new Number();
+                }
+
+                var elementindex = r1.IntValue - 1;
+                if (elementindex < 0 || elementindex >= animation.Elements.Count)
+                {
+                    return new Number(false);
+                }
+
+                var elementstarttime = animation.GetElementStartTime(elementindex);
+                var animationtime = character.AnimationManager.TimeInAnimation;
+                while (animation.TotalTime != -1 && animationtime >= animation.TotalTime)
+                {
+                    var looptime = animation.TotalTime - animation.GetElementStartTime(animation.Loopstart);
+                    animationtime -= looptime;
+                }
+
+                var timeoffset = animationtime - elementstarttime;
+
+                if (character.AnimationManager.IsAnimationFinished) return new Number(false);
+
+                var result = SpecialFunctions.LogicalOperation(compareType, timeoffset, rhs.IntValue);
+                if (character.InHitPause)
+                    return new Number(result);
+                else
+                    return new Number(compareType == Operator.Equals ? result && character.UpdatedAnimation : result);
+            }
+            else if(Children.Count == 3 && Arguments.Count == 3)
+            {
+                if (KeepLog)
+                    Debug.Log("Error | AnimElem - Implementar o Evaluat Abaixo");
+
+                Debug.LogError("AnimElem : Function");
+                return new Number();
+            }
+            else
+            {
+                Debug.LogError("AnimElem : Function");
+                return new Number();
+            }
+        }
+        
+        /*
         public static bool Evaluate(Character character, ref bool error, int r1, int pre, int post, Operator compareType, Symbol preCheck, Symbol postCheck)
         {
             if (character == null)
@@ -263,7 +324,7 @@ namespace UnityMugen.Evaluation.Triggers
 
             return SpecialFunctions.Range(timeoffset, pre, post, compareType, preCheck, postCheck);
         }
-
+        */
         public static Node Parse(ParseState state)
         {
             var initoperator = state.CurrentOperator;
@@ -289,14 +350,14 @@ namespace UnityMugen.Evaluation.Triggers
 
             state.BaseNode.Children.Add(arg1);
 
-//            if (state.CurrentSymbol != Symbol.Comma)
-//            {
-//#warning Hack
-//                state.BaseNode.Children.Add(Node.ZeroNode);
-//                state.BaseNode.Arguments.Add(Operator.Equals);
+            //            if (state.CurrentSymbol != Symbol.Comma)
+            //            {
+            //#warning Hack
+            //                state.BaseNode.Children.Add(Node.ZeroNode);
+            //                state.BaseNode.Arguments.Add(Operator.Equals);
 
-//                return state.BaseNode;
-//            }
+            //                return state.BaseNode;
+            //            }
 
             if (state.CurrentSymbol != Symbol.Comma)
             {
@@ -374,7 +435,7 @@ namespace UnityMugen.Evaluation.Triggers
                         return null;
                     }
                     else return null;
-                    
+
                 default:
                     return null;
             }
@@ -390,17 +451,18 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("AnimElemNo")]
-    internal static class AnimElemNo
+    class AnimElemNo : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-
-        public static int Evaluate(Character character, ref bool error, int timeoffset)
+        public AnimElemNo(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Children.Count != 1) return new Number();
+
+            Number timeoffset = Children[0].Evaluate(character);
+            if (timeoffset.NumberType == NumberType.None) return new Number();
 
             var animation = character.AnimationManager.CurrentAnimation;
             if (animation == null)
@@ -408,24 +470,22 @@ namespace UnityMugen.Evaluation.Triggers
                 if (KeepLog)
                     Debug.Log("Error | AnimElemNo");
 
-                error = true;
-                return 0;
+                return new Number();
             }
 
             var animtime = character.AnimationManager.TimeInAnimation;
 
-            var checktime = animtime + timeoffset;
+            var checktime = animtime + timeoffset.IntValue;
             if (checktime < 0)
             {
                 if (KeepLog)
                     Debug.Log("Error | AnimElemNo");
 
-                error = true;
-                return 0;
+                return new Number();
             }
 
             var elemIndex = animation.GetElementFromTime(checktime).Id;
-            return elemIndex + 1;
+            return new Number(elemIndex + 1);
         }
 
         public static Node Parse(ParseState state)
@@ -435,19 +495,24 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("AnimElemTime")]
-    internal static class AnimElemTime
+    class AnimElemTime : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static int Evaluate(Character character, ref bool error, int value)
+        public AnimElemTime(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Children.Count != 1)
             {
                 if (KeepLog)
                     Debug.Log("Error | AnimElemTime");
 
-                error = true;
-                return 0;
+                return new Number();
             }
+
+            Number value = Children[0].Evaluate(character);
+            if (value.NumberType == NumberType.None) return new Number();
 
             var animation = character.AnimationManager.CurrentAnimation;
             if (animation == null)
@@ -455,26 +520,25 @@ namespace UnityMugen.Evaluation.Triggers
                 if (KeepLog)
                     Debug.Log("Error | AnimElemTime");
 
-                error = true;
-                return 0;
+                return new Number();
             }
 
-            var elementIndex = value - 1;
-            if (animation.Elements.Count <= elementIndex) return 0;
+            var elementIndex = value.IntValue - 1;
+            if (animation.Elements.Count <= elementIndex) return new Number(0);
 
             var animationTime = character.AnimationManager.TimeInAnimation;
             var timeLoop = character.AnimationManager.TimeLoop;
             var elementStarttime = animation.GetElementStartTime(elementIndex);
 
             var result = animationTime - elementStarttime;
-            if (animation.TotalTime != -1 && animationTime > animation.TotalTime && !(value == 1 && timeLoop == 0))
+            if (animation.TotalTime != -1 && animationTime > animation.TotalTime && !(value.IntValue == 1 && timeLoop == 0))
             {
                 var firstTickLoopElement = animation.GetElementStartTime(animation.Loopstart);
                 //if (elementIndex != animation.Loopstart && timeLoop != firstTickLoopElement)
                 if (!(elementIndex == animation.Loopstart && timeLoop == firstTickLoopElement))
                     result = timeLoop - elementStarttime;
             }
-            return result;
+            return new Number(result);
         }
 
         public static Node Parse(ParseState state)
@@ -484,27 +548,28 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("AnimExist")]
-    internal static class AnimExist
+    class AnimExist : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static bool Evaluate(Character character, ref bool error, int value)
+        public AnimExist(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Children.Count != 1) return new Number();
 
             if (character.AnimationManager.IsForeignAnimation)
             {
                 if (KeepLog)
                     Debug.Log("Error | AnimElemTime");
 
-                error = true;
-                return false;
+                return new Number();
             }
 
-            return character.AnimationManager.HasAnimation(value);
+            Number value = Children[0].Evaluate(character);
+            if (value.NumberType == NumberType.None) return new Number();
+
+            return new Number(character.AnimationManager.HasAnimation(value.IntValue));
         }
 
         public static Node Parse(ParseState state)
@@ -514,16 +579,15 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("AnimTime")]
-    internal static class AnimTime
+    class AnimTime : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static int Evaluate(Character character, ref bool error)
+        public AnimTime(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
             var animation = character.AnimationManager.CurrentAnimation;
             if (animation == null)
@@ -531,18 +595,17 @@ namespace UnityMugen.Evaluation.Triggers
                 if (KeepLog)
                     Debug.Log("Error | AnimTime");
 
-                error = true;
-                return 0;
+                return new Number();
             }
 
             var animtime = character.AnimationManager.TimeLoop;
 
             if (animation.TotalTime == -1)
             {
-                return animtime + 1;
+                return new Number(animtime + 1);
             }
 
-            return animtime - animation.TotalTime;
+            return new Number(animtime - animation.TotalTime);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -552,21 +615,28 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("Asin")]
-    internal static class Asin
+    class Asin : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static float Evaluate(Character character, ref bool error, float value)
+        public Asin(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (value < -1 || value > 1)
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (Children.Count != 1) return new Number();
+
+            Number value = Children[0].Evaluate(character);
+            if (value.NumberType == NumberType.None) return new Number();
+
+            if (value.FloatValue < -1 || value.FloatValue > 1)
             {
                 if (KeepLog)
                     Debug.Log("Error | Asin");
 
-                error = true;
-                return 0;
+                return new Number();
             }
-
-            return (float)Math.Asin(value);
+#warning analizar este retorno
+            return new Number(Math.Asin(value.FloatValue));//(float)Math.Asin(value);
         }
 
         public static Node Parse(ParseState state)
@@ -576,82 +646,79 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("Assertion")]
-    internal static class AssertionT
+    class Assertion : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static bool Evaluate(Character character, ref bool error, UnityMugen.Assertion assertion)
+        public Assertion(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
 
-            switch (assertion)
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Arguments.Count != 1) return new Number();
+
+            switch ((UnityMugen.Assertion)Arguments[0])
             {
                 case UnityMugen.Assertion.Intro:
-                    return character.Engine.Assertions.Intro;
+                    return new Number(character.Engine.Assertions.Intro);
 
                 case UnityMugen.Assertion.Invisible:
-                    return character.Assertions.Invisible;
+                    return new Number(character.Assertions.Invisible);
 
                 case UnityMugen.Assertion.RoundNotOver:
-                    return character.Engine.Assertions.WinPose;
+                    return new Number(character.Engine.Assertions.WinPose);
 
                 case UnityMugen.Assertion.NoBarDisplay:
-                    return character.Engine.Assertions.NoBarDisplay;
+                    return new Number(character.Engine.Assertions.NoBarDisplay);
 
                 case UnityMugen.Assertion.NoBackground:
-                    return character.Engine.Assertions.NoBackLayer;
+                    return new Number(character.Engine.Assertions.NoBackLayer);
 
                 case UnityMugen.Assertion.NoForeground:
-                    return character.Engine.Assertions.NoFrontLayer;
+                    return new Number(character.Engine.Assertions.NoFrontLayer);
 
                 case UnityMugen.Assertion.NoStandGuard:
-                    return character.Assertions.NoStandingGuard;
+                    return new Number(character.Assertions.NoStandingGuard);
 
                 case UnityMugen.Assertion.NoAirGuard:
-                    return character.Assertions.NoAirGuard;
+                    return new Number(character.Assertions.NoAirGuard);
 
                 case UnityMugen.Assertion.NoCrouchGuard:
-                    return character.Assertions.NoCrouchingGuard;
+                    return new Number(character.Assertions.NoCrouchingGuard);
 
                 case UnityMugen.Assertion.NoAutoturn:
-                    return character.Assertions.NoAutoTurn;
+                    return new Number(character.Assertions.NoAutoTurn);
 
                 case UnityMugen.Assertion.NoJuggleCheck:
-                    return character.Assertions.NoJuggleCheck;
+                    return new Number(character.Assertions.NoJuggleCheck);
 
                 case UnityMugen.Assertion.NoKOSound:
-                    return character.Engine.Assertions.NoKOSound;
+                    return new Number(character.Engine.Assertions.NoKOSound);
 
                 case UnityMugen.Assertion.NoKOSlow:
-                    return character.Engine.Assertions.NoKOSlow;
+                    return new Number(character.Engine.Assertions.NoKOSlow);
 
                 case UnityMugen.Assertion.NoShadow:
-                    return character.Assertions.NoShadow;
+                    return new Number(character.Assertions.NoShadow);
 
                 case UnityMugen.Assertion.GlobalNoShadow:
-                    return character.Engine.Assertions.GlobalNoShadow;
+                    return new Number(character.Engine.Assertions.GlobalNoShadow);
 
                 case UnityMugen.Assertion.NoMusic:
-                    return character.Engine.Assertions.NoMusic;
+                    return new Number(character.Engine.Assertions.NoMusic);
 
                 case UnityMugen.Assertion.NoWalk:
-                    return character.Assertions.NoWalk;
+                    return new Number(character.Assertions.NoWalk);
 
                 case UnityMugen.Assertion.TimerFreeze:
-                    return character.Engine.Assertions.TimerFreeze;
+                    return new Number(character.Engine.Assertions.TimerFreeze);
 
                 case UnityMugen.Assertion.Unguardable:
-                    return character.Assertions.UnGuardable;
+                    return new Number(character.Assertions.UnGuardable);
 
+                case UnityMugen.Assertion.None:
                 default:
-                    if (KeepLog)
-                        Debug.Log("Error | Assertion");
-
-                    error = true;
-                    return false;
+                    return new Number(0);
             }
         }
 
@@ -674,11 +741,20 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("Atan")]
-    internal static class Atan
+    class Atan : Function
     {
-        public static float Evaluate(Character character, ref bool error, float value)
+        public Atan(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            return (float)Math.Atan(value);
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (Children.Count != 1) return new Number();
+
+            Number value = Children[0].Evaluate(character);
+            if (value.NumberType == NumberType.None) return new Number();
+
+            return new Number(Math.Atan(value.FloatValue));
         }
 
         public static Node Parse(ParseState state)
@@ -688,27 +764,28 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("AuthorName")]
-    internal static class AuthorName
+    class AuthorName : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static bool Evaluate(Character character, ref bool error, Operator @operator, string text)
+        public AuthorName(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Arguments.Count != 2) return new Number();
+
+            Operator @operator = (Operator)Arguments[0];
+            string text = (string)Arguments[1];
 
             var authorname = character.BasePlayer.profile.author;
             if (authorname == null)
             {
-                error = true;
                 if (KeepLog)
                     Debug.Log("Error | AuthorName");
-                return false;
+                return new Number();
             }
 
-            var result = string.Equals(authorname, text, StringComparison.OrdinalIgnoreCase);
+            Number result = new Number(string.Equals(authorname, text, StringComparison.OrdinalIgnoreCase));
 
             switch (@operator)
             {
@@ -722,8 +799,7 @@ namespace UnityMugen.Evaluation.Triggers
                     if (KeepLog)
                         Debug.Log("Error | AuthorName");
 
-                    error = true;
-                    return false;
+                    return new Number();
             }
         }
 
@@ -744,34 +820,31 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("BackEdgeBodyDist")]
-    internal static class BackEdgeBodyDist
+    class BackEdgeBodyDist : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static float Evaluate(Character character, ref bool error)
+        public BackEdgeBodyDist(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
             var camerarect = character.Engine.CameraFE.ScreenBounds();
-            var stage = character.Engine.stageScreen.Stage;
 
             switch (character.CurrentFacing)
             {
                 case UnityMugen.Facing.Left:
-                    return ((camerarect.xMax - character.GetRightEdgePosition(true)) * Constant.Scale2);
+                    return new Number((camerarect.xMax - character.GetRightEdgePosition(true)) * Constant.Scale2);
 
                 case UnityMugen.Facing.Right:
-                    return ((character.GetLeftEdgePosition(true) - camerarect.xMin) * Constant.Scale2);
+                    return new Number((character.GetLeftEdgePosition(true) - camerarect.xMin) * Constant.Scale2);
 
                 default:
                     if (KeepLog)
                         Debug.Log("Error | BackEdgeBodyDist");
 
-                    error = true;
-                    return 0;
+                    return new Number();
             }
         }
 
@@ -782,34 +855,31 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("BackEdgeDist")]
-    internal static class BackEdgeDist
+    class BackEdgeDist : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static float Evaluate(Character character, ref bool error)
+        public BackEdgeDist(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
             var camerarect = character.Engine.CameraFE.ScreenBounds();
-            var stage = character.Engine.stageScreen.Stage;
 
             switch (character.CurrentFacing)
             {
                 case UnityMugen.Facing.Left:
-                    return ((camerarect.xMax - character.GetRightEdgePosition(false)) * Constant.Scale2);
+                    return new Number((camerarect.xMax - character.GetRightEdgePosition(false)) * Constant.Scale2);
 
                 case UnityMugen.Facing.Right:
-                    return ((character.GetLeftEdgePosition(false) - camerarect.xMin) * Constant.Scale2);//Atenção aqui
+                    return new Number((character.GetLeftEdgePosition(false) - camerarect.xMin) * Constant.Scale2);//Atenção aqui
 
                 default:
                     if (KeepLog)
                         Debug.Log("Error | BackEdgeDist");
 
-                    error = true;
-                    return 0;
+                    return new Number();
             }
         }
 
@@ -821,27 +891,29 @@ namespace UnityMugen.Evaluation.Triggers
 
 #warning esta faltando
     [CustomFunction("CameraPos")]
-    internal static class CameraPos
+    class CameraPos : Function
     {
-        public static float Evaluate(Character character, ref bool error, Axis axis)
+        public CameraPos(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
-            return 0; 
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Arguments.Count != 1) return new Number();
+
+            return new Number(0);
+
+            Axis axis = (Axis)Arguments[0];
             switch (axis)
             {
                 case Axis.X:
-                    return character.Engine.CameraFE.transform.position.x * Constant.Scale2;
+                    return new Number(character.Engine.CameraFE.transform.position.x * Constant.Scale2);
 
                 case Axis.Y:
-                    return character.Engine.CameraFE.transform.position.y * Constant.Scale2;
+                    return new Number(character.Engine.CameraFE.transform.position.y * Constant.Scale2);
 
                 default:
-                    error = true;
-                    return 0;
+                    return new Number();
             }
         }
 
@@ -858,21 +930,41 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
 
-#warning esta faltando
-    //CameraZoom
+#warning Em teste
+    [CustomFunction("CameraZoom")]
+    class CameraZoom : Function
+    {
+        public CameraZoom(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
+        {
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
+
+            return new Number(character.Engine.CameraFE.ScaleCamera);
+        }
+
+        public static Node Parse(ParseState state)
+        {
+            return state.BaseNode;
+        }
+    }
 
     [CustomFunction("CanRecover")]
-    internal static class CanRecover
+    class CanRecover : Function
     {
-        public static bool Evaluate(Character character, ref bool error)
+        public CanRecover(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            return character.DefensiveInfo.IsFalling == false ? false : character.DefensiveInfo.HitDef.FallCanRecover;
+            return new Number(character.DefensiveInfo.IsFalling == false ?
+                false :
+                character.DefensiveInfo.HitDef.FallCanRecover);
         }
 
         public static Node Parse(ParseState state)
@@ -882,17 +974,29 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("Ceil")]
-    internal static class Ceil
+    class Ceil : Function
     {
-        public static int Evaluate(Character character, ref bool error, int value)
+        public Ceil(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            return value;
         }
-
-        public static float Evaluate(Character character, ref bool error, float value)
+        public override Number Evaluate(Character character)
         {
-            return value;
-            //return (int)Math.Ceiling(value);
+            if (Children.Count != 1) return new Number();
+
+            Number number = Children[0].Evaluate(character);
+
+            switch (number.NumberType)
+            {
+                case NumberType.Int:
+                    return new Number(number.IntValue);
+
+                case NumberType.Float:
+                    return new Number(/*Math.Ceiling(*/number.FloatValue/*)*/);
+
+                default:
+                    return new Number();
+            }
         }
 
         public static Node Parse(ParseState state)
@@ -902,32 +1006,34 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("Command")]
-    internal static class Command
+    class Command : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static bool Evaluate(Character character, ref bool error, Operator @operator, string text)
+        public Command(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Arguments.Count != 2) return new Number();
+
+            Operator @operator = (Operator)Arguments[0];
+            string text = (string)Arguments[1];
 
             var active = character.CommandManager.IsActive(text);
             switch (@operator)
             {
                 case Operator.Equals:
-                    return active;
+                    return new Number(active);
 
                 case Operator.NotEquals:
-                    return !active;
+                    return new Number(!active);
 
                 default:
                     if (KeepLog)
                         Debug.Log("Error | Command");
 
-                    error = true;
-                    return false;
+                    return new Number();
             }
         }
 
@@ -948,22 +1054,40 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("Cond")]
-    internal static class Cond
+    class Cond : Function
     {
-        public static int Evaluate(Character character, ref bool error, int r1, int r2, int r3)
+        public Cond(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (r1 < 0)
-                return r1;
-
-            return r1 != 0 ? r2 : r3;
         }
-
-        public static float Evaluate(Character character, ref bool error, float r1, float r2, float r3)
+        public override Number Evaluate(Character character)
         {
-            if (r1 < 0)
-                return r1;
+            if (character == null || Children.Count != 3) return new Number();
 
-            return r1 != 0 ? r2 : r3;
+            Number r1 = Children[0].Evaluate(character);
+            Number r2 = Children[1].Evaluate(character);
+            Number r3 = Children[2].Evaluate(character);
+
+            if (r1.NumberType == NumberType.None || r2.NumberType == NumberType.None || r3.NumberType == NumberType.None) return new Number();
+
+            if (r2.NumberType == NumberType.Float || r3.NumberType == NumberType.Float)
+            {
+                if (r1.FloatValue < 0)
+                    return r1;
+
+                return new Number(r1.FloatValue != 0 ? r2.FloatValue : r3.FloatValue);
+            }
+            else if (r2.NumberType == NumberType.Int && r3.NumberType == NumberType.Int)
+            {
+                if (r1.IntValue < 0)
+                    return r1;
+
+                return new Number(r1.IntValue != 0 ? r2.IntValue : r3.IntValue);
+            }
+            else
+            {
+                return new Number();
+            }
         }
 
         public static Node Parse(ParseState parsestate)
@@ -997,11 +1121,22 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("Cos")]
-    internal static class Cos
+    class Cos : Function
     {
-        public static float Evaluate(Character character, ref bool error, float value)
+        public Cos(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            return (float)Math.Cos(value);
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (Children.Count != 1) return new Number();
+
+            Number number = Children[0].Evaluate(character);
+
+            if (number.NumberType == NumberType.Int) return new Number((Single)Math.Cos(number.IntValue));
+            if (number.NumberType == NumberType.Float) return new Number((Single)Math.Cos(number.FloatValue));
+
+            return new Number();
         }
 
         public static Node Parse(ParseState state)
@@ -1011,17 +1146,16 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("Ctrl")]
-    internal static class Ctrl
+    internal class Ctrl : Function
     {
-        public static bool Evaluate(Character character, ref bool error)
+        public Ctrl(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
-
-            return character.PlayerControl == PlayerControl.InControl;
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
+            return new Number(character.PlayerControl == PlayerControl.InControl);
         }
 
         public static Node Parse(ParseState state)
@@ -1031,17 +1165,17 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("DrawGame")]
-    internal static class DrawGame
+    class DrawGame : Function
     {
-        public static bool Evaluate(Character character, ref bool error)
+        public DrawGame(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            return character.Engine.Team1.VictoryStatus.Lose && character.Engine.Team2.VictoryStatus.Lose;
+            return new Number(character.Engine.Team1.VictoryStatus.Lose && character.Engine.Team2.VictoryStatus.Lose);
         }
 
         public static Node Parse(ParseState state)
@@ -1051,11 +1185,15 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("E")]
-    internal static class E
+    class E : Function
     {
-        public static float Evaluate(Character character, ref bool error)
+        public E(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            return (float)Math.E;
+        }
+        public override Number Evaluate(Character character)
+        {
+            return new Number(Math.E);
         }
 
         public static Node Parse(ParseState state)
@@ -1065,11 +1203,20 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("Exp")]
-    internal static class ExpT
+    class Exp : Function
     {
-        public static float Evaluate(Character character, ref bool error, float value)
+        public Exp(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            return (float)Math.Exp(value);
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (Children.Count != 1) return new Number();
+
+            Number value = Children[0].Evaluate(character);
+            if (value.NumberType == NumberType.None) return new Number();
+
+            return new Number(Math.Exp(value.FloatValue));
         }
 
         public static Node Parse(ParseState state)
@@ -1079,51 +1226,61 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("Facing")]
-    internal static class FacingTrigger
+    class Facing : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static int Evaluate(Character character, ref bool error)
+        public Facing(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
             switch (character.CurrentFacing)
             {
-                case Facing.Left:
-                    return -1;
+                case UnityMugen.Facing.Left:
+                    return new Number(-1);
 
-                case Facing.Right:
-                    return 1;
+                case UnityMugen.Facing.Right:
+                    return new Number(1);
 
                 default:
                     if (KeepLog)
                         Debug.Log("Error | Facing");
-
-                    error = true;
-                    return 0;
+                    return new Number();
             }
         }
 
-        public static Node Parse(ParseState state)
+        public static Node Parse(ParseState parsestate)
         {
-            return state.BaseNode;
+            return parsestate.BaseNode;
         }
     }
 
     [CustomFunction("Floor")]
-    internal static class Floor
+    class Floor : Function
     {
-        public static int Evaluate(Character character, ref bool error, int value)
+        public Floor(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            return value;
         }
-
-        public static int Evaluate(Character character, ref bool error, float value)
+        public override Number Evaluate(Character character)
         {
-            return (int)Math.Floor(value);
+            if (Children.Count != 1) return new Number();
+
+            Number value = Children[0].Evaluate(character);
+
+            switch (value.NumberType)
+            {
+                case NumberType.Int:
+                    return new Number(value.IntValue);
+
+                case NumberType.Float:
+                    return new Number(Math.Floor(value.FloatValue));
+
+                default:
+                    return new Number();
+            }
         }
 
         public static Node Parse(ParseState state)
@@ -1133,34 +1290,31 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("FrontEdgeBodyDist")]
-    internal static class FrontEdgeBodyDist
+    class FrontEdgeBodyDist : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static int Evaluate(Character character, ref bool error)
+        public FrontEdgeBodyDist(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
             var camerarect = character.Engine.CameraFE.ScreenBounds();
-            var stage = character.Engine.stageScreen.Stage;
 
             switch (character.CurrentFacing)
             {
                 case UnityMugen.Facing.Left:
-                    return (int)((character.GetLeftEdgePosition(true) - camerarect.xMin) * Constant.Scale2);
+                    return new Number((int)((character.GetLeftEdgePosition(true) - camerarect.xMin) * Constant.Scale2));
 
                 case UnityMugen.Facing.Right:
-                    return (int)((camerarect.xMax - character.GetRightEdgePosition(true)) * Constant.Scale2);
+                    return new Number((int)((camerarect.xMax - character.GetRightEdgePosition(true)) * Constant.Scale2));
 
                 default:
                     if (KeepLog)
                         Debug.Log("Error | Facing");
 
-                    error = true;
-                    return 0;
+                    return new Number();
             }
         }
 
@@ -1171,33 +1325,31 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("FrontEdgeDist")]
-    internal static class FrontEdgeDist
+    class FrontEdgeDist : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static int Evaluate(Character character, ref bool error)
+        public FrontEdgeDist(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
             var camerarect = character.Engine.CameraFE.ScreenBounds();
 
             switch (character.CurrentFacing)
             {
                 case UnityMugen.Facing.Left:
-                    return (int)((character.GetLeftEdgePosition(false) - camerarect.xMin) * Constant.Scale2);
+                    return new Number((int)((character.GetLeftEdgePosition(false) - camerarect.xMin) * Constant.Scale2));
 
                 case UnityMugen.Facing.Right:
-                    return (int)((camerarect.xMax - character.GetRightEdgePosition(false)) * Constant.Scale2);
+                    return new Number((int)((camerarect.xMax - character.GetRightEdgePosition(false)) * Constant.Scale2));
 
                 default:
                     if (KeepLog)
                         Debug.Log("Error | FrontEdgeDist");
 
-                    error = true;
-                    return 0;
+                    return new Number();
             }
         }
 
@@ -1208,25 +1360,26 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("FVar")]
-    internal static class FVar
+    class FVar : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static float Evaluate(Character character, ref bool error, int value)
+        public FVar(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Children.Count != 1) return new Number();
 
-            if (character.Variables.GetFloat(value, false, out float result))
-                return result;
+            Number value = Children[0].Evaluate(character);
+            if (value.NumberType == NumberType.None) return new Number();
+
+            if (character.Variables.GetFloat(value.IntValue, false, out float result))
+                return new Number(result);
 
             if (KeepLog)
                 Debug.Log("Error | FVar");
 
-            error = true;
-            return 0;
+            return new Number();
         }
 
         public static Node Parse(ParseState state)
@@ -1236,17 +1389,17 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("GameTime")]
-    internal static class GameTime
+    class GameTime : Function
     {
-        public static int Evaluate(Character character, ref bool error)
+        public GameTime(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            return character.Engine.TickCount;
+            return new Number(character.Engine.TickCount);
         }
 
         public static Node Parse(ParseState state)
@@ -1256,17 +1409,17 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("HitCount")]
-    internal static class HitCount
+    class HitCount : Function
     {
-        public static int Evaluate(Character character, ref bool error)
+        public HitCount(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            return character.OffensiveInfo.HitCount;
+            return new Number(character.OffensiveInfo.HitCount);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -1276,26 +1429,29 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("HitDefAttr")]
-    internal static class HitDefAttr
+    class HitDefAttr : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static bool Evaluate(Character character, ref bool error, Operator @operator, AttackStateType ast, HitType[] hittypes)
+        public HitDefAttr(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Arguments.Count <= 2) return new Number();
 
-            if (character.MoveType != UnityMugen.MoveType.Attack) return false;
+            if (character.MoveType != UnityMugen.MoveType.Attack) return new Number(false);
 
             var attr = character.OffensiveInfo.HitDef.HitAttribute;
+
+            Operator @operator = (Operator)Arguments[0];
+            AttackStateType ast = (AttackStateType)Arguments[1];
 
             var heightmatch = (attr.AttackHeight & ast) != AttackStateType.None;
 
             var datamatch = false;
-            foreach (var hittype in hittypes)
+            for (int i = 2; i != Arguments.Count; ++i)
             {
+                Combat.HitType hittype = (Combat.HitType)Arguments[i];
                 if (attr.HasData(hittype) == false) continue;
 
                 datamatch = true;
@@ -1305,17 +1461,16 @@ namespace UnityMugen.Evaluation.Triggers
             switch (@operator)
             {
                 case Operator.Equals:
-                    return heightmatch && datamatch;
+                    return new Number(heightmatch && datamatch);
 
                 case Operator.NotEquals:
-                    return !heightmatch || !datamatch;
+                    return new Number(!heightmatch || !datamatch);
 
                 default:
                     if (KeepLog)
                         Debug.Log("Error | HitDefAttr");
 
-                    error = true;
-                    return false;
+                    return new Number();
             }
         }
 
@@ -1357,17 +1512,17 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("HitFall")]
-    internal static class HitFall
+    class HitFall : Function
     {
-        public static bool Evaluate(Character character, ref bool error)
+        public HitFall(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            return character.DefensiveInfo.IsFalling;
+            return new Number(character.DefensiveInfo.IsFalling);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -1377,17 +1532,17 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("HitOver")]
-    internal static class HitOver
+    class HitOver : Function
     {
-        public static bool Evaluate(Character character, ref bool error)
+        public HitOver(List<IFunction> children, List<System.Object> arguments)
+                  : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            return character.DefensiveInfo.HitTime <= 0;
+            return new Number(character.DefensiveInfo.HitTime <= 0);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -1397,17 +1552,17 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("HitPauseTime")]
-    internal static class HitPauseTime
+    class HitPauseTime : Function
     {
-        public static int Evaluate(Character character, ref bool error)
+        public HitPauseTime(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            return character.OffensiveInfo.HitPauseTime;
+            return new Number(character.OffensiveInfo.HitPauseTime);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -1417,17 +1572,17 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("HitShakeOver")]
-    internal static class HitShakeOver
+    class HitShakeOver : Function
     {
-        public static bool Evaluate(Character character, ref bool error)
+        public HitShakeOver(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            return character.DefensiveInfo.HitShakeTime <= 0;
+            return new Number(character.DefensiveInfo.HitShakeTime <= 0);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -1437,31 +1592,31 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("HitVel")]
-    internal static class HitVel
+    class HitVel : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static float Evaluate(Character character, ref bool error, Axis axis)
+        public HitVel(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Arguments.Count != 1) return new Number();
+
+            Axis axis = (Axis)Arguments[0];
 
             switch (axis)
             {
                 case Axis.X:
-                    return character.DefensiveInfo.GetHitVelocity().x * Constant.Scale2;
+                    return new Number(character.DefensiveInfo.GetHitVelocity().x * Constant.Scale2);
 
                 case Axis.Y:
-                    return character.DefensiveInfo.GetHitVelocity().y * Constant.Scale2;
+                    return new Number(character.DefensiveInfo.GetHitVelocity().y * Constant.Scale2);
 
                 default:
                     if (KeepLog)
                         Debug.Log("Error | HitVel");
 
-                    error = true;
-                    return 0;
+                    return new Number();
             }
         }
 
@@ -1478,17 +1633,17 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("ID")]
-    internal static class ID
+    class ID : Function
     {
-        public static int Evaluate(Character character, ref bool error)
+        public ID(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            return (int)character.Id;
+            return new Number((int)character.Id);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -1498,16 +1653,40 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("IfElse")]
-    internal static class IfElse
+    class IfElse : Function
     {
-        public static int Evaluate(Character character, ref bool error, int r1, int r2, int r3)
+        public IfElse(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            return r1 != 0 ? r2 : r3;
         }
-
-        public static float Evaluate(Character character, ref bool error, float r1, float r2, float r3)
+        public override Number Evaluate(Character character)
         {
-            return r1 != 0 ? r2 : r3;
+            if (character == null || Children.Count != 3) return new Number();
+
+            Number r1 = Children[0].Evaluate(character);
+            Number r2 = Children[1].Evaluate(character);
+            Number r3 = Children[2].Evaluate(character);
+
+            if (r1.NumberType == NumberType.None || r2.NumberType == NumberType.None || r3.NumberType == NumberType.None) return new Number();
+
+            if(r2.NumberType == NumberType.Float || r3.NumberType == NumberType.Float)
+            {
+                if (r1.FloatValue < 0)
+                    return r1;
+
+                return new Number(r1.FloatValue != 0 ? r2.FloatValue : r3.FloatValue);
+            }
+            else if (r2.NumberType == NumberType.Int && r3.NumberType == NumberType.Int)
+            {
+                if (r1.IntValue < 0)
+                    return r1;
+
+                return new Number(r1.IntValue != 0 ? r2.IntValue : r3.IntValue);
+            }
+            else 
+            { 
+                return new Number();
+            }
         }
 
         public static Node Parse(ParseState parsestate)
@@ -1541,32 +1720,32 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("InGuardDist")]
-    internal static class InGuardDist
+    class InGuardDist : Function
     {
-        public static bool Evaluate(Character character, ref bool error)
+        public InGuardDist(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
             foreach (var entity in character.Engine.Entities)
             {
                 var opp = character.FilterEntityAsCharacter(entity, AffectTeam.Enemy);
                 if (opp != null && opp.OffensiveInfo.ActiveHitDef && InGuardDistance(opp.OffensiveInfo.HitDef, opp, character))
                 {
-                    return true;
+                    return new Number(true);
                 }
 
-                var projectile = entity as UnityMugen.Combat.Projectile;
+                var projectile = entity as Combat.Projectile;
                 if (projectile != null && projectile.Team != character.Team && InGuardDistance(projectile.Data.HitDef, projectile, character))
                 {
-                    return true;
+                    return new Number(true);
                 }
             }
 
-            return false;
+            return new Number(false);
         }
 
         private static bool InGuardDistance(HitDefinition hitdef, Entity attacker, Character target)
@@ -1588,20 +1767,22 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("IsHelper")]
-    internal static class IsHelper
+    class IsHelper : Function
     {
-        public static bool Evaluate(Character character, ref bool error, int helperid)
+        public IsHelper(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
+            if (Children.Count == 0 || Children.Count != 1) return new Number(true);
 
+            Number helperid = Children[0].Evaluate(character);
             if (character.typeEntity != TypeEntity.Helper)
-                return false;
+                return new Number(false);
 
-            return helperid >= 0 ? character.Id == helperid : true;
+            return new Number(helperid.IntValue >= 0 ? character.Id == helperid.IntValue : true);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -1618,17 +1799,17 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("IsHomeTeam")]
-    internal static class IsHomeTeam
+    class IsHomeTeam : Function
     {
-        public static bool Evaluate(Character character, ref bool error)
+        public IsHomeTeam(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            return character.Team.Side == UnityMugen.TeamSide.Left;
+            return new Number(character.Team.Side == UnityMugen.TeamSide.Left);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -1638,17 +1819,17 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("Life")]
-    internal static class Life
+    class Life : Function
     {
-        public static float Evaluate(Character character, ref bool error)
+        public Life(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            return character.Life;
+            return new Number(character.Life);
         }
 
         public static Node Parse(ParseState state)
@@ -1658,17 +1839,17 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("LifeMax")]
-    internal static class LifeMax
+    class LifeMax : Function
     {
-        public static float Evaluate(Character character, ref bool error)
+        public LifeMax(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            return character.BasePlayer.playerConstants.MaximumLife;
+            return new Number(character.BasePlayer.playerConstants.MaximumLife);
         }
 
         public static Node Parse(ParseState state)
@@ -1678,11 +1859,20 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("Ln")]
-    internal static class Ln
+    class Ln : Function
     {
-        public static float Evaluate(Character character, ref bool error, float value)
+        public Ln(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            return (float)Math.Log10(value);
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (Children.Count != 1) return new Number();
+
+            Number number = Children[0].Evaluate(character);
+            if (number.NumberType == NumberType.None) return new Number();
+
+            return new Number(Math.Log10(number.FloatValue));
         }
 
         public static Node Parse(ParseState state)
@@ -1692,11 +1882,21 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("Log")]
-    internal static class Log
+    class Log : Function
     {
-        public static float Evaluate(Character character, ref bool error, float lhs, float rhs)
+        public Log(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            return (float)Math.Log(lhs, rhs);
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (Children.Count != 2) return new Number();
+
+            Number n1 = Children[0].Evaluate(character);
+            Number n2 = Children[1].Evaluate(character);
+            if (n1.NumberType == NumberType.None || n2.NumberType == NumberType.None) return new Number();
+
+            return new Number(Math.Log(n1.FloatValue, n2.FloatValue));
         }
 
         public static Node Parse(ParseState state)
@@ -1706,17 +1906,17 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("Lose")]
-    internal static class Lose
+    class Lose : Function
     {
-        public static bool Evaluate(Character character, ref bool error)
+        public Lose(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            return character.Team.VictoryStatus.Lose;
+            return new Number(character.Team.VictoryStatus.Lose);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -1726,17 +1926,17 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("LoseKO")]
-    internal static class LoseKO
+    class LoseKO : Function
     {
-        public static bool Evaluate(Character character, ref bool error)
+        public LoseKO(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            return character.Team.VictoryStatus.LoseKO;
+            return new Number(character.Team.VictoryStatus.LoseKO);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -1746,17 +1946,17 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("LoseTime")]
-    internal static class LoseTime
+    class LoseTime : Function
     {
-        public static bool Evaluate(Character character, ref bool error)
+        public LoseTime(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            return character.Team.VictoryStatus.LoseTime;
+            return new Number(character.Team.VictoryStatus.LoseTime);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -1766,17 +1966,17 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("MatchNo")]
-    internal static class MatchNo
+    class MatchNo : Function
     {
-        public static int Evaluate(Character character, ref bool error)
+        public MatchNo(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            return character.Engine.MatchNumber;
+            return new Number(character.Engine.MatchNumber);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -1786,17 +1986,17 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("MatchOver")]
-    internal static class MatchOver
+    class MatchOver : Function
     {
-        public static bool Evaluate(Character character, ref bool error)
+        public MatchOver(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            return character.Engine.IsMatchOver();
+            return new Number(character.Engine.IsMatchOver());
         }
 
         public static Node Parse(ParseState parsestate)
@@ -1806,20 +2006,20 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("MoveContact")]
-    internal static class MoveContact
+    class MoveContact : Function
     {
-        public static int Evaluate(Character character, ref bool error)
+        public MoveContact(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
             //int result = character.MoveType == UnityMugen.MoveType.Attack ? character.OffensiveInfo.MoveContact : 0;
             //return result != 0; // Atualizado Tiago
 #warning em teste
-            return character.OffensiveInfo.MoveContact; // Baseado no IK
+            return new Number(character.OffensiveInfo.MoveContact); // Baseado no IK
         }
 
         public static Node Parse(ParseState parsestate)
@@ -1829,20 +2029,20 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("MoveGuarded")]
-    internal static class MoveGuarded
+    class MoveGuarded : Function
     {
-        public static int Evaluate(Character character, ref bool error)
+        public MoveGuarded(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
             //int result = character.MoveType == UnityMugen.MoveType.Attack ? character.OffensiveInfo.MoveGuarded : 0;
             //return result != 0; // Atualizado Tiago
 #warning em teste
-            return character.OffensiveInfo.MoveGuarded; // Baseado no IK
+            return new Number(character.OffensiveInfo.MoveGuarded); // Baseado no IK
         }
 
         public static Node Parse(ParseState parsestate)
@@ -1853,18 +2053,18 @@ namespace UnityMugen.Evaluation.Triggers
 
 
     [CustomFunction("MoveReversed")]
-    internal static class MoveReversed
+    class MoveReversed : Function
     {
-        public static int Evaluate(Character character, ref bool error)
+        public MoveReversed(List<IFunction> children, List<System.Object> arguments)
+                  : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
             int result = character.MoveType == UnityMugen.MoveType.Attack ? character.OffensiveInfo.MoveReversed : 0;
-            return result; // Atualizado Tiago
+            return new Number(result); // Atualizado Tiago
         }
 
         public static Node Parse(ParseState parsestate)
@@ -1874,37 +2074,37 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("MoveType")]
-    internal static class MoveTypeT
+    class MoveType : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static bool Evaluate(Character character, ref bool error, Operator @operator, UnityMugen.MoveType movetype)
+        public MoveType(List<IFunction> children, List<System.Object> arguments)
+                  : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Arguments.Count != 2) return new Number();
+
+            Operator @operator = (Operator)Arguments[0];
+            UnityMugen.MoveType movetype = (UnityMugen.MoveType)Arguments[1];
 
             if (movetype == UnityMugen.MoveType.Unchanged || movetype == UnityMugen.MoveType.None)
             {
-                error = true;
-                return false;
+                return new Number();
             }
 
             switch (@operator)
             {
                 case Operator.Equals:
-                    return movetype == character.MoveType;
+                    return new Number(movetype == character.MoveType);
 
                 case Operator.NotEquals:
-                    return movetype != character.MoveType;
+                    return new Number(movetype != character.MoveType);
 
                 default:
                     if (KeepLog)
                         Debug.Log("Error | MoveType");
 
-                    error = true;
-                    return false;
+                    return new Number();
             }
         }
 
@@ -1928,20 +2128,20 @@ namespace UnityMugen.Evaluation.Triggers
 
 
     [CustomFunction("MoveHit")]
-    internal static class MoveHit
+    class MoveHit : Function
     {
-        public static int Evaluate(Character character, ref bool error)
+        public MoveHit(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
             //return character.MoveType == UnityMugen.MoveType.Attack ? character.OffensiveInfo.MoveHit : 0;
             //character.MoveContact == MoveContact.
 #warning em teste
-            return character.OffensiveInfo.MoveHit; // Baseado no IK
+            return new Number(character.OffensiveInfo.MoveHit); // Baseado no IK
         }
 
         public static Node Parse(ParseState parsestate)
@@ -1951,16 +2151,18 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("Name")]
-    internal static class Name
+    class Name : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static bool Evaluate(Character character, ref bool error, Operator @operator, string text)
+        public Name(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Arguments.Count != 2) return new Number();
+
+            Operator @operator = (Operator)Arguments[0];
+            string text = (string)Arguments[1];
 
             string name = null;
             if (character is Player)
@@ -1979,24 +2181,22 @@ namespace UnityMugen.Evaluation.Triggers
                 if (KeepLog)
                     Debug.Log("Error | Name");
 
-                error = true;
-                return false;
+                return new Number();
             }
 
             switch (@operator)
             {
                 case Operator.Equals:
-                    return string.Equals(name, text, StringComparison.OrdinalIgnoreCase);
+                    return new Number(string.Equals(name, text, StringComparison.OrdinalIgnoreCase));
 
                 case Operator.NotEquals:
-                    return !string.Equals(name, text, StringComparison.OrdinalIgnoreCase);
+                    return new Number(!string.Equals(name, text, StringComparison.OrdinalIgnoreCase));
 
                 default:
                     if (KeepLog)
                         Debug.Log("Error | Name");
 
-                    error = true;
-                    return false;
+                    return new Number();
             }
         }
 
@@ -2018,15 +2218,15 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("NumEnemy")]
-    internal static class NumEnemy
+    class NumEnemy : Function
     {
-        public static int Evaluate(Character character, ref bool error)
+        public NumEnemy(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
             var count = 0;
             Action<Player> func = player =>
@@ -2040,7 +2240,7 @@ namespace UnityMugen.Evaluation.Triggers
             func(character.Engine.Team1.TeamMate);
             func(character.Engine.Team2.TeamMate);
 
-            return count;
+            return new Number(count);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -2050,22 +2250,25 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("NumExplod")]
-    internal static class NumExplod
+    class NumExplod : Function
     {
-        public static int Evaluate(Character character, ref bool error, int explodId)
+        public NumExplod(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Children.Count != 1) return new Number();
+
+            Number explodId = Children[0].Evaluate(character);
+            if (explodId.NumberType != NumberType.Int) return new Number();
 
             var count = 0;
 
-            foreach (var explod in character.GetExplods(explodId))
+            foreach (var explod in character.GetExplods(explodId.IntValue))
                 ++count;
 
-            return count;
+            return new Number(count);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -2082,30 +2285,33 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("NumHelper")]
-    internal static class NumHelper
+    class NumHelper : Function
     {
-        public static int Evaluate(Character character, ref bool error, int helperId)
+        public NumHelper(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Children.Count != 1) return new Number();
 
-            if (helperId >= 0)
+            Number helperId = Children[0].Evaluate(character);
+            if (helperId.NumberType != NumberType.Int) return new Number();
+
+            if (helperId.IntValue >= 0)
             {
                 List<UnityMugen.Combat.Helper> helpers;
-                if (character.BasePlayer.Helpers.TryGetValue(helperId, out helpers))
-                    return helpers.Count;
+                if (character.BasePlayer.Helpers.TryGetValue(helperId.IntValue, out helpers))
+                    return new Number(helpers.Count);
 
-                return 0;
+                return new Number(0);
             }
 
             var count = 0;
 
             foreach (var data in character.BasePlayer.Helpers) count += data.Value.Count;
 
-            return count;
+            return new Number(count);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -2122,15 +2328,15 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("NumPartner")]
-    internal static class NumPartner
+    class NumPartner : Function
     {
-        public static int Evaluate(Character character, ref bool error)
+        public NumPartner(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
             var count = 0;
             foreach (var entity in character.Engine.Entities)
@@ -2141,7 +2347,7 @@ namespace UnityMugen.Evaluation.Triggers
                 ++count;
             }
 
-            return count;
+            return new Number(count);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -2151,15 +2357,15 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("NumProj")]
-    internal static class NumProj
+    class NumProj : Function
     {
-        public static int Evaluate(Character character, ref bool error)
+        public NumProj(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
             var count = 0;
             foreach (var entity in character.Engine.Entities)
@@ -2170,7 +2376,7 @@ namespace UnityMugen.Evaluation.Triggers
                 ++count;
             }
 
-            return count;
+            return new Number(count);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -2180,26 +2386,29 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("NumProjID")]
-    internal static class NumProjID
+    class NumProjID : Function
     {
-        public static int Evaluate(Character character, ref bool error, int projectileId)
+        public NumProjID(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Children.Count != 1) return new Number();
+
+            Number projectileId = Children[0].Evaluate(character);
+            if (projectileId.NumberType != NumberType.Int) return new Number();
 
             var count = 0;
             foreach (var entity in character.Engine.Entities)
             {
-                var projectile = character.FilterEntityAsProjectile(entity, projectileId);
+                var projectile = character.FilterEntityAsProjectile(entity, projectileId.IntValue);
                 if (projectile == null) continue;
 
                 ++count;
             }
 
-            return count;
+            return new Number(count);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -2209,20 +2418,23 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("NumTarget")]
-    internal static class NumTarget
+    class NumTarget : Function
     {
-        public static int Evaluate(Character character, ref bool error, int targetId)
+        public NumTarget(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Children.Count != 1) return new Number();
+
+            Number targetId = Children[0].Evaluate(character);
+            if (targetId.NumberType != NumberType.Int) return new Number();
 
             var count = 0;
-            foreach (var target in character.GetTargets(targetId)) ++count;
+            foreach (var target in character.GetTargets(targetId.IntValue)) ++count;
 
-            return count;
+            return new Number(count);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -2239,21 +2451,24 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("NumGraphicUI")]
-    internal static class NumGraphicUI
+    class NumGraphicUI : Function
     {
-        public static int Evaluate(Character character, ref bool error, int graphicUiID)
+        public NumGraphicUI(List<IFunction> children, List<System.Object> arguments)
+                  : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Children.Count != 1) return new Number();
+
+            Number graphicUiID = Children[0].Evaluate(character);
+            if (graphicUiID.NumberType != NumberType.Int) return new Number();
 
             var count = 0;
-            foreach (var graphicUI in character.GetGraphicUIs(graphicUiID))
+            foreach (var graphicUI in character.GetGraphicUIs(graphicUiID.IntValue))
                 ++count;
 
-            return count;
+            return new Number(count);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -2270,16 +2485,18 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("P1Name")]
-    internal static class P1Name
+    class P1Name : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static bool Evaluate(Character character, ref bool error, Operator @operator, string text)
+        public P1Name(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Arguments.Count != 2) return new Number();
+
+            Operator @operator = (Operator)Arguments[0];
+            string text = (string)Arguments[1];
 
             string name = null;
             if (character is Player)
@@ -2298,21 +2515,19 @@ namespace UnityMugen.Evaluation.Triggers
                 if (KeepLog)
                     Debug.Log("Error | P1Name");
 
-                error = true;
-                return false;
+                return new Number();
             }
 
             switch (@operator)
             {
                 case Operator.Equals:
-                    return string.Equals(name, text, StringComparison.OrdinalIgnoreCase);
+                    return new Number(string.Equals(name, text, StringComparison.OrdinalIgnoreCase));
 
                 case Operator.NotEquals:
-                    return !string.Equals(name, text, StringComparison.OrdinalIgnoreCase);
+                    return new Number(!string.Equals(name, text, StringComparison.OrdinalIgnoreCase));
 
                 default:
-                    error = true;
-                    return false;
+                    return new Number();
             }
         }
 
@@ -2333,16 +2548,15 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("P2BodyDist")]
-    internal static class P2BodyDist
+    class P2BodyDist : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static float Evaluate(Character character, ref bool error, Axis axis)
+        public P2BodyDist(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Arguments.Count != 1) return new Number();
 
             var opponent = character.GetOpponent();
             if (opponent == null)
@@ -2350,9 +2564,10 @@ namespace UnityMugen.Evaluation.Triggers
                 if (KeepLog)
                     Debug.Log("Error | P2BodyDist");
 
-                error = true;
-                return 0;
+                return new Number();
             }
+
+            Axis axis = (Axis)Arguments[0];
 
             switch (axis)
             {
@@ -2362,22 +2577,21 @@ namespace UnityMugen.Evaluation.Triggers
                     var distance = Math.Abs(mylocation - opplocation);
                     if (character.CurrentFacing == UnityMugen.Facing.Right)
                     {
-                        return (opponent.CurrentLocation.x >= character.CurrentLocation.x ? distance : -distance) * Constant.Scale2;
+                        return new Number((opponent.CurrentLocation.x >= character.CurrentLocation.x ? distance : -distance) * Constant.Scale2);
                     }
                     else
                     {
-                        return (opponent.CurrentLocation.x >= character.CurrentLocation.x ? -distance : distance) * Constant.Scale2;
+                        return new Number((opponent.CurrentLocation.x >= character.CurrentLocation.x ? -distance : distance) * Constant.Scale2);
                     }
 
                 case Axis.Y:
-                    return (opponent.CurrentLocation.y - character.CurrentLocation.y) * Constant.Scale2;
+                    return new Number((opponent.CurrentLocation.y - character.CurrentLocation.y) * Constant.Scale2);
 
                 default:
                     if (KeepLog)
                         Debug.Log("Error | P2BodyDist");
 
-                    error = true;
-                    return 0;
+                    return new Number();
             }
         }
 
@@ -2394,16 +2608,15 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("P2Dist")]
-    internal static class P2Dist
+    class P2Dist : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static float Evaluate(Character character, ref bool error, Axis axis)
+        public P2Dist(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Arguments.Count != 1) return new Number();
 
             var opponent = character.GetOpponent();
             if (opponent == null)
@@ -2411,9 +2624,10 @@ namespace UnityMugen.Evaluation.Triggers
                 if (KeepLog)
                     Debug.Log("Error | P2Dist");
 
-                error = true;
-                return 0;
+                return new Number();
             }
+
+            Axis axis = (Axis)Arguments[0];
 
             switch (axis)
             {
@@ -2421,22 +2635,21 @@ namespace UnityMugen.Evaluation.Triggers
                     var distance = Math.Abs(character.CurrentLocation.x - opponent.CurrentLocation.x);
                     if (character.CurrentFacing == UnityMugen.Facing.Right)
                     {
-                        return (opponent.CurrentLocation.x >= character.CurrentLocation.x ? distance : -distance) * Constant.Scale2;
+                        return new Number((opponent.CurrentLocation.x >= character.CurrentLocation.x ? distance : -distance) * Constant.Scale2);
                     }
                     else
                     {
-                        return (opponent.CurrentLocation.x >= character.CurrentLocation.x ? -distance : distance) * Constant.Scale2;
+                        return new Number((opponent.CurrentLocation.x >= character.CurrentLocation.x ? -distance : distance) * Constant.Scale2);
                     }
 
                 case Axis.Y:
-                    return (opponent.CurrentLocation.y - character.CurrentLocation.y) * Constant.Scale2;
+                    return new Number((opponent.CurrentLocation.y - character.CurrentLocation.y) * Constant.Scale2);
 
                 default:
                     if (KeepLog)
                         Debug.Log("Error | P2Dist");
 
-                    error = true;
-                    return 0;
+                    return new Number();
             }
         }
 
@@ -2453,16 +2666,15 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("P2Life")]
-    internal static class P2Life
+    class P2Life : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static float Evaluate(Character character, ref bool error)
+        public P2Life(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
             var opponent = character.GetOpponent();
             if (opponent == null)
@@ -2470,11 +2682,10 @@ namespace UnityMugen.Evaluation.Triggers
                 if (KeepLog)
                     Debug.Log("Error | P2Life");
 
-                error = true;
-                return 0;
+                return new Number();
             }
 
-            return opponent.Life;
+            return new Number(opponent.Life);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -2484,18 +2695,20 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("P2MoveType")]
-    internal static class P2MoveType
+    class P2MoveType : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static bool Evaluate(Character character, ref bool error, Operator @operator, UnityMugen.MoveType movetype)
+        public P2MoveType(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Arguments.Count != 2)
             {
                 if (KeepLog)
                     Debug.Log("Error | P2MoveType");
 
-                error = true;
-                return false;
+                return new Number();
             }
 
             var opponent = character.GetOpponent();
@@ -2504,33 +2717,34 @@ namespace UnityMugen.Evaluation.Triggers
                 if (KeepLog)
                     Debug.Log("Error | P2MoveType");
 
-                error = true;
-                return false;
+                return new Number();
             }
+
+
+            Operator @operator = (Operator)Arguments[0];
+            UnityMugen.MoveType movetype = (UnityMugen.MoveType)Arguments[1];
 
             if (movetype == UnityMugen.MoveType.Unchanged || movetype == UnityMugen.MoveType.None)
             {
                 if (KeepLog)
                     Debug.Log("Error | P2MoveType");
 
-                error = true;
-                return false;
+                return new Number();
             }
 
             switch (@operator)
             {
                 case Operator.Equals:
-                    return movetype == opponent.MoveType;
+                    return new Number(movetype == opponent.MoveType);
 
                 case Operator.NotEquals:
-                    return movetype != opponent.MoveType;
+                    return new Number(movetype != opponent.MoveType);
 
                 default:
                     if (KeepLog)
                         Debug.Log("Error | P2MoveType");
 
-                    error = true;
-                    return false;
+                    return new Number();
             }
         }
 
@@ -2553,33 +2767,33 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("P2Name")]
-    internal static class P2Name
+    class P2Name : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static bool Evaluate(Character character, ref bool error, Operator @operator, string text)
+        public P2Name(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Arguments.Count != 2) return new Number();
 
             var p2 = character.Team.OtherTeam.MainPlayer;
+            Operator @operator = (Operator)Arguments[0];
+            string text = (string)Arguments[1];
 
             switch (@operator)
             {
                 case Operator.Equals:
-                    return p2 != null ? string.Equals(p2.profile.charName, text, StringComparison.OrdinalIgnoreCase) : false;
+                    return new Number(p2 != null ? string.Equals(p2.profile.charName, text, StringComparison.OrdinalIgnoreCase) : false);
 
                 case Operator.NotEquals:
-                    return p2 != null ? !string.Equals(p2.profile.charName, text, StringComparison.OrdinalIgnoreCase) : true;
+                    return new Number(p2 != null ? !string.Equals(p2.profile.charName, text, StringComparison.OrdinalIgnoreCase) : true);
 
                 default:
                     if (KeepLog)
                         Debug.Log("Error | P2Name");
 
-                    error = true;
-                    return false;
+                    return new Number();
             }
         }
 
@@ -2600,16 +2814,15 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("P2StateNo")]
-    internal static class P2StateNo
+    class P2StateNo : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static int Evaluate(Character character, ref bool error)
+        public P2StateNo(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
             var opponent = character.GetOpponent();
             if (opponent == null)
@@ -2617,12 +2830,11 @@ namespace UnityMugen.Evaluation.Triggers
                 if (KeepLog)
                     Debug.Log("Error | P2StateNo");
 
-                error = true;
-                return 0;
+                return new Number();
             }
 
             var currentstate = opponent.StateManager.CurrentState;
-            return currentstate != null ? currentstate.number : 0;
+            return new Number(currentstate != null ? currentstate.number : 0);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -2632,18 +2844,20 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("P2StateType")]
-    internal static class P2StateType
+    class P2StateType : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static bool Evaluate(Character character, ref bool error, Operator @operator, UnityMugen.StateType statetype)
+        public P2StateType(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Arguments.Count != 2)
             {
                 if (KeepLog)
                     Debug.Log("Error | P2StateType");
 
-                error = true;
-                return false;
+                return new Number();
             }
 
             var opponent = character.GetOpponent();
@@ -2652,33 +2866,33 @@ namespace UnityMugen.Evaluation.Triggers
                 if (KeepLog)
                     Debug.Log("Error | P2StateType");
 
-                error = true;
-                return false;
+                return new Number();
             }
+
+            Operator @operator = (Operator)Arguments[0];
+            UnityMugen.StateType statetype = (UnityMugen.StateType)Arguments[1];
 
             if (statetype == UnityMugen.StateType.Unchanged || statetype == UnityMugen.StateType.None)
             {
                 if (KeepLog)
                     Debug.Log("Error | P2StateType");
 
-                error = true;
-                return false;
+                return new Number();
             }
 
             switch (@operator)
             {
                 case Operator.Equals:
-                    return statetype == opponent.StateType;
+                    return new Number(statetype == opponent.StateType);
 
                 case Operator.NotEquals:
-                    return statetype != opponent.StateType;
+                    return new Number(statetype != opponent.StateType);
 
                 default:
                     if (KeepLog)
                         Debug.Log("Error | P2StateType");
 
-                    error = true;
-                    return false;
+                    return new Number();
             }
         }
 
@@ -2701,33 +2915,33 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("P3Name")]
-    internal static class P3Name
+    class P3Name : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static bool Evaluate(Character character, ref bool error, Operator @operator, string text)
+        public P3Name(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Arguments.Count != 2) return new Number();
 
             var p3 = character.Team.TeamMate;
+            Operator @operator = (Operator)Arguments[0];
+            string text = (string)Arguments[1];
 
             switch (@operator)
             {
                 case Operator.Equals:
-                    return p3 != null ? string.Equals(p3.profile.charName, text, StringComparison.OrdinalIgnoreCase) : false;
+                    return new Number(p3 != null ? string.Equals(p3.profile.charName, text, StringComparison.OrdinalIgnoreCase) : false);
 
                 case Operator.NotEquals:
-                    return p3 != null ? !string.Equals(p3.profile.charName, text, StringComparison.OrdinalIgnoreCase) : true;
+                    return new Number(p3 != null ? !string.Equals(p3.profile.charName, text, StringComparison.OrdinalIgnoreCase) : true);
 
                 default:
                     if (KeepLog)
                         Debug.Log("Error | P3Name");
 
-                    error = true;
-                    return false;
+                    return new Number();
             }
         }
 
@@ -2748,33 +2962,33 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("P4Name")]
-    internal static class P4Name
+    class P4Name : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static bool Evaluate(Character character, ref bool error, Operator @operator, string text)
+        public P4Name(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Arguments.Count != 2) return new Number();
 
             var p4 = character.Team.OtherTeam.TeamMate;
+            Operator @operator = (Operator)Arguments[0];
+            string text = (string)Arguments[1];
 
             switch (@operator)
             {
                 case Operator.Equals:
-                    return p4 != null ? string.Equals(p4.profile.charName, text, StringComparison.OrdinalIgnoreCase) : false;
+                    return new Number(p4 != null ? string.Equals(p4.profile.charName, text, StringComparison.OrdinalIgnoreCase) : false);
 
                 case Operator.NotEquals:
-                    return p4 != null ? !string.Equals(p4.profile.charName, text, StringComparison.OrdinalIgnoreCase) : true;
+                    return new Number(p4 != null ? !string.Equals(p4.profile.charName, text, StringComparison.OrdinalIgnoreCase) : true);
 
                 default:
                     if (KeepLog)
                         Debug.Log("Error | P4Name");
 
-                    error = true;
-                    return false;
+                    return new Number();
             }
         }
 
@@ -2795,17 +3009,17 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("PalNo")]
-    internal static class PalNo
+    class PalNo : Function
     {
-        public static int Evaluate(Character character, ref bool error)
+        public PalNo(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            return character.BasePlayer.PaletteNumber;
+            return new Number(character.BasePlayer.PaletteNumber);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -2815,16 +3029,15 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("ParentDist")]
-    internal static class ParentDist
+    class ParentDist : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static float Evaluate(Character character, ref bool error, Axis axis)
+        public ParentDist(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Arguments.Count != 1) return new Number();
 
             var helper = character as UnityMugen.Combat.Helper;
             if (helper == null)
@@ -2832,9 +3045,10 @@ namespace UnityMugen.Evaluation.Triggers
                 if (KeepLog)
                     Debug.Log("Error | ParentDist");
 
-                error = true;
-                return 0;
+                return new Number();
             }
+
+            Axis axis = (Axis)Arguments[0];
 
             switch (axis)
             {
@@ -2842,22 +3056,21 @@ namespace UnityMugen.Evaluation.Triggers
                     var distance = Math.Abs(helper.CurrentLocation.x - helper.Creator.CurrentLocation.x) * Constant.Scale2;
                     if (helper.CurrentFacing == UnityMugen.Facing.Right)
                     {
-                        return helper.Creator.CurrentLocation.x >= helper.CurrentLocation.x ? distance : -distance;
+                        return new Number(helper.Creator.CurrentLocation.x >= helper.CurrentLocation.x ? distance : -distance);
                     }
                     else
                     {
-                        return helper.Creator.CurrentLocation.x >= helper.CurrentLocation.x ? -distance : distance;
+                        return new Number(helper.Creator.CurrentLocation.x >= helper.CurrentLocation.x ? -distance : distance);
                     }
 
                 case Axis.Y:
-                    return helper.Creator.CurrentLocation.y - helper.CurrentLocation.y;
+                    return new Number(helper.Creator.CurrentLocation.y - helper.CurrentLocation.y);
 
                 default:
                     if (KeepLog)
                         Debug.Log("Error | ParentDist");
 
-                    error = true;
-                    return 0;
+                    return new Number();
             }
         }
 
@@ -2874,43 +3087,46 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("Physics")]
-    internal static class Physics
+    class Physics : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static bool Evaluate(Character character, ref bool error, Operator @operator, UnityMugen.Physic physics)
+        public Physics(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Arguments.Count != 2)
             {
                 if (KeepLog)
                     Debug.Log("Error | Physics");
 
-                error = true;
-                return false;
+                return new Number();
             }
+
+            Operator @operator = (Operator)Arguments[0];
+            UnityMugen.Physic physics = (UnityMugen.Physic)Arguments[1];
 
             if (physics == UnityMugen.Physic.Unchanged || physics == UnityMugen.Physic.None)
             {
                 if (KeepLog)
                     Debug.Log("Error | Physics");
 
-                error = true;
-                return false;
+                return new Number();
             }
 
             switch (@operator)
             {
                 case Operator.Equals:
-                    return physics == character.Physics;
+                    return new Number(physics == character.Physics);
 
                 case Operator.NotEquals:
-                    return physics != character.Physics;
+                    return new Number(physics != character.Physics);
 
                 default:
                     if (KeepLog)
                         Debug.Log("Error | Physics");
 
-                    error = true;
-                    return false;
+                    return new Number();
             }
         }
 
@@ -2933,11 +3149,15 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("Pi")]
-    internal static class Pi
+    class Pi : Function
     {
-        public static float Evaluate(Character character, ref bool error)
+        public Pi(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            return (float)Math.PI;
+        }
+        public override Number Evaluate(Character character)
+        {
+            return new Number(Math.PI);
         }
 
         public static Node Parse(ParseState state)
@@ -2947,32 +3167,40 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("Pos")]
-    internal static class Pos
+    class Pos : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static float Evaluate(Character character, ref bool error, Axis axis)
+        public Pos(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Arguments.Count != 1) return new Number();
+
+            Axis axis = (Axis)Arguments[0];
 
             switch (axis)
             {
                 case Axis.X:
-                    var screenrect = character.Engine.CameraFE.ScreenBounds();
-                    //return (character.CurrentLocation.x - screenrect.xMin - screenrect.width / 2) * Constant.Scale2;
-                    return (character.CurrentLocation.x - screenrect.center.x) * Constant.Scale2;
+                    ////var screenrect = character.Engine.CameraFE.ScreenBounds();
+                    //var screenrect = character.Engine.CameraFE.CornerCamera();
+                    ////return (character.CurrentLocation.x - screenrect.xMin - screenrect.width / 2) * Constant.Scale2;
+                    //return new Number((character.CurrentLocation.x - screenrect.center.x) * Constant.Scale2);
+
+                    var drawlocationCenterCam = Camera.main.WorldToScreenPoint(character.Engine.CameraFE.transCenter.position);
+                    float xCam = drawlocationCenterCam.x / (Screen.width / Constant.LocalCoord.x);
+
+                    var drawlocationEntity = Camera.main.WorldToScreenPoint(character.CurrentLocationYTransform());
+                    float xEntity = drawlocationEntity.x / (Screen.width / Constant.LocalCoord.x);
+                    return new Number(xEntity - xCam);
                 case Axis.Y:
-                    return character.CurrentLocation.y * Constant.Scale2;
+                    return new Number(character.CurrentLocation.y * Constant.Scale2);
 
                 default:
                     if (KeepLog)
                         Debug.Log("Error | Pos");
 
-                    error = true;
-                    return 0;
+                    return new Number();
             }
         }
 
@@ -2989,17 +3217,17 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("Power")]
-    internal static class Power
+    class Power : Function
     {
-        public static float Evaluate(Character character, ref bool error)
+        public Power(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            return character.BasePlayer.Power;
+            return new Number(character.BasePlayer.Power);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -3009,17 +3237,17 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("PowerMax")]
-    internal static class PowerMax
+    class PowerMax : Function
     {
-        public static float Evaluate(Character character, ref bool error)
+        public PowerMax(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            return character.BasePlayer.playerConstants.MaximumPower;
+            return new Number(character.BasePlayer.playerConstants.MaximumPower);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -3029,25 +3257,28 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("PlayerIDExist")]
-    internal static class PlayerIDExist
+    class PlayerIDExist : Function
     {
-        public static bool Evaluate(Character character, ref bool error, int id)
+        public PlayerIDExist(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Children.Count != 1) return new Number();
+
+            Number id = Children[0].Evaluate(character);
+            if (id.NumberType != NumberType.Int) return new Number();
 
             foreach (var entity in character.Engine.Entities)
             {
                 var c = entity as Character;
                 if (c == null) continue;
 
-                if (c.Id == id) return true;
+                if (c.Id == id.IntValue) return new Number(true);
             }
 
-            return false;
+            return new Number(false);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -3057,18 +3288,18 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("PrevStateNo")]
-    internal static class PrevStateNo
+    class PrevStateNo : Function
     {
-        public static int Evaluate(Character character, ref bool error)
+        public PrevStateNo(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
             var prevstate = character.StateManager.PreviousState;
-            return prevstate != null ? prevstate.number : 0;
+            return new Number(prevstate != null ? prevstate.number : 0);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -3078,23 +3309,26 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("ProjCancelTime")]
-    internal static class ProjCancelTime
+    class ProjCancelTime : Function
     {
-        public static int Evaluate(Character character, ref bool error, int projectileId)
+        public ProjCancelTime(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Children.Count != 1) return new Number();
+
+            Number projectileId = Children[0].Evaluate(character);
+            if (projectileId.NumberType != NumberType.Int) return new Number();
 
             var projinfo = character.OffensiveInfo.ProjectileInfo;
-            if (projinfo.Type == ProjectileDataType.Cancel && (projectileId <= 0 || projectileId == projinfo.ProjectileId))
+            if (projinfo.Type == ProjectileDataType.Cancel && (projectileId.IntValue <= 0 || projectileId.IntValue == projinfo.ProjectileId))
             {
-                return projinfo.Time;
+                return new Number(projinfo.Time);
             }
 
-            return -1;
+            return new Number(-1);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -3104,26 +3338,38 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("ProjContact")]
-    internal static class ProjContact
+    class ProjContact : Function
     {
-        public static bool Evaluate(Character character, ref bool error, int projId, int r2, int rhs, Operator compareType)
+        public ProjContact(List<IFunction> children, List<System.Object> arguments)
+                  : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
-
-            var lookingfor = r2 > 0;
-
-            var projinfo = character.OffensiveInfo.ProjectileInfo;
-
-            var found = (projinfo.Type == ProjectileDataType.Hit || projinfo.Type == ProjectileDataType.Guarded) && (projId <= 0 || projId == projinfo.ProjectileId);
-            if (found) found = SpecialFunctions.LogicalOperation(compareType, projinfo.Time, rhs);
-
-            return lookingfor == found;
         }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
+            if (Children.Count == 3 && Arguments.Count == 1)
+            {
+                Number projId = Children[0].Evaluate(character);
+                Number r2 = Children[1].Evaluate(character);
+                Number rhs = Children[2].Evaluate(character);
+                Operator compareType = (Operator)Arguments[0];
+
+                var lookingfor = r2.IntValue > 0;
+                var projinfo = character.OffensiveInfo.ProjectileInfo;
+                var found = (projinfo.Type == ProjectileDataType.Hit || projinfo.Type == ProjectileDataType.Guarded) && (projId.IntValue <= 0 || projId.IntValue == projinfo.ProjectileId);
+                if (found) found = SpecialFunctions.LogicalOperation(compareType, projinfo.Time, rhs.IntValue);
+
+                return new Number(lookingfor == found);
+            }
+            else
+            {
+                Debug.LogError("ProjContact : Function");
+                return new Number();
+            }
+                
+        }
+        /*
         public static bool Evaluate(Character character, ref bool error, int projId, int r2, int pre, int post, Operator compareType, Symbol preCheck, Symbol postCheck)
         {
             if (character == null)
@@ -3141,7 +3387,7 @@ namespace UnityMugen.Evaluation.Triggers
 
             return lookingfor == found;
         }
-
+        */
         public static Node Parse(ParseState parsestate)
         {
             var basenode = parsestate.BuildParenNumberNode(true);
@@ -3217,23 +3463,26 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("ProjContactTime")]
-    internal static class ProjContactTime
+    class ProjContactTime : Function
     {
-        public static int Evaluate(Character character, ref bool error, int projectileId)
+        public ProjContactTime(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Children.Count != 1) return new Number();
+
+            Number projectileId = Children[0].Evaluate(character);
+            if (projectileId.NumberType != NumberType.Int) return new Number();
 
             var projinfo = character.OffensiveInfo.ProjectileInfo;
-            if ((projinfo.Type == ProjectileDataType.Hit || projinfo.Type == ProjectileDataType.Guarded) && (projectileId <= 0 || projectileId == projinfo.ProjectileId))
+            if ((projinfo.Type == ProjectileDataType.Hit || projinfo.Type == ProjectileDataType.Guarded) && (projectileId.IntValue <= 0 || projectileId.IntValue == projinfo.ProjectileId))
             {
-                return projinfo.Time;
+                return new Number(projinfo.Time);
             }
 
-            return -1;
+            return new Number(-1);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -3243,26 +3492,36 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("ProjGuarded")]
-    internal static class ProjGuarded
+    class ProjGuarded : Function
     {
-        public static bool Evaluate(Character character, ref bool error, int projId, int r2, int rhs, Operator compareType)
+        public ProjGuarded(List<IFunction> children, List<System.Object> arguments)
+                  : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
-
-            var lookingfor = r2 > 0;
-
-            var projinfo = character.OffensiveInfo.ProjectileInfo;
-
-            var found = projinfo.Type == ProjectileDataType.Guarded && (projId <= 0 || projId == projinfo.ProjectileId);
-            if (found) found = SpecialFunctions.LogicalOperation(compareType, projinfo.Time, rhs);
-
-            return lookingfor == found;
         }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
+            if (Children.Count == 3 && Arguments.Count == 1)
+            {
+                Number projId = Children[0].Evaluate(character);
+                Number r2 = Children[1].Evaluate(character);
+                Number rhs = Children[2].Evaluate(character);
+                Operator compareType = (Operator)Arguments[0];
+
+                var lookingfor = r2.IntValue > 0;
+                var projinfo = character.OffensiveInfo.ProjectileInfo;
+                var found = projinfo.Type == ProjectileDataType.Guarded && (projId.IntValue <= 0 || projId.IntValue == projinfo.ProjectileId);
+                if (found) found = SpecialFunctions.LogicalOperation(compareType, projinfo.Time, rhs.IntValue);
+                return new Number(lookingfor == found);
+            }
+            else
+            {
+                Debug.LogError("ProjGuarded : Function");
+                return new Number();
+            }
+        }
+        /*
         public static bool Evaluate(Character character, ref bool error, int projId, int r2, int pre, int post, Operator compareType, Symbol preCheck, Symbol postCheck)
         {
             if (character == null)
@@ -3280,7 +3539,7 @@ namespace UnityMugen.Evaluation.Triggers
 
             return lookingfor == found;
         }
-
+        */
         public static Node Parse(ParseState parsestate)
         {
             var basenode = parsestate.BuildParenNumberNode(true);
@@ -3356,23 +3615,26 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("ProjGuardedTime")]
-    internal static class ProjGuardedTime
+    class ProjGuardedTime : Function
     {
-        public static int Evaluate(Character character, ref bool error, int projectileId)
+        public ProjGuardedTime(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Children.Count != 1) return new Number();
+
+            Number projectileId = Children[0].Evaluate(character);
+            if (projectileId.NumberType != NumberType.Int) return new Number();
 
             var projinfo = character.OffensiveInfo.ProjectileInfo;
-            if (projinfo.Type == ProjectileDataType.Guarded && (projectileId <= 0 || projectileId == projinfo.ProjectileId))
+            if (projinfo.Type == ProjectileDataType.Guarded && (projectileId.IntValue <= 0 || projectileId.IntValue == projinfo.ProjectileId))
             {
-                return projinfo.Time;
+                return new Number(projinfo.Time);
             }
 
-            return -1;
+            return new Number(-1);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -3382,26 +3644,39 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("ProjHit")]
-    internal static class ProjHit
+    class ProjHit : Function
     {
-        public static bool Evaluate(Character character, ref bool error, int projId, int r2, int rhs, Operator compareType)
+        public ProjHit(List<IFunction> children, List<System.Object> arguments)
+                  : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
-
-            var lookingfor = r2 > 0;
-
-            var projinfo = character.OffensiveInfo.ProjectileInfo;
-
-            var found = projinfo.Type == ProjectileDataType.Hit && (projId <= 0 || projId == projinfo.ProjectileId);
-            if (found) found = SpecialFunctions.LogicalOperation(compareType, projinfo.Time, rhs);
-
-            return lookingfor == found;
         }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
+            if (Children.Count == 3 && Arguments.Count == 1)
+            {
+                Number projId = Children[0].Evaluate(character);
+                Number r2 = Children[1].Evaluate(character);
+                Number rhs = Children[2].Evaluate(character);
+                Operator compareType = (Operator)Arguments[0];
+
+                var lookingfor = r2.IntValue > 0;
+
+                var projinfo = character.OffensiveInfo.ProjectileInfo;
+
+                var found = projinfo.Type == ProjectileDataType.Hit && (projId.IntValue <= 0 || projId.IntValue == projinfo.ProjectileId);
+                if (found) found = SpecialFunctions.LogicalOperation(compareType, projinfo.Time, rhs.IntValue);
+
+                return new Number(lookingfor == found);
+            }
+            else
+            {
+                Debug.LogError("ProjHit : Function");
+                return new Number();
+            }
+        }
+        /*
         public static bool Evaluate(Character character, ref bool error, int projId, int r2, int pre, int post, Operator compareType, Symbol preCheck, Symbol postCheck)
         {
             if (character == null)
@@ -3419,7 +3694,7 @@ namespace UnityMugen.Evaluation.Triggers
 
             return lookingfor == found;
         }
-
+        */
         public static Node Parse(ParseState parsestate)
         {
             var basenode = parsestate.BuildParenNumberNode(true);
@@ -3495,23 +3770,26 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("ProjHitTime")]
-    internal static class ProjHitTime
+    class ProjHitTime : Function
     {
-        public static int Evaluate(Character character, ref bool error, int projectileId)
+        public ProjHitTime(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Children.Count != 1) return new Number();
+
+            Number projectileId = Children[0].Evaluate(character);
+            if (projectileId.NumberType != NumberType.Int) return new Number();
 
             var projinfo = character.OffensiveInfo.ProjectileInfo;
-            if (projinfo.Type == ProjectileDataType.Hit && (projectileId <= 0 || projectileId == projinfo.ProjectileId))
+            if (projinfo.Type == ProjectileDataType.Hit && (projectileId.IntValue <= 0 || projectileId.IntValue == projinfo.ProjectileId))
             {
-                return projinfo.Time;
+                return new Number(projinfo.Time);
             }
 
-            return -1;
+            return new Number(-1);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -3521,18 +3799,19 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("Random")]
-    internal static class RandomT
+    class Random : Function
     {
-        public static int Evaluate(Character character, ref bool error)
+        public Random(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
+
 #warning analizar posteriormente game online
             var rng = LauncherEngine.Inst.random;
-            return rng.NewInt(0, 999);
+            return new Number(rng.NewInt(0, 999));
         }
 
         public static Node Parse(ParseState parsestate)
@@ -3542,16 +3821,15 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("RootDist")]
-    internal static class RootDist
+    class RootDist : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static float Evaluate(Character character, ref bool error, Axis axis)
+        public RootDist(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Arguments.Count != 1) return new Number();
 
             var helper = character as UnityMugen.Combat.Helper;
             if (helper == null)
@@ -3559,9 +3837,10 @@ namespace UnityMugen.Evaluation.Triggers
                 if (KeepLog)
                     Debug.Log("Error | RootDist");
 
-                error = true;
-                return 0;
+                return new Number();
             }
+
+            Axis axis = (Axis)Arguments[0];
 
             switch (axis)
             {
@@ -3570,24 +3849,23 @@ namespace UnityMugen.Evaluation.Triggers
                     if (helper.CurrentFacing == UnityMugen.Facing.Right)
                     {
                         float valueX = helper.BasePlayer.CurrentLocation.x >= helper.CurrentLocation.x ? distance : -distance;
-                        return valueX * Constant.Scale2;
+                        return new Number(valueX * Constant.Scale2);
                     }
                     else
                     {
                         float valueX = helper.BasePlayer.CurrentLocation.x >= helper.CurrentLocation.x ? -distance : distance;
-                        return valueX * Constant.Scale2;
+                        return new Number(valueX * Constant.Scale2);
                     }
 
                 case Axis.Y:
                     float valueY = helper.BasePlayer.CurrentLocation.y - helper.CurrentLocation.y;
-                    return valueY * Constant.Scale2;
+                    return new Number(valueY * Constant.Scale2);
 
                 default:
                     if (KeepLog)
                         Debug.Log("Error | RootDist");
 
-                    error = true;
-                    return 0;
+                    return new Number();
             }
         }
 
@@ -3604,17 +3882,17 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("RoundNo")]
-    internal static class RoundNo
+    class RoundNo : Function
     {
-        public static int Evaluate(Character character, ref bool error)
+        public RoundNo(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            return character.Engine.RoundNumber;
+            return new Number(character.Engine.RoundNumber);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -3624,17 +3902,17 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("RoundsExisted")]
-    internal static class RoundsExisted
+    class RoundsExisted : Function
     {
-        public static int Evaluate(Character character, ref bool error)
+        public RoundsExisted(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            return character.RoundsExisted;
+            return new Number(character.RoundsExisted);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -3644,35 +3922,35 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("RoundState")]
-    internal static class RoundStateT
+    class RoundState : Function
     {
-        public static int Evaluate(Character character, ref bool error)
+        public RoundState(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
             switch (character.Engine.RoundState)
             {
                 case UnityMugen.RoundState.PreIntro:
-                    return 0;
+                    return new Number(0);
 
                 case UnityMugen.RoundState.Intro:
-                    return 1;
+                    return new Number(1);
 
                 case UnityMugen.RoundState.Fight:
-                    return 2;
+                    return new Number(2);
 
                 case UnityMugen.RoundState.PreOver:
-                    return 3;
+                    return new Number(3);
 
                 case UnityMugen.RoundState.Over:
-                    return 4;
+                    return new Number(4);
 
                 default:
-                    return -1;
+                    return new Number(-1);
             }
         }
 
@@ -3683,34 +3961,32 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("ScreenPos")]
-    internal static class ScreenPos
+    class ScreenPos : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static float Evaluate(Character character, ref bool error, Axis axis)
+        public ScreenPos(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Arguments.Count != 1) return new Number();
 
+            Axis axis = (Axis)Arguments[0];
             var drawlocation = Camera.main.WorldToScreenPoint(character.CurrentLocationYTransform());
 
             switch (axis)
             {
                 case Axis.X:
-                    return drawlocation.x / (Screen.width / Constant.LocalCoord.x);
+                    return new Number(drawlocation.x / (Screen.width / Constant.LocalCoord.x));
 
                 case Axis.Y:
-                    return (Screen.height - drawlocation.y) / 
-                        (Screen.height / Constant.LocalCoord.y);
+                    return new Number((Screen.height - drawlocation.y) / (Screen.height / Constant.LocalCoord.y));
 
                 default:
                     if (KeepLog)
                         Debug.Log("Error | ScreenPos");
 
-                    error = true;
-                    return 0;
+                    return new Number();
             }
         }
 
@@ -3727,17 +4003,20 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("SelfAnimExist")]
-    internal static class SelfAnimExist
+    class SelfAnimExist : Function
     {
-        public static bool Evaluate(Character character, ref bool error, int animationnumber)
+        public SelfAnimExist(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Children.Count != 1) return new Number();
 
-            return character.AnimationManager.HasAnimation(animationnumber);
+            Number animationnumber = Children[0].Evaluate(character);
+            if (animationnumber.NumberType != NumberType.Int) return new Number();
+
+            return new Number(character.AnimationManager.HasAnimation(animationnumber.IntValue));
         }
 
         public static Node Parse(ParseState parsestate)
@@ -3747,11 +4026,18 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("Sin")]
-    internal static class Sin
+    class Sin : Function
     {
-        public static float Evaluate(Character character, ref bool error, float value)
+        public Sin(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            return (float)Math.Sin(value);
+        }
+        public override Number Evaluate(Character character)
+        {
+            Number number = Children[0].Evaluate(character);
+            if (number.NumberType == NumberType.None) return new Number();
+
+            return new Number(Math.Sin(number.FloatValue));
         }
 
         public static Node Parse(ParseState state)
@@ -3761,22 +4047,24 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("StateNo")]
-    internal static class StateNo
+    class StateNo : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static int Evaluate(Character character, ref bool error)
+        public StateNo(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
+        {
+        }
+        public override Number Evaluate(Character character)
         {
             if (character == null)
             {
                 if (KeepLog)
                     Debug.Log("Error | StateNo");
 
-                error = true;
-                return 0;
+                return new Number();
             }
 
             var currentstate = character.StateManager.CurrentState;
-            return currentstate != null ? currentstate.number : 0;
+            return new Number(currentstate != null ? currentstate.number : 0);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -3786,43 +4074,46 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("StateType")]
-    internal static class StateTypeT
+    class StateType : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static bool Evaluate(Character character, ref bool error, Operator @operator, UnityMugen.StateType statetype)
+        public StateType(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Arguments.Count != 2)
             {
                 if (KeepLog)
                     Debug.Log("Error | StateType");
 
-                error = true;
-                return false;
+                return new Number();
             }
+
+            Operator @operator = (Operator)Arguments[0];
+            UnityMugen.StateType statetype = (UnityMugen.StateType)Arguments[1];
 
             if (statetype == UnityMugen.StateType.Unchanged || statetype == UnityMugen.StateType.None)
             {
                 if (KeepLog)
                     Debug.Log("Error | StateType");
 
-                error = true;
-                return false;
+                return new Number();
             }
 
             switch (@operator)
             {
                 case Operator.Equals:
-                    return statetype == character.StateType;
+                    return new Number(statetype == character.StateType);
 
                 case Operator.NotEquals:
-                    return statetype != character.StateType;
+                    return new Number(statetype != character.StateType);
 
                 default:
                     if (KeepLog)
                         Debug.Log("Error | StateType");
 
-                    error = true;
-                    return false;
+                    return new Number();
             }
         }
 
@@ -3846,15 +4137,18 @@ namespace UnityMugen.Evaluation.Triggers
 
 
     [CustomFunction("StageVar")]
-    internal static class StageVar
+    class StageVar : Function
     {
-        public static bool Evaluate(Character character, ref bool error, Operator @operator, string text)
+        public StageVar(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Arguments.Count != 2) return new Number();
+
+            Operator @operator = (Operator)Arguments[0];
+            string text = (string)Arguments[1];
 
             StageProfile prof = LauncherEngine.Inst.profileLoader.stageProfiles[character.Engine.stageScreen.Stage.stageID];
             Stage stage = character.Engine.stageScreen.Stage;
@@ -3948,7 +4242,7 @@ namespace UnityMugen.Evaluation.Triggers
                         return false;
                 }*/
 
-            return false;
+            return new Number(false);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -3970,25 +4264,25 @@ namespace UnityMugen.Evaluation.Triggers
 
 
     [CustomFunction("SysFVar")]
-    internal static class SysFVar
+    class SysFVar : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static float Evaluate(Character character, ref bool error, int value)
+        public SysFVar(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Children.Count != 1) return new Number();
 
-            float result;
-            if (character.Variables.GetFloat(value, true, out result)) return result;
+            Number value = Children[0].Evaluate(character);
+            if (value.NumberType == NumberType.None) return new Number();
+
+            if (character.Variables.GetFloat(value.IntValue, true, out float result)) return new Number(result);
 
             if (KeepLog)
                 Debug.Log("Error | SysFVar");
 
-            error = true;
-            return 0;
+            return new Number();
         }
 
         public static Node Parse(ParseState parsestate)
@@ -3998,25 +4292,25 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("SysVar")]
-    internal static class SysVar
+    class SysVar : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static int Evaluate(Character character, ref bool error, int value)
+        public SysVar(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Children.Count != 1) return new Number();
 
-            int result;
-            if (character.Variables.GetInteger(value, true, out result)) return result;
+            Number value = Children[0].Evaluate(character);
+            if (value.NumberType == NumberType.None) return new Number();
+
+            if (character.Variables.GetInteger(value.IntValue, true, out int result)) return new Number(result);
 
             if (KeepLog)
                 Debug.Log("Error | SysFVar");
 
-            error = true;
-            return 0;
+            return new Number();
         }
 
         public static Node Parse(ParseState parsestate)
@@ -4026,11 +4320,20 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("Tan")]
-    internal static class Tan
+    class Tan : Function
     {
-        public static float Evaluate(Character character, ref bool error, float value)
+        public Tan(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            return (float)Math.Tan(value);
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (Children.Count != 1) return new Number();
+
+            Number number = Children[0].Evaluate(character);
+            if (number.NumberType == NumberType.None) return new Number();
+
+            return new Number(Math.Tan(number.FloatValue));
         }
 
         public static Node Parse(ParseState state)
@@ -4040,16 +4343,18 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("TeamMode")]
-    internal static class TeamModeT
+    class TeamMode : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static bool Evaluate(Character character, ref bool error, Operator @operator, string text)
+        public TeamMode(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Arguments.Count != 2) return new Number();
+
+            Operator @operator = (Operator)Arguments[0];
+            string text = (string)Arguments[1];
 
             var mode = character.Team.Mode;
             bool result;
@@ -4068,24 +4373,22 @@ namespace UnityMugen.Evaluation.Triggers
                     if (KeepLog)
                         Debug.Log("Error | TeamMode");
 
-                    error = true;
-                    return false;
+                    return new Number();
             }
 
             switch (@operator)
             {
                 case Operator.Equals:
-                    return result;
+                    return new Number(result);
 
                 case Operator.NotEquals:
-                    return !result;
+                    return new Number(!result);
 
                 default:
                     if (KeepLog)
                         Debug.Log("Error | TeamMode");
 
-                    error = true;
-                    return false;
+                    return new Number();
             }
         }
 
@@ -4106,31 +4409,29 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("TeamSide")]
-    internal static class TeamSideT
+    class TeamSide : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static int Evaluate(Character character, ref bool error)
+        public TeamSide(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
             switch (character.Team.Side)
             {
                 case UnityMugen.TeamSide.Left:
-                    return 1;
+                    return new Number(1);
 
                 case UnityMugen.TeamSide.Right:
-                    return 2;
+                    return new Number(2);
 
                 default:
                     if (KeepLog)
                         Debug.Log("Error | TeamSide");
 
-                    error = true;
-                    return 0;
+                    return new Number();
             }
         }
 
@@ -4141,17 +4442,17 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("TicksPerSecond")]
-    internal static class TicksPerSecond
+    class TicksPerSecond : Function
     {
-        public static int Evaluate(Character character, ref bool error)
+        public TicksPerSecond(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            return LauncherEngine.Inst.initializationSettings.GameSpeed;
+            return new Number(LauncherEngine.Inst.initializationSettings.GameSpeed);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -4161,20 +4462,20 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("Time")]
-    internal static class TimeT
+    class Time : Function
     {
-        public static int Evaluate(Character character, ref bool error)
+        public Time(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
             var time = character.StateManager.StateTime;
             if (time < 0) time = 0;
 
-            return time;
+            return new Number(time);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -4184,21 +4485,21 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("StateTime")]
-    internal static class StateTime
+    class StateTime : Function
     {
 #warning isso nao é usado mais acho que futuramente vou apagar o Time(Character character) para usar esse
-        public static int Evaluate(Character character, ref bool error)
+        public StateTime(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
             var time = character.StateManager.StateTime;
             if (time < 0) time = 0;
 
-            return time;
+            return new Number(time);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -4208,21 +4509,26 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("TimeMod")]
-    internal static class TimeMod
+    class TimeMod : Function
     {
-        public static bool Evaluate(Character character, ref bool error, int r1, int r2, Operator compareType)
+        public TimeMod(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Children.Count != 2) return new Number();
 
-            var statetimeRemander = character.StateManager.StateTime % r1;
+            Number r1 = Children[0].Evaluate(character);
+            Number r2 = Children[1].Evaluate(character);
+            Operator compareType = (Operator)Arguments[0];
+            if (r1.NumberType != NumberType.Int || r2.NumberType != NumberType.Int) return new Number();
+
+            var statetimeRemander = character.StateManager.StateTime % r1.IntValue;
             //return statetimeRemander == r2; // Modificado Tiago
 
-            bool result = SpecialFunctions.LogicalOperation(compareType, statetimeRemander, r2);// Modificado Tiago
-            return result;// Modificado Tiago
+            bool result = SpecialFunctions.LogicalOperation(compareType, statetimeRemander, r2.IntValue);// Modificado Tiago
+            return new Number(result);// Modificado Tiago
         }
 
         public static Node Parse(ParseState parsestate)
@@ -4267,17 +4573,17 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("UniqHitCount")]
-    internal static class UniqHitCount
+    class UniqHitCount : Function
     {
-        public static int Evaluate(Character character, ref bool error)
+        public UniqHitCount(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            return character.OffensiveInfo.UniqueHitCount;
+            return new Number(character.OffensiveInfo.UniqueHitCount);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -4287,25 +4593,26 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("Var")]
-    internal static class Var
+    class Var : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static int Evaluate(Character character, ref bool error, int value)
+        public Var(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Children.Count != 1) return new Number();
 
-            if (character.Variables.GetInteger(value, false, out int result))
-                return result;
+            Number value = Children[0].Evaluate(character);
+            if (value.NumberType == NumberType.None) return new Number();
+
+            if (character.Variables.GetInteger(value.IntValue, false, out int result))
+                return new Number(result);
 
             if (KeepLog)
                 Debug.Log("Error | Var");
 
-            error = true;
-            return 0;
+            return new Number();
         }
 
         public static Node Parse(ParseState parsestate)
@@ -4314,56 +4621,31 @@ namespace UnityMugen.Evaluation.Triggers
         }
     }
 
-    ////Set Var -- New Tiago -- isso é igual a [var(ixdex) := valor]
-    //public static int SetVar(this Character character, int index, int value)
-    //{
-    //    if (character == null)
-    //    {
-    //        return 0;
-    //    }
-
-    //    character.Variables.SetInteger(index, false, value);
-    //    return value;
-    //}
-
-    ////Set Var -- New Tiago -- isso é igual a [var(ixdex) := valor]
-    //public static float SetVar(this Character character, int index, float value)
-    //{
-    //    if (character == null)
-    //    {
-    //        return 0;
-    //    }
-
-    //    character.Variables.SetFloat(index, false, value);
-    //    return value;
-    //}
-
     [CustomFunction("Vel")]
-    internal static class Vel
+    internal class Vel : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static float Evaluate(Character character, ref bool error, Axis axis)
+        public Vel(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+
+        }
+        public override Number Evaluate(Character character)
+        {
+            Axis axis = (Axis)Arguments[0];
 
             switch (axis)
             {
                 case Axis.X:
-                    return character.CurrentVelocity.x * Constant.Scale2;
+                    return new Number(character.CurrentVelocity.x * Constant.Scale2);
 
                 case Axis.Y:
-                    return character.CurrentVelocity.y * Constant.Scale2;
+                    return new Number(character.CurrentVelocity.y * Constant.Scale2);
 
                 default:
                     if (KeepLog)
                         Debug.Log("Error | Vel");
 
-                    error = true;
-                    return 0;
+                    return new Number();
             }
         }
 
@@ -4380,17 +4662,17 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("Win")]
-    internal static class Win
+    class Win : Function
     {
-        public static bool Evaluate(Character character, ref bool error)
+        public Win(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            return character.Team.VictoryStatus.Win;
+            return new Number(character.Team.VictoryStatus.Win);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -4400,17 +4682,17 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("WinKO")]
-    internal static class WinKO
+    class WinKO : Function
     {
-        public static bool Evaluate(Character character, ref bool error)
+        public WinKO(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            return character.Team.VictoryStatus.WinKO;
+            return new Number(character.Team.VictoryStatus.WinKO);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -4420,17 +4702,17 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("WinTime")]
-    internal static class WinTime
+    class WinTime : Function
     {
-        public static bool Evaluate(Character character, ref bool error)
+        public WinTime(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            return character.Team.VictoryStatus.WinTime;
+            return new Number(character.Team.VictoryStatus.WinTime);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -4440,17 +4722,17 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("WinPerfect")]
-    internal static class WinPerfect
+    class WinPerfect : Function
     {
-        public static bool Evaluate(Character character, ref bool error)
+        public WinPerfect(List<IFunction> children, List<System.Object> arguments)
+               : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            return character.Team.VictoryStatus.WinPerfect;
+            return new Number(character.Team.VictoryStatus.WinPerfect);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -4463,17 +4745,17 @@ namespace UnityMugen.Evaluation.Triggers
 
 #warning falta testar
     [CustomFunction("ScreenHeight")]
-    internal static class ScreenHeight
+    class ScreenHeight : Function
     {
-        public static float Evaluate(Character character, ref bool error)
+        public ScreenHeight(List<IFunction> children, List<System.Object> arguments)
+                  : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            return character.Engine.CameraFE.ConverterBound().height * Constant.Scale2;
+            return new Number(character.Engine.CameraFE.ConverterBound().height * Constant.Scale2);
         }
 
         public static Node Parse(ParseState state)
@@ -4484,17 +4766,17 @@ namespace UnityMugen.Evaluation.Triggers
 
 #warning falta testar
     [CustomFunction("ScreenWidth")]
-    internal static class ScreenWidth
+    class ScreenWidth : Function
     {
-        public static float Evaluate(Character character, ref bool error)
+        public ScreenWidth(List<IFunction> children, List<System.Object> arguments)
+                     : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            return character.Engine.CameraFE.ConverterBound().width * Constant.Scale2;
+            return new Number(character.Engine.CameraFE.ConverterBound().width * Constant.Scale2);
         }
 
         public static Node Parse(ParseState state)
@@ -4504,18 +4786,18 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("GameHeight")]
-    internal static class GameHeight
+    class GameHeight : Function
     {
-        public static float Evaluate(Character character, ref bool error)
+        public GameHeight(List<IFunction> children, List<System.Object> arguments)
+                     : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
             //return character.Engine.CameraFE.CameraBounds.up - character.Engine.CameraFE.CameraBounds.down;
             //return Screen.height;
-            return character.Engine.CameraFE.ConverterBound().height * Constant.Scale2;
+            return new Number(character.Engine.CameraFE.ConverterBound().height * Constant.Scale2);
         }
 
         public static Node Parse(ParseState state)
@@ -4525,18 +4807,18 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("GameWidth")]
-    internal static class GameWidth
+    class GameWidth : Function
     {
-        public static float Evaluate(Character character, ref bool error)
+        public GameWidth(List<IFunction> children, List<System.Object> arguments)
+                     : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
             //return character.Engine.CameraFE.CameraBounds.right - character.Engine.CameraFE.CameraBounds.left;
             //return Screen.width;
-            return character.Engine.CameraFE.ConverterBound().width * Constant.Scale2;
+            return new Number(character.Engine.CameraFE.ConverterBound().width * Constant.Scale2);
         }
 
         public static Node Parse(ParseState state)
@@ -4546,20 +4828,20 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("TopEdge")]
-    internal static class TopEdge
+    class TopEdge : Function
     {
-        public static float Evaluate(Character character, ref bool error)
+        public TopEdge(List<IFunction> children, List<System.Object> arguments)
+                     : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
 #warning não tenho certeza sobre usar yMax, analizar
             // Nao preciso mecher com scale pois Pos e ScreenPos já possuem seus valores alterados pos Constant.Scale2
             // return TE.Pos(character, Axis.Y) - character.ScreenPos(Axis.Y);
-            return character.Engine.CameraFE.ConverterBound().yMin * Constant.Scale2;
+            return new Number(character.Engine.CameraFE.ConverterBound().yMin * Constant.Scale2);
         }
 
         public static Node Parse(ParseState state)
@@ -4569,20 +4851,20 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("BottomEdge")]
-    internal static class BottomEdge
+    class BottomEdge : Function
     {
-        public static float Evaluate(Character character, ref bool error)
+        public BottomEdge(List<IFunction> children, List<System.Object> arguments)
+                     : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
             // Nao preciso mecher com scale pois Pos e ScreenPos já possuem seus valores alterados pos Constant.Scale2
             //return TE.Pos(character, Axis.Y) - TE.ScreenPos(character, Axis.Y) + TE.GameHeight();
 #warning não tenho certeza sobre usar yMax, analizar
-            return character.Engine.CameraFE.ConverterBound().yMax * Constant.Scale2;
+            return new Number(character.Engine.CameraFE.ConverterBound().yMax * Constant.Scale2);
         }
 
         public static Node Parse(ParseState state)
@@ -4592,18 +4874,18 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("RightEdge")]
-    internal static class RightEdge
+    class RightEdge : Function
     {
-        public static float Evaluate(Character character, ref bool error)
+        public RightEdge(List<IFunction> children, List<System.Object> arguments)
+                     : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
 #warning não tenho certeza sobre usar yMin, analizar
-            return character.Engine.CameraFE.ConverterBound().xMax * Constant.Scale2;
+            return new Number(character.Engine.CameraFE.ConverterBound().xMax * Constant.Scale2);
         }
 
         public static Node Parse(ParseState state)
@@ -4613,17 +4895,17 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("LeftEdge")]
-    internal static class LeftEdge
+    class LeftEdge : Function
     {
-        public static float Evaluate(Character character, ref bool error)
+        public LeftEdge(List<IFunction> children, List<System.Object> arguments)
+                     : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            return character.Engine.CameraFE.ConverterBound().xMin * Constant.Scale2;
+            return new Number(character.Engine.CameraFE.ConverterBound().xMin * Constant.Scale2);
         }
 
         public static Node Parse(ParseState state)
@@ -4633,20 +4915,20 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("FrontEdge")]
-    internal static class FrontEdge
+    class FrontEdge : Function
     {
-        public static float Evaluate(Character character, ref bool error)
+        public FrontEdge(List<IFunction> children, List<System.Object> arguments)
+                     : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            if (character.CurrentFacing == Facing.Left)
-                return character.Engine.CameraFE.ConverterBound().xMin * Constant.Scale2;
+            if (character.CurrentFacing == UnityMugen.Facing.Left)
+                return new Number(character.Engine.CameraFE.ConverterBound().xMin * Constant.Scale2);
             else
-                return character.Engine.CameraFE.ConverterBound().xMax * Constant.Scale2;
+                return new Number(character.Engine.CameraFE.ConverterBound().xMax * Constant.Scale2);
         }
 
         public static Node Parse(ParseState state)
@@ -4656,20 +4938,20 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("BackEdge")]
-    internal static class BackEdge
+    class BackEdge : Function
     {
-        public static float Evaluate(Character character, ref bool error)
+        public BackEdge(List<IFunction> children, List<System.Object> arguments)
+                     : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
             //return character.CurrentFacing == UnityMugen.Facing.Right ? TE.LeftEdge() : TE.RightEdge();
-            if (character.CurrentFacing == Facing.Left)
-                return character.Engine.CameraFE.ConverterBound().xMax * Constant.Scale2;
+            if (character.CurrentFacing == UnityMugen.Facing.Left)
+                return new Number(character.Engine.CameraFE.ConverterBound().xMax * Constant.Scale2);
             else
-                return character.Engine.CameraFE.ConverterBound().xMin * Constant.Scale2;
+                return new Number(character.Engine.CameraFE.ConverterBound().xMin * Constant.Scale2);
         }
 
         public static Node Parse(ParseState state)
@@ -4679,17 +4961,17 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("WinHyper")]
-    internal static class WinHyper
+    class WinHyper : Function
     {
-        public static bool Evaluate(Character character, ref bool error)
+        public WinHyper(List<IFunction> children, List<System.Object> arguments)
+                     : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            return character.Team.VictoryStatus.WinHyper;
+            return new Number(character.Team.VictoryStatus.WinHyper);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -4699,17 +4981,17 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("WinSpecial")]
-    internal static class WinSpecial
+    class WinSpecial : Function
     {
-        public static bool Evaluate(Character character, ref bool error)
+        public WinSpecial(List<IFunction> children, List<System.Object> arguments)
+                     : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            return character.Team.VictoryStatus.WinSpecial;
+            return new Number(character.Team.VictoryStatus.WinSpecial);
         }
 
         public static Node Parse(ParseState parsestate)
@@ -4719,17 +5001,17 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("ComboCounter")]
-    internal static class ComboCounterT
+    class ComboCounter : Function
     {
-        public static int Evaluate(Character character, ref bool error)
+        public ComboCounter(List<IFunction> children, List<System.Object> arguments)
+                     : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return 0;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
-            return character.Team.ComboCounter.HitCount;
+            return new Number(character.Team.ComboCounter.HitCount);
         }
 
         public static Node Parse(ParseState state)
@@ -4739,22 +5021,22 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("ReceivedDamage")]
-    internal static class ReceivedDamage
+    class ReceivedDamage : Function
     {
-        public static bool Evaluate(Character character, ref bool error)
+        public ReceivedDamage(List<IFunction> children, List<System.Object> arguments)
+                     : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null) return new Number();
 
             foreach (Contact contact in character.Engine.m_combatcheck.Attacks)
             {
-                return character.Engine.m_combatcheck.ReceivedDamage(character);
+                return new Number(character.Engine.m_combatcheck.ReceivedDamage(character));
                 //if (contact.Type == ContactType.Hit) return true;
             }
-            return false;
+            return new Number(false);
         }
 
         public static Node Parse(ParseState state)
@@ -4770,16 +5052,18 @@ namespace UnityMugen.Evaluation.Triggers
 
 
     [CustomFunction("CombatMode")]
-    internal static class CombatMode
+    class CombatMode : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static bool Evaluate(Character character, ref bool error, Operator @operator, string text)
+        public CombatMode(List<IFunction> children, List<System.Object> arguments)
+                     : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Arguments.Count != 2) return new Number();
+
+            Operator @operator = (Operator)Arguments[0];
+            string text = (string)Arguments[1];
 
             var mode = character.Team.Mode;
             bool result;
@@ -4788,29 +5072,27 @@ namespace UnityMugen.Evaluation.Triggers
                 case UnityMugen.CombatMode.Training:
                     result = string.Equals(text, "training", StringComparison.OrdinalIgnoreCase);
                     break;
-                
+
                 default:
                     if (KeepLog)
                         Debug.Log("Error | CombatMode");
 
-                    error = true;
-                    return false;
+                    return new Number();
             }
 
             switch (@operator)
             {
                 case Operator.Equals:
-                    return result;
+                    return new Number(result);
 
                 case Operator.NotEquals:
-                    return !result;
+                    return new Number(!result);
 
                 default:
                     if (KeepLog)
                         Debug.Log("Error | CombatMode");
 
-                    error = true;
-                    return false;
+                    return new Number();
             }
         }
 
@@ -4831,16 +5113,18 @@ namespace UnityMugen.Evaluation.Triggers
     }
 
     [CustomFunction("StanceType")]
-    internal static class StanceType
+    class StanceType : Function
     {
-        static bool KeepLog => LauncherEngine.Inst.initializationSettings.KeepLog;
-        public static bool Evaluate(Character character, ref bool error, Operator @operator, string text)
+        public StanceType(List<IFunction> children, List<System.Object> arguments)
+            : base(children, arguments)
         {
-            if (character == null)
-            {
-                error = true;
-                return false;
-            }
+        }
+        public override Number Evaluate(Character character)
+        {
+            if (character == null || Arguments.Count != 2) return new Number();
+
+            Operator @operator = (Operator)Arguments[0];
+            string text = (string)Arguments[1];
 
             var mode = character.Team.Mode;
             bool result;
@@ -4866,24 +5150,22 @@ namespace UnityMugen.Evaluation.Triggers
                     if (KeepLog)
                         Debug.Log("Error | StanceType");
 
-                    error = true;
-                    return false;
+                    return new Number();
             }
 
             switch (@operator)
             {
                 case Operator.Equals:
-                    return result;
+                    return new Number(result);
 
                 case Operator.NotEquals:
-                    return !result;
+                    return new Number(!result);
 
                 default:
                     if (KeepLog)
                         Debug.Log("Error | StanceType");
 
-                    error = true;
-                    return false;
+                    return new Number();
             }
         }
 

@@ -27,7 +27,7 @@ namespace UnityMugen.Evaluation
                 if (bomAttrib != null)
                 {
                     var @operator = (Operator)field.GetValue(null);
-                    mapping.Add(bomAttrib.Value, new BinaryOperatorData(@operator, bomAttrib.Value, bomAttrib.Name, bomAttrib.Precedence));
+                    mapping.Add(bomAttrib.Text, new BinaryOperatorData(@operator, bomAttrib.Text, bomAttrib.Precedence, bomAttrib.Type.FullName));
                 }
                 else
                 {
@@ -35,7 +35,7 @@ namespace UnityMugen.Evaluation
                     if (fm_attr != null)
                     {
                         var @operator = (Operator)field.GetValue(null);
-                        mapping.Add(fm_attr.Value, new UnaryOperatorData(@operator, fm_attr.Value, fm_attr.Name));
+                        mapping.Add(fm_attr.Text, new UnaryOperatorData(@operator, fm_attr.Text, fm_attr.Type.FullName));
                     }
                 }
             }
@@ -46,19 +46,19 @@ namespace UnityMugen.Evaluation
                 if (attr != null)
                 {
                     var symbol = (Symbol)field.GetValue(null);
-                    mapping.Add(attr.Value, new SymbolData(symbol, attr.Value));
+                    mapping.Add(attr.Text, new SymbolData(symbol, attr.Text));
                 }
             }
 
             foreach (var type in Assembly.GetExecutingAssembly().GetTypes())
             {
-                if (type.IsAbstract == false || type.IsClass == false) continue;
+                if (type.IsAbstract == true || type.IsClass == false || type.IsInterface == true) continue;
 
                 var cf_attr = (CustomFunctionAttribute)Attribute.GetCustomAttribute(type, typeof(CustomFunctionAttribute));
-                if (cf_attr != null) mapping.Add(cf_attr.Value, new CustomFunctionData(cf_attr.Value, cf_attr.Value, type));
+                if (cf_attr != null) mapping.Add(cf_attr.Text, new CustomFunctionData(cf_attr.Text, type.FullName));
 
                 var sr_attr = (StateRedirectionAttribute)Attribute.GetCustomAttribute(type, typeof(StateRedirectionAttribute));
-                if (sr_attr != null) mapping.Add(sr_attr.Value, new StateRedirectionData(sr_attr.Value, sr_attr.Value, type));
+                if (sr_attr != null) mapping.Add(sr_attr.Text, new StateRedirectionData(sr_attr.Text, type.FullName));
             }
 
             return mapping;
