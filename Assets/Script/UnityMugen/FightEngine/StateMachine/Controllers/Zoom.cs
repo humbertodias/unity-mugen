@@ -44,29 +44,5 @@ public class Zoom : StateController
         var lag = EvaluationHelper.AsSingle(character, m_lag, 1f);
 
         character.Engine.CameraFE.SetStateZoom(scale, pos, time, lag);
-
-        //// isso tambem ten que ficar dentro de CmeraFE
-        //if(time > 0)
-        //{
-        //    s.zoomlag = 0;
-        //    s.zoomPosXLag = 0;
-        //    s.zoomPosYLag = 0;
-        //    s.zoomScale = 1;
-        //    s.zoomPos = [2]float32{ 0, 0};
-        //    s.drawScale = s.cam.Scale;
-        //}
-        ///////
-        
-
-        //isso esta em CameraFE, quando o time for maior que zero, preservar up, down, left, right.
-        //    acho que a melhhor coisa que eu posso fazer é deixar esses parametros no proprio CameraFE. 
-        //up = transUp.position.y;
-        //down = transDown.position.y;
-        //left = transLeft.position.x;
-        //right = transRight.position.x;
-
-        //sys.zoomPos[0] = sys.zoomScale * zoompos[0]
-        //sys.zoomPos[1] = zoompos[1]
-        //sys.enableZoomtime = t;
     }
 }
