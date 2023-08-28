@@ -30,6 +30,7 @@ public class FullDebugEditorWindow : EditorWindow
     Dictionary<long, bool> m_foldoutEntities = new Dictionary<long, bool>();
     Dictionary<long, bool> m_foldoutAnimations = new Dictionary<long, bool>();
     Dictionary<long, bool> m_foldoutCmd = new Dictionary<long, bool>();
+    Dictionary<long, bool> m_foldoutTrigger = new Dictionary<long, bool>();
     Dictionary<long, bool> m_toggleActiveCmd = new Dictionary<long, bool>();
 
     public string nameEntity;
@@ -361,9 +362,6 @@ public class FullDebugEditorWindow : EditorWindow
 
             EntityData(mainPlayer as Entity);
             CharacterData(mainPlayer as Character);
-
-            TriggerData(mainPlayer as Entity);
-
         }
         EditorGUILayout.EndVertical();
     }
@@ -437,26 +435,6 @@ public class FullDebugEditorWindow : EditorWindow
             EditorGUILayout.LabelField("CurrentFlip: ");
             entity.CurrentFlip = (SpriteEffects)EditorGUILayout.Popup("", (int)entity.CurrentFlip, enum_Flip);
             EditorGUILayout.LabelField("Type");
-        }
-        EditorGUILayout.EndHorizontal();
-
-    }
-
-    void TriggerData(Entity entity)
-    {
-        EditorGUILayout.BeginHorizontal();
-        {
-            EditorGUILayout.LabelField("ScreenPos: ");
-            EditorGUILayout.Vector2Field("", Misc.ScreenPos(entity));
-            EditorGUILayout.LabelField("Vector2");
-        }
-        EditorGUILayout.EndHorizontal();
-
-        EditorGUILayout.BeginHorizontal();
-        {
-            EditorGUILayout.LabelField("Pos: ");
-            EditorGUILayout.Vector2Field("", Misc.Pos(entity));
-            EditorGUILayout.LabelField("Vector2");
         }
         EditorGUILayout.EndHorizontal();
 
@@ -689,6 +667,8 @@ public class FullDebugEditorWindow : EditorWindow
         ShowVarsFloat("FloatVars:", character.Variables.FloatVariables, ref m_floatVars);
         ShowVarsInt("SysVars:", character.Variables.SystemIntegerVariables, ref m_sysIntVars);
         ShowVarsFloat("SysFloatVars:", character.Variables.SystemFloatVariables, ref m_sysFloatVars);
+
+        Triggers(character);
     }
 
     void OtherInfo()
@@ -1049,4 +1029,36 @@ public class FullDebugEditorWindow : EditorWindow
         }
         EditorGUILayout.EndVertical();
     }
+
+    void Triggers(Entity entity)
+    {
+        int hash = /*"trigger".GetHashCode() +*/ entity.GetHashCode();
+        if (!m_foldoutTrigger.ContainsKey(hash))
+            m_foldoutTrigger.Add(entity.GetHashCode(), false);
+
+        EditorGUILayout.BeginVertical("ObjectFieldThumb");
+        {
+            m_foldoutTrigger[hash] = EditorGUILayout.Foldout(m_foldoutTrigger[hash], "Triggers:", true, "Foldout");
+            if (m_foldoutTrigger[hash])
+            {
+                EditorGUILayout.BeginHorizontal();
+                {
+                    EditorGUILayout.LabelField("ScreenPos: ");
+                    EditorGUILayout.Vector2Field("", Misc.ScreenPos(entity));
+                    EditorGUILayout.LabelField("Vector2");
+                }
+                EditorGUILayout.EndHorizontal();
+
+                EditorGUILayout.BeginHorizontal();
+                {
+                    EditorGUILayout.LabelField("Pos: ");
+                    EditorGUILayout.Vector2Field("", Misc.Pos(entity));
+                    EditorGUILayout.LabelField("Vector2");
+                }
+                EditorGUILayout.EndHorizontal();
+            }
+        }
+        EditorGUILayout.EndVertical();
+    }
+
 }
