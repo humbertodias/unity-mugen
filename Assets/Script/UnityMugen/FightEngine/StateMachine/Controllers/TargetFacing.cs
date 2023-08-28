@@ -29,7 +29,7 @@ namespace UnityMugen.StateMachine.Controllers
         public override void Run(Character character)
         {
             var facing = EvaluationHelper.AsInt32(character, m_facing, 0);
-            var targetId = EvaluationHelper.AsInt32(character, m_targetId, int.MinValue);
+            var targetId = EvaluationHelper.AsInt32(character, m_targetId, -1);
 
             foreach (var target in character.GetTargets(targetId))
             {

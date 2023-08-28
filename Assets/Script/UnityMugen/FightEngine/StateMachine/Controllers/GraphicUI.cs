@@ -96,7 +96,7 @@ namespace UnityMugen.StateMachine.Controllers
         public override void Run(Character character)
         {
             var update = EvaluationHelper.AsBoolean(character, m_update, false);
-            long Id = EvaluationHelper.AsInt32(character, m_id, int.MinValue);
+            long Id = EvaluationHelper.AsInt32(character, m_id, -1);
 
             GraphicUIData graphicUIData = new GraphicUIData();
             graphicUIData.id = Id;

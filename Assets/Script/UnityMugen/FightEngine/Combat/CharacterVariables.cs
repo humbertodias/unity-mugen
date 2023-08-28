@@ -20,6 +20,14 @@ namespace UnityMugen.Combat
             for (var i = 0; i != m_sysfloat.Capacity; ++i) m_sysfloat.Add(0);
         }
 
+        public CharacterVariables(CharacterVariables variables)
+        {
+            m_int = new List<int>(variables.m_int);
+            m_sysint = new List<int>(variables.m_sysint);
+            m_float = new List<float>(variables.m_float);
+            m_sysfloat = new List<float>(variables.m_sysfloat);
+        }
+
         public void ResetFE()
         {
             for (var i = 0; i != m_int.Count; ++i) m_int[i] = 0;

@@ -26,7 +26,7 @@ namespace UnityMugen.StateMachine.Controllers
 
         public override void Run(Character character)
         {
-            var ID = EvaluationHelper.AsInt32(character, m_id, int.MinValue);
+            var ID = EvaluationHelper.AsInt32(character, m_id, -1);
             var removelist = new List<GraphicUIEntity>(character.GetGraphicUIs(ID));
             foreach (var graphicUIEntity in removelist)
                 graphicUIEntity.Kill();

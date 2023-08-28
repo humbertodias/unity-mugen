@@ -41,7 +41,7 @@ namespace UnityMugen.Combat
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private CharacterBind m_bind;
 
-        public CharacterVariables Variables => m_variables;
+        public CharacterVariables Variables { get => m_variables; set => m_variables = value; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private CharacterVariables m_variables;
 
@@ -57,9 +57,9 @@ namespace UnityMugen.Combat
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private StringBuilder m_clipboard;
 
-        public Dictionary<long, List<UnityMugen.Combat.Explod>> Explods { get => m_explods; set => m_explods = value; } 
+        public Dictionary<long, List<Combat.Explod>> Explods { get => m_explods; set => m_explods = value; } 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Dictionary<long, List<UnityMugen.Combat.Explod>> m_explods;
+        private Dictionary<long, List<Combat.Explod>> m_explods;
 
         public Dictionary<long, List<GraphicUIEntity>> GraphicUIs => m_graphicUIs;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

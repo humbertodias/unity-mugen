@@ -25,7 +25,7 @@ namespace UnityMugen.StateMachine.Controllers
 
         public override void Run(Character character)
         {
-            var explodId = EvaluationHelper.AsInt32(character, m_id, int.MinValue);
+            var explodId = EvaluationHelper.AsInt32(character, m_id, -1);
 
             var removelist = new List<UnityMugen.Combat.Explod>(character.GetExplods(explodId));
 

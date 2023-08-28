@@ -197,6 +197,7 @@ public class CharacterMemory : EntityMemory
             Explods.Add(ex, listDataExplod);
         }
 
+        Variables = new CharacterVariables(character.Variables);
         OffensiveInfo = new OffensiveInfo(character.OffensiveInfo);
         DefensiveInfo = new DefensiveInfo(character.DefensiveInfo);
         StatemanagerMemory = new StatemanagerMemory(character.StateManager);
@@ -235,6 +236,7 @@ public class CharacterMemory : EntityMemory
 
         character.OffensiveInfo = OffensiveInfo;
         character.DefensiveInfo = DefensiveInfo;
+        character.Variables = Variables;
 
         StateManager sm = character.StateManager;
         StatemanagerMemory.BackMemory(ref sm);
@@ -272,6 +274,7 @@ public class CharacterMemory : EntityMemory
     public PlayerButton[] m_inputbuffer { get; }
     public Dictionary<string, BufferCount> m_commandcount { get; }
 
+    public CharacterVariables Variables { get; }
     public OffensiveInfo OffensiveInfo { get; }
     public DefensiveInfo DefensiveInfo { get; }
     public StatemanagerMemory StatemanagerMemory { get; }
@@ -526,7 +529,7 @@ public class MemoryState
 
         foreach (Entity entity in engine.Entities)
         {
-            if (!entityMemories.ContainsKey(entity.UniqueID))
+            if (!(entity is Player))
             {
                 engine.Entities.Remove(entity);
             }
@@ -603,7 +606,8 @@ public class MemoryState
 
     private void PopuleCharacter(Character character, CharacterMemory memory)
     {
-        memory.Explods.Clear();
+#warning problema lá, por causa daqui, mas aqui é necessario
+        character.Explods.Clear(); 
         foreach (long ex in memory.Explods.Keys)
         {
             List<Explod> explods = new List<Explod>();
@@ -612,7 +616,10 @@ public class MemoryState
                 character.Engine.Entities.TryGetValue(unityID, out Entity entity);
                 explods.Add(entity as Explod);
             }
-            character.Explods.Add(ex, explods);
+            if (character.Explods.ContainsKey(ex))
+                character.Explods[ex] = explods;
+            else
+               character.Explods.Add(ex, explods);
         }
     }
 
