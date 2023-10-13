@@ -1,3 +1,5 @@
+[![Build](https://github.com/humbertodias/unity-mugen/actions/workflows/release.yml/badge.svg)](https://github.com/humbertodias/unity-mugen/actions/workflows/release.yml)
+
 # UnityMugen
 
 ![Project Logo](./.github/logo.png)
